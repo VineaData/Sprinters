@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sprinters · Social Club — Planes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="subs.css">
+</head>
+<body>
+
+<nav class="top">
+  <a href="Landing v2.html" class="back"><span class="a">←</span> <span>Volver</span></a>
+  <a href="Landing v2.html" class="brand">Sprinters<sup>®</sup></a>
+  <a href="Suscripcion Running.html" class="cta">Ver running →</a>
+</nav>
+
+<header class="sub-hero" data-screen-label="01 Hero · Social">
+  <div class="pillar-tag">Pilar 02 / Social Club</div>
+  <h1>Vení y pasá un<br/>buen rato en <span class="marker" id="subMarker"><span class="marker-bg"></span><span class="marker-txt">grupo.</span></span></h1>
+  <p class="lede">Tres niveles de membresía. Desde el plan de fin de semana hasta el círculo más cercano del club — con mesa reservada, eventos privados y kit anual.</p>
+
+  <div class="toggle-wrap">
+    <div class="toggle" id="toggle" role="tablist">
+      <div class="toggle-pill" id="togglePill"></div>
+      <button class="toggle-btn active" data-period="monthly">Mensual</button>
+      <button class="toggle-btn" data-period="yearly">Anual <span class="save">Ahorrá 20%</span></button>
+    </div>
+  </div>
+</header>
+
+<section class="plans cols-3" id="plans">
+
+  <!-- ===== Plan 01 — Social Day ===== -->
+  <article class="plan" data-plan="day">
+    <div class="plan-top">
+      <h2 class="plan-name">Social <em>Day.</em></h2>
+    </div>
+    <p class="plan-desc">Pase suelto para un after-run. Brunch, café, vino o pizza — elegís el evento que más te tiente del mes.</p>
+
+    <div class="price-row">
+      <span class="price-curr">$</span>
+      <span class="price-num" data-price="day">6500</span>
+      <span class="price-period">/ evento</span>
+    </div>
+    <div class="price-note">Sin compromiso · pagás solo cuando vas</div>
+
+    <button class="plan-cta" onclick="location.href='Cuenta.html?plan=social-day'">Reservar un evento <span class="a">→</span></button>
+
+    <ul class="plan-features">
+      <li class="plan-feature"><span class="feature-icon">↗</span><span>1 after-run a elección del calendario</span></li>
+      <li class="plan-feature"><span class="feature-icon">✦</span><span>Acceso a la mesa del grupo y producción</span></li>
+      <li class="plan-feature"><span class="feature-icon">∞</span><span>Pack de fotos profesionales del evento</span></li>
+    </ul>
+
+    <div class="plan-includes-divider">
+      <h4 class="plan-includes-title">Pase puntual:</h4>
+      <ul class="plan-includes-list">
+        <li><span class="check">✓</span><span>Sumás +1 invitado al precio del día</span></li>
+        <li><span class="check">✓</span><span>Reserva con 24 hs de anticipación</span></li>
+        <li><span class="check">✓</span><span>Bebida de bienvenida incluida</span></li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ===== Plan 02 — Social Pass · POPULAR ===== -->
+  <article class="plan popular" data-plan="pass">
+    <div class="plan-top">
+      <h2 class="plan-name">Social <em>Pass.</em></h2>
+      <span class="popular-badge">El favorito</span>
+    </div>
+    <p class="plan-desc">El plan mensual del club. Cuatro eventos, acceso prioritario antes que el público general y tarjeta digital de member.</p>
+
+    <div class="price-row">
+      <span class="price-curr">$</span>
+      <span class="price-num" data-price="pass">19000</span>
+      <span class="price-period">/ mes</span>
+    </div>
+    <div class="price-note">$4.750 por evento · cupos garantizados</div>
+
+    <button class="plan-cta" onclick="location.href='Cuenta.html?plan=social-pass'">Sumarme al pass <span class="a">→</span></button>
+
+    <ul class="plan-features">
+      <li class="plan-feature"><span class="feature-icon">↗</span><span>4 eventos al mes (run+brunch, wine, pizza, café)</span></li>
+      <li class="plan-feature"><span class="feature-icon">✦</span><span>Acceso anticipado 48 hs antes que el resto</span></li>
+      <li class="plan-feature"><span class="feature-icon">∞</span><span>Tarjeta digital Sprinters Member</span></li>
+    </ul>
+
+    <div class="plan-includes-divider">
+      <h4 class="plan-includes-title">Todo lo del Social Day, más:</h4>
+      <ul class="plan-includes-list">
+        <li><span class="check">✓</span><span>1 invitado gratis al mes</span></li>
+        <li><span class="check">✓</span><span>20% off en marcas aliadas (BRÖD, MalaBoca, Bravos…)</span></li>
+        <li><span class="check">✓</span><span>Eventos exclusivos solo para members</span></li>
+        <li><span class="check">✓</span><span>Newsletter privada del club</span></li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ===== Plan 03 — Founder's Circle · DARK ===== -->
+  <article class="plan dark" data-plan="founders">
+    <div class="plan-top">
+      <h2 class="plan-name">Founder's <em>Circle.</em></h2>
+    </div>
+    <p class="plan-desc">El círculo más cercano. Acceso ilimitado a todo lo que pase en Sprinters — running, social, eventos privados con marcas, viajes.</p>
+
+    <div class="price-row">
+      <span class="price-curr">$</span>
+      <span class="price-num" data-price="founders">38000</span>
+      <span class="price-period">/ mes</span>
+    </div>
+    <div class="price-note">Cupos limitados a 40 founders por año</div>
+
+    <button class="plan-cta" onclick="location.href='Cuenta.html?plan=founders-circle'">Sumarme al circle <span class="a">→</span></button>
+
+    <ul class="plan-features">
+      <li class="plan-feature"><span class="feature-icon">↗</span><span>Acceso ilimitado a Running + Social</span></li>
+      <li class="plan-feature"><span class="feature-icon">✦</span><span>Mesa reservada en los after-runs</span></li>
+      <li class="plan-feature"><span class="feature-icon">∞</span><span>Eventos privados con marcas (off-the-record)</span></li>
+    </ul>
+
+    <div class="plan-includes-divider">
+      <h4 class="plan-includes-title">Todo, sin límite:</h4>
+      <ul class="plan-includes-list">
+        <li><span class="check">✓</span><span>Acceso a eventos Sprinters en BA &amp; Bariloche</span></li>
+        <li><span class="check">✓</span><span>+1 acompañante incluido siempre</span></li>
+        <li><span class="check">✓</span><span>Sesión 1-on-1 con run coach trimestral</span></li>
+        <li><span class="check">✓</span><span>Kit de bienvenida + renovación anual</span></li>
+      </ul>
+    </div>
+  </article>
+
+</section>
+
+<section class="foot-block">
+  <div class="inner">
+    <h3>¿Todavía no <em>corrés?</em></h3>
+    <p>El Running Club tiene 2 planes pensados para sumarte sin presión. Coach incluido, todas las distancias, y un grupo que te espera en cada esquina del parque.</p>
+    <a href="Suscripcion Running.html" class="btn">Ver planes de Running Club <span class="a">→</span></a>
+  </div>
+</section>
+
+<footer class="tinyfoot">
+  <div>© 2026 Sprinters · Mendoza, AR</div>
+  <div>Let's run together</div>
+</footer>
+
+<script>
+  // ===== Marker highlight trigger =====
+  (function(){
+    const m = document.getElementById('subMarker');
+    if (m) setTimeout(() => m.classList.add('is-on'), 600);
+  })();
+
+  // ===== Pricing data — monthly vs yearly =====
+  const PRICES = {
+    day:      { monthly: 6500,  yearly: 6500 },
+    pass:     { monthly: 19000, yearly: 15200 },
+    founders: { monthly: 38000, yearly: 30400 }
+  };
+
+  // ===== Toggle pill =====
+  const toggle = document.getElementById('toggle');
+  const pill = document.getElementById('togglePill');
+  const btns = toggle.querySelectorAll('.toggle-btn');
+
+  function positionPill(){
+    const active = toggle.querySelector('.toggle-btn.active');
+    if(!active) return;
+    pill.style.width = active.offsetWidth + 'px';
+    pill.style.transform = `translateX(${active.offsetLeft - 5}px)`;
+  }
+
+  function setPrice(el, value){
+    const target = String(value);
+    if (el.dataset.shown === target) return;
+    el.dataset.shown = target;
+    el.innerHTML = '';
+    for (const ch of target) {
+      const span = document.createElement('span');
+      span.className = 'digit';
+      span.textContent = ch;
+      el.appendChild(span);
+    }
+  }
+
+  function applyPeriod(period){
+    document.querySelectorAll('[data-price]').forEach(el => {
+      const key = el.getAttribute('data-price');
+      const p = PRICES[key];
+      if (!p) return;
+      setPrice(el, p[period]);
+    });
+    document.querySelectorAll('.price-period').forEach(el => {
+      const prev = el.previousElementSibling;
+      if (prev && prev.getAttribute('data-price') === 'day') {
+        el.textContent = '/ evento';
+      } else {
+        el.textContent = period === 'yearly' ? '/ mes · pagás anual' : '/ mes';
+      }
+    });
+  }
+
+  btns.forEach(b => {
+    b.addEventListener('click', () => {
+      btns.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      positionPill();
+      applyPeriod(b.dataset.period);
+    });
+  });
+
+  window.addEventListener('load', () => {
+    positionPill();
+    applyPeriod('monthly');
+  });
+  window.addEventListener('resize', positionPill);
+</script>
+</body>
+</html>

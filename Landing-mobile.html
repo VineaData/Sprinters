@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#ffffff" />
+<title>Sprinters · Social Run Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  (function(){
+    try{
+      var p=new URLSearchParams(location.search),force=p.get('force');
+      if(force==='mobile')return;
+      try{if(window.self!==window.top)return;}catch(e){return;}
+      if(force==='desktop'||window.matchMedia('(min-width:761px)').matches)
+        location.replace('Landing v2.html'+(force?'?force=desktop':''));
+    }catch(e){}
+  })();
+</script>
+<style>
+:root{
+  --bg:#ffffff;--ink:#0a0a0a;--ink-2:#1a1a1a;--muted:#6b6b6b;--muted-2:#a3a3a3;
+  --line:rgba(10,10,10,.10);--line-2:rgba(10,10,10,.06);
+  --rust:#C24A1F;--marker:#024939;--marker-fg:#e5e5cc;
+  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
+  --field-bg:#fafaf7;--field-bd:rgba(10,10,10,.10);--error:#b91c1c;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink);font-family:'Montserrat','Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--marker);color:var(--marker-fg)}
+
+/* ── Marker ── */
+.marker{position:relative;display:inline-block;white-space:nowrap}
+.marker-bg{position:absolute;left:-.08em;right:-.08em;top:-.05em;bottom:-.05em;background:var(--marker);transform-origin:left center;transform:scaleX(0);z-index:0;border-radius:2px}
+.marker-txt{position:relative;z-index:1;transition:color .35s ease .55s}
+.marker.is-on .marker-bg{animation:mf .9s cubic-bezier(.22,.7,.2,1) forwards}
+.marker.is-on .marker-txt{color:var(--marker-fg)}
+@keyframes mf{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ── Reveals ── */
+[data-reveal]{opacity:0;transform:translateY(20px);transition:opacity 1s cubic-bezier(.22,.7,.2,1),transform 1s cubic-bezier(.22,.7,.2,1);transition-delay:var(--rd,0ms)}
+[data-reveal="fade"]{transform:none}
+[data-reveal].is-in{opacity:1;transform:none}
+
+/* ── TOP BAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--safe-t)) 18px 12px;background:rgba(255,255,255,.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
+.topbar .brand{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-.02em;font-size:18px;text-transform:uppercase;display:inline-flex;align-items:baseline;gap:5px}
+.topbar .brand sup{font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.acct-btn{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--ink);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;background:transparent;display:flex;align-items:center}
+.menu-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.menu-btn .ico{width:14px;height:9px;position:relative}
+.menu-btn .ico::before,.menu-btn .ico::after{content:"";position:absolute;left:0;right:0;height:1.5px;background:currentColor}
+.menu-btn .ico::before{top:0}
+.menu-btn .ico::after{bottom:0}
+
+/* ── MENU OVERLAY ── */
+.menu-overlay{position:fixed;inset:0;z-index:190;background:var(--ink);color:#fff;transform:translateY(-100%);transition:transform .5s cubic-bezier(.7,0,.3,1);display:flex;flex-direction:column;padding:calc(18px + var(--safe-t)) 22px calc(26px + var(--safe-b));overflow-y:auto}
+.menu-overlay.open{transform:translateY(0)}
+.menu-overlay .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px}
+.menu-overlay .brand{color:#fff;font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-.02em;font-size:18px;text-transform:uppercase;display:inline-flex;align-items:baseline;gap:5px}
+.menu-overlay .brand sup{font-style:normal;font-size:9px;opacity:.4;font-weight:500;letter-spacing:0}
+.menu-overlay .close{width:40px;height:40px;border-radius:50%;border:1px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.menu-overlay nav{display:flex;flex-direction:column;gap:2px}
+.menu-overlay nav a{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.05;letter-spacing:-.02em;padding:10px 0;display:flex;align-items:baseline;gap:14px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.08)}
+.menu-overlay nav a .n{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;font-weight:500;opacity:.4;transform:translateY(-6px)}
+.menu-overlay nav a em{font-style:italic;color:var(--marker-fg)}
+.menu-acct-row{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding:16px 0;border-top:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#fff}
+.menu-acct-row span.a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px}
+.menu-overlay .foot{margin-top:auto;padding-top:28px;display:flex;justify-content:space-between;align-items:flex-end;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.55;font-weight:500}
+.menu-overlay .foot .sc{font-family:'Allura',cursive;font-size:30px;color:var(--marker-fg);letter-spacing:0;text-transform:none;opacity:1;line-height:.8}
+
+/* ── FLOW SECTIONS ── */
+section[data-flow-section],footer[data-flow-section]{position:relative;min-height:100svh;width:100%;overflow:hidden;padding:0!important;background:transparent}
+.flow-art-container{position:relative;min-height:100svh;width:100%;background:var(--bg);display:flex;flex-direction:column;transform-origin:bottom left;will-change:transform;overflow:hidden}
+
+/* ── HERO ── */
+.hero>.flow-art-container{padding:calc(70px + var(--safe-t)) 22px 28px;gap:22px;justify-content:flex-start}
+.hero-photo{position:relative;border-radius:8px;overflow:hidden;background:#1a1a1a;aspect-ratio:4/5;width:100%;flex-shrink:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);transition:transform 2.2s cubic-bezier(.22,.7,.2,1);filter:saturate(.92)}
+.hero-photo.is-in img{transform:scale(1)}
+.hero-photo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.45));pointer-events:none}
+.hero-photo .pcap{position:absolute;left:14px;bottom:12px;color:#fff;font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;opacity:.85;z-index:2}
+.hero-headline{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(50px,14vw,76px);line-height:.88;letter-spacing:-.022em;text-transform:uppercase;margin-bottom:22px}
+.hero-headline .l{display:block}
+.hero-logo{display:flex;flex-direction:column}
+.hero-logo .sp-mark{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;font-size:clamp(34px,8.8vw,52px);line-height:.92;letter-spacing:-.035em;text-transform:uppercase}
+.hero-logo .sp-mark sup{font-style:normal;font-weight:500;font-size:.2em;opacity:.5;vertical-align:super;margin-left:.05em;top:-.6em;position:relative}
+.hero-logo .sp-sub{display:flex;align-items:center;gap:10px;margin-top:8px;width:100%;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.44em;text-transform:uppercase;font-weight:400}
+.hero-logo .sp-sub .hl{flex:1;height:1px;background:var(--ink);opacity:.28}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 22px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;transition:all .25s;width:100%}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:active{background:var(--rust)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.hero-actions{display:flex;flex-direction:column;gap:8px;margin-top:22px}
+.hero-meta{display:flex;flex-direction:column;gap:4px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+/* ── PILLARS ── */
+.pillars>.flow-art-container{padding:64px 22px 48px;gap:14px;border-top:1px solid var(--line)}
+.pillar-card{position:relative;color:#fff;flex:1;min-height:40svh;display:flex;flex-direction:column;justify-content:flex-end;padding:26px 22px;overflow:hidden;text-decoration:none;border-radius:10px;background:#1a1a1a}
+.pillar-card .bg{position:absolute;inset:0;background-size:cover;background-position:center 30%;filter:saturate(.92) brightness(.78)}
+.pillar-card .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,0) 35%,rgba(0,0,0,.85) 100%)}
+.pillar-card>*:not(.bg):not(.ov){position:relative;z-index:2}
+.pillar-card .corner{position:absolute;top:20px;left:22px;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;opacity:.85;font-weight:500;z-index:3}
+.pillar-card h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(48px,14vw,70px);line-height:.92;letter-spacing:-.02em;margin-bottom:8px}
+.pillar-card h2 em{font-style:italic}
+.pillar-card .lede{font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.55;opacity:.88;margin-bottom:20px;max-width:36ch;font-weight:400}
+.pillar-card .cta-row{display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+.pillar-card .cta-row .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px}
+
+/* ── SECTION SCAFFOLD ── */
+.section>.flow-art-container{padding:72px 0 48px;border-top:1px solid var(--line)}
+.section-head{padding:0 22px;margin-bottom:28px}
+.section-head h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(36px,10vw,50px);line-height:1;letter-spacing:-.02em}
+.section-head h2 em{font-style:italic}
+.section-head h2 .script{font-family:'Allura',cursive;color:var(--rust);font-size:1.05em;display:inline-block;transform:translateY(.05em) rotate(-3deg)}
+.section-head .sub{font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.6;color:var(--muted);margin-top:12px;max-width:38ch;font-weight:400}
+.section-head .lab{display:inline-flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--muted);margin-bottom:16px}
+.section-head .lab::before{content:"";width:24px;height:1px;background:currentColor;opacity:.6}
+
+/* ── AGENDA ── */
+.ag-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 22px 8px;scrollbar-width:none}
+.ag-scroll::-webkit-scrollbar{display:none}
+.ag-card{flex:0 0 76%;scroll-snap-align:start;aspect-ratio:3/4.2;border-radius:12px;overflow:hidden;position:relative;background:#1a1a1a;color:#fff}
+.ag-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.94)}
+.ag-card .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,rgba(0,0,0,0) 35%,rgba(0,0,0,.92) 100%)}
+.ag-card .body{position:absolute;inset:0;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.ag-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ag-card .tagcol{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.ag-card .pill{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2)}
+.ag-card .when{font-family:'DM Serif Display',serif;font-style:italic;font-size:12px;opacity:.95}
+.ag-card .arr{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:15px}
+.ag-card .bot{display:flex;flex-direction:column;gap:6px}
+.ag-card .tt{font-family:'DM Serif Display',serif;font-weight:400;font-size:22px;line-height:1.05;letter-spacing:-.01em}
+.ag-card .tt em{font-style:italic}
+.ag-card .meta{font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;opacity:.82;font-weight:500}
+.ag-progress{display:flex;gap:5px;justify-content:center;margin-top:20px;padding:0 22px}
+.ag-progress .d{width:22px;height:2px;border-radius:2px;background:var(--line);transition:all .25s}
+.ag-progress .d.on{background:var(--ink);width:32px}
+
+/* ── GALLERY ── */
+.gallery .gal-grid{padding:0 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gf{position:relative;border-radius:6px;overflow:hidden;background:#222;aspect-ratio:1/1}
+.gf img{width:100%;height:100%;object-fit:cover;display:block}
+.gf.wide{aspect-ratio:2/1;grid-column:span 2}
+.gf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5));pointer-events:none}
+.gf figcaption{position:absolute;left:11px;bottom:9px;color:#fff;font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.5);z-index:2}
+
+/* ── HOW ── */
+.how-steps{padding:0 22px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.h-step{gap:6px;padding:20px 0;border-bottom:1px solid var(--line)}
+.h-step .num{font-family:'DM Serif Display',serif;font-style:italic;font-size:13px;color:var(--muted);margin-bottom:4px}
+.h-step h4{font-family:'DM Serif Display',serif;font-weight:400;font-size:22px;line-height:1.15;letter-spacing:-.01em;margin-bottom:5px}
+.h-step p{font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.55;color:var(--muted);font-weight:400}
+
+/* ── LEADERS ── */
+.leaders .photo-wrap{position:relative;margin:0 22px 26px;border-radius:8px;overflow:hidden;aspect-ratio:4/5;background:#1a1a1a}
+.leaders .photo-wrap img{width:100%;height:100%;object-fit:cover;filter:saturate(.94)}
+.leaders .roster{padding:0 22px;border-top:1px solid var(--line)}
+.ldr{display:grid;grid-template-columns:26px 1fr auto;gap:14px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
+.ldr .idx{font-family:'DM Serif Display',serif;font-style:italic;font-size:12px;color:var(--muted-2)}
+.ldr .nm{font-family:'DM Serif Display',serif;font-weight:400;font-size:20px;line-height:1.05}
+.ldr .role{font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--muted);text-align:right;line-height:1.3;max-width:13ch}
+
+/* ── CTA ── */
+.cta-section>.flow-art-container{border-top:1px solid var(--line);padding:80px 22px 60px;align-items:center;justify-content:center;text-align:center}
+.cta-section .eyebrow{font-size:10px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--muted);margin-bottom:18px}
+.cta-section h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(46px,14vw,68px);line-height:.92;letter-spacing:-.022em;margin-bottom:22px;text-transform:uppercase}
+.cta-section h2 em{font-style:italic}
+.cta-section p{font-family:'Montserrat',sans-serif;font-size:13.5px;line-height:1.6;margin-bottom:26px;color:var(--ink-2);font-weight:400;max-width:34ch}
+.cta-form{display:flex;gap:5px;background:#fff;border:1px solid var(--ink);border-radius:999px;padding:4px;width:100%;max-width:380px}
+.cta-form input{flex:1;border:none;background:transparent;padding:12px 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);outline:none;min-width:0}
+.cta-form input::placeholder{color:var(--muted-2)}
+.cta-form button{background:var(--ink);color:#fff;border-radius:999px;padding:11px 16px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;white-space:nowrap}
+
+/* ── FOOTER ── */
+footer[data-flow-section]>.flow-art-container{background:var(--ink);color:#fff;padding:56px 22px calc(28px + var(--safe-b))}
+footer .brand-mark{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-.02em;font-size:36px;line-height:1;text-transform:uppercase;color:#fff;display:inline-flex;align-items:baseline;gap:6px}
+footer .brand-mark sup{font-style:normal;font-size:.28em;font-weight:500;opacity:.5;letter-spacing:0;vertical-align:super}
+footer .tagline{font-family:'DM Serif Display',serif;font-style:italic;font-size:15px;margin-top:6px;opacity:.7}
+footer .blurb{font-family:'Montserrat',sans-serif;font-size:13px;margin-top:16px;opacity:.7;line-height:1.6;margin-bottom:28px;font-weight:400}
+.f-acc{border-top:1px solid rgba(255,255,255,.15)}
+.f-acc-item{border-bottom:1px solid rgba(255,255,255,.15)}
+.f-acc-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:15px 0;color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500}
+.f-acc-btn .ch{width:14px;height:14px;position:relative;flex-shrink:0}
+.f-acc-btn .ch::before,.f-acc-btn .ch::after{content:"";position:absolute;background:#fff}
+.f-acc-btn .ch::before{left:0;right:0;top:50%;height:1px;transform:translateY(-50%)}
+.f-acc-btn .ch::after{top:0;bottom:0;left:50%;width:1px;transform:translateX(-50%);transition:transform .3s}
+.f-acc-item.open .f-acc-btn .ch::after{transform:translateX(-50%) scaleY(0)}
+.f-acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.f-acc-item.open .f-acc-body{max-height:300px}
+.f-acc-body ul{list-style:none;padding-bottom:14px;display:flex;flex-direction:column;gap:10px}
+.f-acc-body a{font-family:'Montserrat',sans-serif;font-size:13.5px;opacity:.85;font-weight:400}
+.giant-word{margin:28px -22px 0;padding:0 22px;font-family:'DM Serif Display',serif;font-size:clamp(72px,22vw,96px);line-height:.85;letter-spacing:-.04em;font-style:italic;color:rgba(255,255,255,.08);user-select:none;overflow:hidden;white-space:nowrap}
+.f-bottom{margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;gap:8px;font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;opacity:.55;font-weight:500}
+.switch-view{margin-top:12px;display:inline-flex;align-items:center;gap:8px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#fff;opacity:.7;padding:9px 14px;border:1px solid rgba(255,255,255,.25);border-radius:999px;align-self:flex-start}
+
+/* ── ACCOUNT OVERLAY ── */
+.acct-overlay{position:fixed;inset:0;z-index:180;background:var(--bg);transform:translateY(100%);transition:transform .55s cubic-bezier(.7,0,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+.acct-overlay.open{transform:translateY(0)}
+.acct-hdr{position:sticky;top:0;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2);padding:calc(14px + var(--safe-t)) 18px 14px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+.acct-hdr .brand{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-.02em;font-size:16px;text-transform:uppercase}
+.acct-hdr .brand sup{font-style:normal;font-size:9px;opacity:.4;font-weight:500;letter-spacing:0}
+.acct-close-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;background:transparent}
+.acct-body{flex:1;padding:26px 22px calc(48px + var(--safe-b))}
+
+/* Tabs */
+.acct-tabs{display:flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:26px;position:relative}
+.acct-pill-bg{position:absolute;top:4px;left:4px;height:calc(100% - 8px);background:var(--ink);border-radius:999px;transition:transform .4s cubic-bezier(.32,.72,.18,1),width .4s cubic-bezier(.32,.72,.18,1);z-index:0;pointer-events:none}
+.acct-tab{position:relative;z-index:1;flex:1;text-align:center;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;padding:11px 6px;color:var(--ink);transition:color .35s;background:transparent}
+.acct-tab.active{color:#fff}
+.acct-pane{display:none}
+.acct-pane.show{display:block}
+
+/* Form basics */
+.acct-title{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(30px,9vw,44px);line-height:1;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:8px}
+.acct-title em{font-style:italic}
+.acct-hint{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.5}
+.acct-hint button,.acct-hint a{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px;background:none;cursor:pointer;font-family:inherit;font-size:inherit}
+.af{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
+.af label{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:var(--marker)}
+.ai{width:100%;height:48px;background:var(--field-bg);border:1px solid var(--field-bd);border-radius:10px;padding:0 14px;font-family:'Montserrat',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.ai:focus{border-color:var(--ink);background:#fff}
+.ai::placeholder{color:var(--muted-2);font-weight:400}
+.as{height:48px;background:var(--field-bg);border:1px solid var(--field-bd);border-radius:10px;padding:0 30px 0 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);outline:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 12px) 20px,calc(100% - 7px) 20px;background-size:5px 5px;background-repeat:no-repeat;background-color:var(--field-bg)}
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ag2 .full{grid-column:1/-1}
+.apills{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.apills.c3{grid-template-columns:repeat(3,1fr)}
+.apill{position:relative;display:flex;align-items:center;gap:7px;background:var(--field-bg);border:1px solid var(--field-bd);border-radius:10px;padding:11px 10px;font-family:'Montserrat',sans-serif;font-size:12px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.apill::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid var(--field-bd);background:#fff;flex-shrink:0;transition:all .2s}
+.apill input{position:absolute;opacity:0;pointer-events:none}
+.apill.ck{background:#fff;border-color:var(--ink)}
+.apill.ck::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px #fff}
+.pp-row{display:flex;gap:8px;margin-top:4px}
+.pp-btn{flex:1;padding:12px 10px;background:var(--field-bg);border:1px solid var(--field-bd);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;text-align:center;line-height:1.3;transition:all .2s}
+.pp-btn .em{font-family:'DM Serif Display',serif;font-style:italic;font-weight:400}
+.pp-btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.acond{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,.7,.2,1),opacity .3s;opacity:0}
+.acond.show{max-height:120px;opacity:1}
+.asubmit{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--ink);color:#fff;width:100%;padding:15px 22px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-top:22px;transition:background .25s}
+.asubmit:active{background:var(--marker)}
+.asubmit .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px}
+.aghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.aghost:active{background:var(--ink);color:#fff}
+.alegal{font-family:'Montserrat',sans-serif;font-size:11px;color:var(--muted);margin-top:12px;text-align:center;line-height:1.5}
+.alegal a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+.login-row{display:flex;align-items:center;justify-content:space-between;font-family:'Montserrat',sans-serif;font-size:11px;margin:4px 0 16px}
+.login-row label{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--muted)}
+.login-row label input{accent-color:var(--ink)}
+.login-row a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+.aswitch{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:16px}
+.aswitch button{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px;background:none;cursor:pointer;font-family:inherit;font-size:inherit}
+
+/* Profile */
+.prof-hdr{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.prof-pic{width:68px;height:68px;border-radius:50%;background:var(--field-bg);background-size:cover;background-position:center;border:1px solid var(--line);flex-shrink:0}
+.prof-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;padding:5px 10px;border-radius:999px;background:var(--marker);color:var(--marker-fg);margin-bottom:5px}
+.prof-nm h3{font-family:'DM Serif Display',serif;font-weight:400;font-size:24px;line-height:1;letter-spacing:-.02em}
+.prof-nm .since{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:20px}
+.prof-stat{background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:13px 8px;text-align:center}
+.prof-stat .n{font-family:'DM Serif Display',serif;font-size:22px;line-height:1}
+.prof-stat .lab{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:5px;line-height:1.3}
+.prof-info{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px;margin-bottom:22px}
+.prof-info .it{display:flex;flex-direction:column;gap:2px}
+.prof-info .l{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.prof-info .v{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.prof-acts{display:flex;flex-direction:column;gap:8px}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(22px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:11px 20px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;z-index:300;opacity:0;transition:opacity .3s,transform .3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="brand">Sprinters<sup>®</sup></div>
+  <div class="topbar-right">
+    <button class="acct-btn" onclick="openAcct()">Mi cuenta</button>
+    <button class="menu-btn" aria-label="Abrir menú" onclick="openMenu()"><span class="ico"></span></button>
+  </div>
+</header>
+
+<!-- MENU OVERLAY -->
+<div class="menu-overlay" id="menu">
+  <div class="head">
+    <div class="brand">Sprinters<sup>®</sup></div>
+    <button class="close" onclick="closeMenu()">×</button>
+  </div>
+  <nav>
+    <a href="#pilares" onclick="closeMenu()"><span class="n">01</span>Pilares</a>
+    <a href="#agenda" onclick="closeMenu()"><span class="n">02</span><em>Agenda.</em></a>
+    <a href="#galeria" onclick="closeMenu()"><span class="n">03</span>Galería</a>
+    <a href="#lideres" onclick="closeMenu()"><span class="n">04</span>Líderes</a>
+    <a href="#join" onclick="closeMenu()"><span class="n">05</span><em>Sumate.</em></a>
+  </nav>
+  <button class="menu-acct-row" onclick="closeMenu();openAcct()">
+    <span>Mi cuenta</span><span class="a">→</span>
+  </button>
+  <div class="foot">
+    <div>Mendoza · AR<br/>EST. MAY 2025</div>
+    <div class="sc">let's run.</div>
+  </div>
+</div>
+
+<!-- ACCOUNT OVERLAY -->
+<div class="acct-overlay" id="acctOverlay">
+  <div class="acct-hdr">
+    <span class="brand">Sprinters<sup>®</sup></span>
+    <button class="acct-close-btn" onclick="closeAcct()">×</button>
+  </div>
+  <div class="acct-body">
+
+    <div class="acct-tabs" id="acctTabs">
+      <div class="acct-pill-bg" id="acctPillBg"></div>
+      <button class="acct-tab active" data-tab="signup">Crear cuenta</button>
+      <button class="acct-tab" data-tab="login">Ingresar</button>
+      <button class="acct-tab" data-tab="profile">Mi perfil</button>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="acct-pane show" data-pane="signup">
+      <div id="acctIntro">
+        <div class="acct-title">Sumate al <em>club.</em></div>
+        <div class="acct-hint">¿Ya tenés cuenta? <button onclick="acctTab('login')">Iniciá sesión</button></div>
+        <p style="font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.65;color:var(--ink-2);margin-bottom:16px">Una cuenta gratis te da lugar en cualquier corrida y acceso anticipado a los eventos del club.</p>
+        <div style="border-top:1px solid var(--line)">
+          <div style="display:grid;grid-template-columns:38px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)"><span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;color:var(--marker)">01</span><div><strong style="display:block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px">Gratis para siempre</strong><span style="font-size:12px;color:var(--muted)">Sin tarjeta, sin contratos.</span></div></div>
+          <div style="display:grid;grid-template-columns:38px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)"><span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;color:var(--marker)">02</span><div><strong style="display:block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px">2 minutos</strong><span style="font-size:12px;color:var(--muted)">Mail, contraseña y datos básicos. Listo.</span></div></div>
+          <div style="display:grid;grid-template-columns:38px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)"><span style="font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;color:var(--marker)">03</span><div><strong style="display:block;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px">Editable</strong><span style="font-size:12px;color:var(--muted)">Cambiás lo que quieras desde tu perfil.</span></div></div>
+        </div>
+        <button class="asubmit" style="margin-top:20px" onclick="showSignupForm()">Crear cuenta gratis <span class="a">→</span></button>
+      </div>
+
+      <div id="acctForm" style="display:none">
+        <div class="acct-title">Sumate al <em>club.</em></div>
+        <div class="acct-hint"><button onclick="showSignupIntro()">← Volver</button></div>
+        <form id="signupM" novalidate>
+          <div class="af"><label>Mail *</label><input class="ai" type="email" id="m-email" placeholder="tu@mail.com" required /></div>
+          <div class="af"><label>Contraseña *</label><input class="ai" type="password" id="m-pass" placeholder="mín. 8 caracteres" required minlength="8" /></div>
+          <div class="ag2">
+            <div class="af"><label>Nombre *</label><input class="ai" type="text" id="m-name" placeholder="Tu nombre" required /></div>
+            <div class="af"><label>Apellido *</label><input class="ai" type="text" id="m-last" placeholder="Tu apellido" required /></div>
+          </div>
+          <div class="af">
+            <label>¿Participaste en Sprinters antes? *</label>
+            <div class="pp-row" id="ppRow">
+              <button type="button" class="pp-btn on" data-p="no"><span class="em">No,</span> primera vez</button>
+              <button type="button" class="pp-btn" data-p="yes"><span class="em">Sí,</span> ya participé</button>
+            </div>
+          </div>
+          <div id="ftFields">
+            <div class="ag2">
+              <div class="af"><label>Edad *</label><input class="ai" type="number" id="m-age" placeholder="25" min="14" max="99" /></div>
+              <div class="af">
+                <label>Sexo *</label>
+                <div class="apills c3">
+                  <label class="apill"><input type="radio" name="msexo" value="M" /><span>Masc.</span></label>
+                  <label class="apill"><input type="radio" name="msexo" value="F" /><span>Fem.</span></label>
+                  <label class="apill"><input type="radio" name="msexo" value="O" /><span>Otro</span></label>
+                </div>
+              </div>
+            </div>
+            <div class="af">
+              <label>¿De dónde sos? *</label>
+              <div class="apills" id="mOrigin">
+                <label class="apill"><input type="radio" name="morigen" value="godoy-cruz" /><span>Godoy Cruz</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="capital" /><span>Capital</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="guaymallen" /><span>Guaymallén</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="las-heras" /><span>Las Heras</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="lujan" /><span>Luján de Cuyo</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="maipu" /><span>Maipú</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="otra-prov" /><span>Otra Prov.</span></label>
+                <label class="apill"><input type="radio" name="morigen" value="otro-pais" /><span>Otro País</span></label>
+              </div>
+              <div class="acond" id="mCual"><input class="ai" type="text" id="m-cual" placeholder="Ciudad / País" style="margin-top:8px" /></div>
+            </div>
+            <div class="af">
+              <label>¿Cómo nos conociste? *</label>
+              <div class="apills" id="mHow">
+                <label class="apill"><input type="radio" name="mhow" value="instagram" /><span>Instagram</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="tiktok" /><span>TikTok</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="amigos" /><span>Amigos</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="meetup" /><span>MeetUp</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="facebook" /><span>Facebook</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="hostel" /><span>Hostel</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="medios" /><span>Medios</span></label>
+                <label class="apill"><input type="radio" name="mhow" value="otros" /><span>Otros</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="af"><label>Emergencia *</label><input class="ai" type="tel" id="m-emerg" placeholder="Nombre · +54 11 5555 5555" required /></div>
+          <div class="af">
+            <label>Teléfono *</label>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:8px">
+              <select class="as" id="m-cc" style="width:auto"><option value="+54">🇦🇷 +54</option><option value="+56">🇨🇱 +56</option><option value="+598">🇺🇾 +598</option><option value="+595">🇵🇾 +595</option><option value="+51">🇵🇪 +51</option><option value="+57">🇨🇴 +57</option><option value="+55">🇧🇷 +55</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+1">🇺🇸 +1</option></select>
+              <input class="ai" type="tel" id="m-phone" placeholder="11 5555 5555" required inputmode="tel" />
+            </div>
+          </div>
+          <button type="submit" class="asubmit">Crear cuenta <span class="a">→</span></button>
+          <p class="alegal">Al crear tu cuenta aceptás los <a href="#">Términos</a> y la <a href="#">Política de Privacidad</a>.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="acct-pane" data-pane="login">
+      <div class="acct-title">Volver al <em>club.</em></div>
+      <div class="acct-hint">¿No tenés cuenta? <button onclick="acctTab('signup')">Crear una gratis</button></div>
+      <form id="loginM" novalidate>
+        <div class="af"><label>Mail *</label><input class="ai" type="email" id="l-email" placeholder="tu@mail.com" required /></div>
+        <div class="af"><label>Contraseña *</label><input class="ai" type="password" id="l-pass" placeholder="••••••••" required /></div>
+        <div class="login-row">
+          <label><input type="checkbox" /> Recordarme</label>
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button type="submit" class="asubmit">Iniciar sesión <span class="a">→</span></button>
+        <p class="aswitch">¿Primera vez? <button type="button" onclick="acctTab('signup')">Crear cuenta</button></p>
+      </form>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="acct-pane" data-pane="profile">
+      <div class="acct-title">Mi <em>perfil.</em></div>
+      <div class="acct-hint"><button onclick="acctTab('login')">Cerrar sesión</button></div>
+      <div class="prof-hdr">
+        <div class="prof-pic" id="mProfPic" style="background-image:url('images/girls-park.jpg')"></div>
+        <div class="prof-nm">
+          <div class="prof-badge">✦ Plan Runner</div>
+          <h3 id="mProfName">Lucía Romero</h3>
+          <div class="since">Miembro desde · Sep 2025</div>
+        </div>
+      </div>
+      <div class="prof-stats">
+        <div class="prof-stat"><div class="n">12</div><div class="lab">Corridas este año</div></div>
+        <div class="prof-stat"><div class="n">84<span style="font-size:.42em;color:var(--muted)">km</span></div><div class="lab">Km acumulados</div></div>
+        <div class="prof-stat"><div class="n">7</div><div class="lab">After-runs</div></div>
+      </div>
+      <div class="prof-info">
+        <div class="it"><span class="l">Mail</span><span class="v" id="mProfEmail">lucia@mail.com</span></div>
+        <div class="it"><span class="l">Teléfono</span><span class="v">+54 261 555 8844</span></div>
+        <div class="it"><span class="l">Nombre</span><span class="v" id="mProfFullname">Lucía Romero</span></div>
+        <div class="it"><span class="l">Edad</span><span class="v">28 años</span></div>
+        <div class="it"><span class="l">De dónde</span><span class="v">Godoy Cruz</span></div>
+        <div class="it"><span class="l">Nos conoció por</span><span class="v">Instagram</span></div>
+      </div>
+      <div class="prof-acts">
+        <button class="asubmit aghost">Editar perfil <span class="a">→</span></button>
+        <button class="asubmit">Ver mi plan <span class="a">→</span></button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero" data-flow-section>
+  <div class="flow-art-container">
+    <div class="hero-photo" id="heroPhoto">
+      <img src="images/hero-fountain.jpg" alt="Sprinters corriendo en Mendoza" />
+      <div class="pcap">Mendoza · Sábado 10:00 AM</div>
+    </div>
+    <div>
+      <h1 class="hero-headline" data-reveal style="--rd:80ms">
+        <span class="l">Let&rsquo;s Run</span>
+        <span class="l"><span class="marker" id="heroMarker"><span class="marker-bg"></span><span class="marker-txt">Together</span></span></span>
+      </h1>
+      <div class="hero-logo" data-reveal style="--rd:320ms">
+        <span class="sp-mark">Sprinters<sup>®</sup></span>
+        <div class="sp-sub"><span>Social</span><span class="hl"></span><span>Run</span><span class="hl"></span><span>Club</span></div>
+      </div>
+      <div class="hero-actions" data-reveal style="--rd:500ms">
+        <a href="#agenda" class="btn primary">Próxima corrida →</a>
+        <a href="#pilares" class="btn ghost">Conocer</a>
+      </div>
+      <div class="hero-meta" data-reveal="fade" style="--rd:680ms">
+        <div>Mendoza · Argentina</div>
+        <div>First Social Run Club of Mendoza</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars" id="pilares" data-flow-section>
+  <div class="flow-art-container">
+    <a class="pillar-card" href="Suscripcion Running.html" data-reveal>
+      <div class="bg" style="background-image:url('images/group-running.jpg')"></div>
+      <div class="ov"></div>
+      <div class="corner">PILAR 01 · RUNNING</div>
+      <div><h2>Running <em>Club.</em></h2></div>
+      <p class="lede">Sábados 10:00. Tres distancias, dos coaches, un calentamiento sin vergüenza y un grupo que te espera.</p>
+      <div class="cta-row">Sumarme al run <span class="a">→</span></div>
+    </a>
+    <a class="pillar-card" href="Suscripcion Social.html" data-reveal style="--rd:120ms">
+      <div class="bg" style="background-image:url('images/cafe-talk.jpg')"></div>
+      <div class="ov"></div>
+      <div class="corner">PILAR 02 · SOCIAL</div>
+      <div><h2>Social <em>Club.</em></h2></div>
+      <p class="lede">After-runs curados. Un café que abre solo para nosotros, una bodega que descorcha algo distinto.</p>
+      <div class="cta-row">Sumarme al plan <span class="a">→</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section class="section" id="agenda" data-flow-section>
+  <div class="flow-art-container">
+    <div class="section-head">
+      <div class="lab">Agenda</div>
+      <h2 data-reveal>Próximas <em>fechas.</em></h2>
+      <p class="sub" data-reveal style="--rd:100ms">Deslizá. Inscripción gratis hasta 24 hs antes — los after-runs se llenan rápido.</p>
+    </div>
+    <div class="ag-scroll" id="agScroll">
+      <article class="ag-card"><img src="images/run-autumn.jpg" alt="" /><div class="ov"></div><div class="body"><div class="top"><div class="tagcol"><span class="pill">Running</span><span class="when">SÁB 23 · MAY</span></div><div class="arr">↗</div></div><div class="bot"><div class="tt">Let's Run · <em>Otoño</em></div><div class="meta">Prado Español · 9:30 AM</div></div></div></article>
+      <article class="ag-card"><img src="images/cafe-talk.jpg" alt="" /><div class="ov"></div><div class="body"><div class="top"><div class="tagcol"><span class="pill">Run &amp; Coffee</span><span class="when">SÁB 30 · MAY</span></div><div class="arr">↗</div></div><div class="bot"><div class="tt">Run. <em>Coffee.</em></div><div class="meta">Bianco &amp; Nero · 4K–8K</div></div></div></article>
+      <article class="ag-card"><img src="images/poster-maraton.jpg" alt="" /><div class="ov"></div><div class="body"><div class="top"><div class="tagcol"><span class="pill">Run &amp; Wine</span><span class="when">VIE 06 · JUN</span></div><div class="arr">↗</div></div><div class="bot"><div class="tt">Run &amp; <em>Wine</em> III</div><div class="meta">MalaBoca · 19:30 H</div></div></div></article>
+      <article class="ag-card"><img src="images/pizza-picnic.jpg" alt="" /><div class="ov"></div><div class="body"><div class="top"><div class="tagcol"><span class="pill">Run &amp; Pizza</span><span class="when">VIE 20 · JUN</span></div><div class="arr">↗</div></div><div class="bot"><div class="tt">Run. <em>Pizza.</em></div><div class="meta">Picnic by Bravos</div></div></div></article>
+    </div>
+    <div class="ag-progress" id="agProg"><span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section gallery" id="galeria" data-flow-section>
+  <div class="flow-art-container">
+    <div class="section-head">
+      <div class="lab">Galería</div>
+      <h2 data-reveal>Una corrida.<br/>Mil <span class="script">postales.</span></h2>
+      <p class="sub" data-reveal style="--rd:100ms">Lo que se ve cada sábado entre los plátanos, las mesas largas y los amaneceres.</p>
+    </div>
+    <div class="gal-grid">
+      <figure class="gf" data-reveal><img src="images/group-running.jpg" alt="Salida grupal" /><figcaption>Salida grupal</figcaption></figure>
+      <figure class="gf" data-reveal style="--rd:80ms"><img src="images/two-runners.jpg" alt="Pace partners" /><figcaption>Pace partners</figcaption></figure>
+      <figure class="gf wide" data-reveal style="--rd:160ms"><img src="images/brunch-girl.jpg" alt="Brunch" /><figcaption>Brunch · BRÖD</figcaption></figure>
+      <figure class="gf" data-reveal style="--rd:240ms"><img src="images/yoga.jpg" alt="Yoga" /><figcaption>Yoga &amp; reset</figcaption></figure>
+      <figure class="gf" data-reveal style="--rd:320ms"><img src="images/run-trees-1.jpg" alt="" /><figcaption>Bajo los plátanos</figcaption></figure>
+      <figure class="gf wide" data-reveal style="--rd:400ms"><img src="images/picnic-mate.jpg" alt="" /><figcaption>Sobremesa</figcaption></figure>
+      <figure class="gf" data-reveal style="--rd:480ms"><img src="images/girls-park.jpg" alt="" /><figcaption>Cooldown</figcaption></figure>
+      <figure class="gf" data-reveal style="--rd:560ms"><img src="images/shoes.webp" alt="" /><figcaption>Línea de salida</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section" id="como" data-flow-section>
+  <div class="flow-art-container">
+    <div class="section-head">
+      <div class="lab">Sumarse</div>
+      <h2 data-reveal>Cómo se <em>suma</em> uno.<br/>Cuatro pasos.</h2>
+    </div>
+    <div class="how-steps">
+      <div class="h-step" data-reveal><div class="num">01 — Agenda</div><h4>Mirá la agenda</h4><p>Elegí la corrida o el after-run que más te tiente. Hay opciones todos los fines de semana.</p></div>
+      <div class="h-step" data-reveal style="--rd:100ms"><div class="num">02 — Reserva</div><h4>Reservá tu lugar</h4><p>Inscripción gratis vía Instagram o WhatsApp. Confirmás cupo y recibís el punto exacto.</p></div>
+      <div class="h-step" data-reveal style="--rd:200ms"><div class="num">03 — Corrida</div><h4>Vení a correr</h4><p>Warm-up suave, tres distancias, dos coaches que abren y cierran el grupo. Nadie corre solo.</p></div>
+      <div class="h-step" data-reveal style="--rd:300ms"><div class="num">04 — After</div><h4>Quedate</h4><p>El after-run es lo mejor. Bajamos un cambio, comemos rico, conocés gente nueva.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERS -->
+<section class="section leaders" id="lideres" data-flow-section>
+  <div class="flow-art-container">
+    <div class="section-head">
+      <div class="lab">Líderes</div>
+      <h2 data-reveal>Los que <em>abren</em><br/>y cierran <em>el grupo.</em></h2>
+      <p class="sub" data-reveal style="--rd:100ms">Tres referentes que entienden el ritmo del que recién empieza y el del que ya vino a sumar kilómetros.</p>
+    </div>
+    <div class="photo-wrap" data-reveal><img src="images/leaders-trio.jpg" alt="Run leaders" /></div>
+    <div class="roster">
+      <div class="ldr"><div class="idx">01</div><div class="nm">Inés</div><div class="role">Founder · Run Coach</div></div>
+      <div class="ldr"><div class="idx">02</div><div class="nm">Alan</div><div class="role">Co-founder · Estrategia</div></div>
+      <div class="ldr"><div class="idx">03</div><div class="nm">Nico</div><div class="role">Run Coach · Comunidad</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="join" data-flow-section>
+  <div class="flow-art-container">
+    <div class="eyebrow" data-reveal="fade">Listos · Ya</div>
+    <h2 data-reveal>¿Listo para este<br/><span class="marker" id="ctaMarker"><span class="marker-bg"></span><span class="marker-txt">run juntos?</span></span></h2>
+    <p data-reveal style="--rd:200ms">Dejá tu mail y te avisamos del próximo encuentro antes que a nadie. Sin spam — solo el plan.</p>
+    <form class="cta-form" data-reveal style="--rd:340ms" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Listo'">
+      <input type="email" placeholder="tu@mail.com" required />
+      <button type="submit">Sumarme</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="community" data-flow-section>
+  <div class="flow-art-container">
+    <div class="brand-mark">Sprinters<sup>®</sup></div>
+    <div class="tagline">Social · Run · Club</div>
+    <p class="blurb">El primer Social Run Club de Mendoza. Creado en mayo 2025 por Inés y Alan. Una experiencia que va mucho más allá de salir a correr.</p>
+    <div class="f-acc" id="fAcc">
+      <div class="f-acc-item"><button class="f-acc-btn">Club <span class="ch"></span></button><div class="f-acc-body"><ul><li><a href="#pilares">Pilares</a></li><li><a href="#agenda">Agenda</a></li><li><a href="#galeria">Galería</a></li><li><a href="#join">Sumarse</a></li></ul></div></div>
+      <div class="f-acc-item"><button class="f-acc-btn">Encuentros <span class="ch"></span></button><div class="f-acc-body"><ul><li><a href="#">Fuente de los Continentes</a></li><li><a href="#">Prado Español</a></li><li><a href="#">Parque San Martín</a></li><li><a href="#">Ciclovía G. Cruz</a></li></ul></div></div>
+      <div class="f-acc-item"><button class="f-acc-btn">Seguinos <span class="ch"></span></button><div class="f-acc-body"><ul><li><a href="https://instagram.com/sprintersmza">@sprintersmza</a></li><li><a href="https://beacons.ai/sprintersmza">beacons.ai/sprintersmza</a></li><li><a href="mailto:hola@sprintersmza.com">hola@sprintersmza.com</a></li><li><a href="tel:+542619293884">+54 261 929 8844</a></li></ul></div></div>
+    </div>
+    <div class="giant-word">sprinters</div>
+    <div class="f-bottom"><div>© 2026 Sprinters · Mendoza, AR</div><div>Let's run together</div></div>
+    <a href="Landing v2.html?force=desktop" class="switch-view">Ver desktop ↗</a>
+  </div>
+</footer>
+
+<div class="toast" id="mToast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Smooth scroll ──
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    if(id.length>1){const el=document.querySelector(id);if(el){e.preventDefault();window.scrollTo({top:el.getBoundingClientRect().top+scrollY-64,behavior:'smooth'});}}
+  });
+});
+
+// ── Reveals ──
+new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-in');revIO.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.05})
+  .observe; // placeholder — re-init below
+const revIO=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-in');revIO.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.05});
+document.querySelectorAll('[data-reveal]').forEach(el=>revIO.observe(el));
+
+// ── Hero photo zoom ──
+(function(){const p=document.getElementById('heroPhoto');if(!p)return;const o=new IntersectionObserver(ents=>{ents.forEach(e=>{if(e.isIntersecting){p.classList.add('is-in');o.unobserve(p);}});},{threshold:.1});o.observe(p);})();
+
+// ── Markers ──
+setTimeout(()=>document.getElementById('heroMarker')?.classList.add('is-on'),900);
+(function(){const cta=document.getElementById('ctaMarker');if(!cta)return;const o=new IntersectionObserver(ents=>{ents.forEach(e=>{if(e.isIntersecting){cta.classList.add('is-on');o.unobserve(cta);}});},{threshold:.4});o.observe(cta);})();
+
+// ── Agenda dots ──
+(function(){
+  const scr=document.getElementById('agScroll'),prog=document.getElementById('agProg');
+  if(!scr||!prog)return;
+  const dots=prog.querySelectorAll('.d'),cards=scr.querySelectorAll('.ag-card');
+  scr.addEventListener('scroll',()=>{const w=(cards[0]?.offsetWidth||0)+14,idx=Math.min(dots.length-1,Math.round(scr.scrollLeft/w));dots.forEach((d,i)=>d.classList.toggle('on',i===idx));},{passive:true});
+})();
+
+// ── Footer accordion ──
+document.querySelectorAll('.f-acc-item').forEach(it=>it.querySelector('.f-acc-btn').addEventListener('click',()=>it.classList.toggle('open')));
+
+// ── Menu ──
+function openMenu(){document.getElementById('menu').classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menu').classList.remove('open');document.body.style.overflow='';}
+
+// ── FLOW ART ANIMATIONS ──
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const sections=Array.from(document.querySelectorAll('[data-flow-section]'));
+  sections.forEach((sec,i)=>{
+    gsap.set(sec,{zIndex:i+1});
+    const inner=sec.querySelector('.flow-art-container');
+    if(!inner)return;
+    if(i>0){
+      gsap.set(inner,{rotation:28,transformOrigin:'bottom left'});
+      gsap.to(inner,{rotation:0,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'top 20%',scrub:true}});
+    }
+    if(i<sections.length-1){
+      ScrollTrigger.create({trigger:sec,start:'bottom bottom',end:'bottom top',pin:true,pinSpacing:false});
+    }
+  });
+  ScrollTrigger.refresh();
+})();
+
+// ── ACCOUNT OVERLAY ──
+function openAcct(){
+  document.getElementById('acctOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(acctPosPill,60);
+  const stored=JSON.parse(localStorage.getItem('spr_user')||'null');
+  if(stored)updateProfile(stored.email,stored.name);
+}
+function closeAcct(){
+  document.getElementById('acctOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function acctTab(name){
+  document.querySelectorAll('.acct-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.acct-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===name));
+  acctPosPill();
+  document.getElementById('acctOverlay').scrollTo({top:0,behavior:'smooth'});
+}
+function acctPosPill(){
+  const active=document.querySelector('.acct-tab.active');
+  const pill=document.getElementById('acctPillBg');
+  if(!active||!pill)return;
+  const pR=active.parentElement.getBoundingClientRect();
+  const aR=active.getBoundingClientRect();
+  pill.style.width=aR.width+'px';
+  pill.style.transform='translateX('+(aR.left-pR.left-4)+'px)';
+}
+document.querySelectorAll('.acct-tab').forEach(t=>t.addEventListener('click',()=>acctTab(t.dataset.tab)));
+window.addEventListener('resize',acctPosPill);
+
+function showSignupForm(){document.getElementById('acctIntro').style.display='none';document.getElementById('acctForm').style.display='';}
+function showSignupIntro(){document.getElementById('acctIntro').style.display='';document.getElementById('acctForm').style.display='none';}
+
+// Participated toggle
+let mPart='no';
+document.querySelectorAll('#ppRow .pp-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    mPart=b.dataset.p;
+    document.querySelectorAll('#ppRow .pp-btn').forEach(x=>x.classList.toggle('on',x===b));
+    document.getElementById('ftFields').style.display=mPart==='no'?'':'none';
+  });
+});
+
+// Origin conditional
+document.getElementById('mOrigin')?.addEventListener('change',()=>{
+  const v=document.querySelector('input[name="morigen"]:checked')?.value;
+  document.getElementById('mCual')?.classList.toggle('show',v==='otra-prov'||v==='otro-pais');
+});
+
+// Pill radio sync
+document.querySelectorAll('.apills').forEach(g=>{
+  const sync=()=>g.querySelectorAll('.apill').forEach(p=>p.classList.toggle('ck',!!p.querySelector('input')?.checked));
+  g.addEventListener('change',sync);
+  g.querySelectorAll('.apill').forEach(p=>p.addEventListener('click',()=>setTimeout(sync,0)));
+});
+
+// Signup submit
+document.getElementById('signupM')?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=document.getElementById('m-email').value.trim();
+  const pass=document.getElementById('m-pass').value;
+  const name=document.getElementById('m-name').value.trim();
+  const last=document.getElementById('m-last').value.trim();
+  if(!email||!pass||pass.length<8||!name||!last){showToast('Completá los campos requeridos');return;}
+  const fullName=name+' '+last;
+  localStorage.setItem('spr_user',JSON.stringify({email,name:fullName}));
+  updateProfile(email,fullName);
+  showToast('✓ Cuenta creada · Bienvenido al club');
+  setTimeout(()=>acctTab('profile'),950);
+});
+
+// Login submit
+document.getElementById('loginM')?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=document.getElementById('l-email').value.trim();
+  if(!email){showToast('Ingresá tu mail');return;}
+  const stored=JSON.parse(localStorage.getItem('spr_user')||'{}');
+  updateProfile(stored.email||email,stored.name||email);
+  showToast('✓ Sesión iniciada');
+  setTimeout(()=>acctTab('profile'),800);
+});
+
+function updateProfile(email,name){
+  const e=document.getElementById('mProfEmail'),n=document.getElementById('mProfName'),f=document.getElementById('mProfFullname');
+  if(e)e.textContent=email;if(n)n.textContent=name;if(f)f.textContent=name;
+}
+
+// Load existing session
+(function(){const s=JSON.parse(localStorage.getItem('spr_user')||'null');if(s)updateProfile(s.email,s.name);})();
+
+function showToast(msg){
+  const t=document.getElementById('mToast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove('show'),2600);
+}
+</script>
+</body>
+</html>

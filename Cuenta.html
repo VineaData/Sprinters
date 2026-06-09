@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Sprinters · Tu cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#0a0a0a;
+    --ink-2:#1a1a1a;
+    --muted:#6b6b6b;
+    --muted-2:#a3a3a3;
+    --line:rgba(10,10,10,.10);
+    --line-2:rgba(10,10,10,.06);
+    --rust:#C24A1F;
+    --marker:#024939;
+    --marker-fg:#e5e5cc;
+    --field-bg:#fafaf7;
+    --field-border:rgba(10,10,10,.10);
+    --field-border-hover:rgba(10,10,10,.22);
+    --error:#b91c1c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Montserrat','Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;overflow-x:clip}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--marker);color:var(--marker-fg)}
+
+  /* ====== Marker highlight ====== */
+  .marker{position:relative;display:inline-block;white-space:nowrap}
+  .marker-bg{position:absolute;left:-0.08em;right:-0.08em;top:-0.05em;bottom:-0.05em;background:var(--marker);transform-origin:left center;transform:scaleX(0);z-index:0;border-radius:2px}
+  .marker-txt{position:relative;z-index:1;transition:color .35s ease .55s}
+  .marker.is-on .marker-bg{animation:marker-fill .9s cubic-bezier(.22,.7,.2,1) forwards}
+  .marker.is-on .marker-txt{color:var(--marker-fg)}
+  @keyframes marker-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+  /* ====== Top nav ====== */
+  nav.top{position:sticky;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 36px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
+  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
+  nav.top .back:hover{opacity:1}
+  nav.top .back .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;line-height:1}
+  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
+  nav.top .brand sup{font-family:'Montserrat',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
+  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
+  @media (max-width:720px){nav.top{padding:14px 18px}nav.top .help span{display:none}nav.top .back span:not(.a){display:none}}
+
+  /* ====== Layout ====== */
+  .page{display:grid;grid-template-columns:.95fr 1.05fr;min-height:calc(100vh - 60px)}
+  @media (max-width:980px){.page{grid-template-columns:1fr}}
+
+  /* ===== Aside hero ===== */
+  .aside{background:var(--ink);color:#fff;padding:80px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:100%}
+  .aside .lab{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
+  .aside .lab::before{content:"";width:30px;height:1px;background:currentColor;opacity:.6}
+  .aside h1{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
+  .aside h1 em{font-style:italic;color:var(--marker-fg)}
+  .aside .lede{font-family:'Montserrat',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
+  .aside .perks{display:flex;flex-direction:column;gap:18px;margin-top:40px}
+  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
+  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
+  .aside .perk strong{display:block;font-family:'Montserrat',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
+  .aside .perk span{opacity:.7}
+  .aside .signature{font-family:'Allura',cursive;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
+  .aside .footer-note{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
+  @media (max-width:980px){.aside{padding:64px 28px 48px;min-height:auto}.aside h1{font-size:48px}.aside .signature{font-size:38px;margin-top:24px}}
+
+  /* ===== Form area ===== */
+  .form-area{padding:64px 64px;background:var(--bg);display:flex;flex-direction:column}
+  @media (max-width:980px){.form-area{padding:44px 24px}}
+
+  /* Tabs */
+  .tabs{position:relative;display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px;gap:0;align-self:flex-start;margin-bottom:36px}
+  .tabs-pill{position:absolute;top:5px;left:5px;height:calc(100% - 10px);background:var(--ink);border-radius:999px;transition:transform .45s cubic-bezier(.32,.72,.18,1),width .45s cubic-bezier(.32,.72,.18,1);z-index:0}
+  .tab{position:relative;z-index:1;background:transparent;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
+  .tab.active{color:#fff}
+
+  /* Form titles */
+  .step-head{margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .step-head h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
+  .step-head h2 em{font-style:italic}
+  .step-head .hint{font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
+  .step-head .hint a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+
+  /* Sections */
+  .section-block{margin-top:36px}
+  .section-block:first-of-type{margin-top:0}
+  .section-block .sec-title{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .section-block .sec-title::before{content:"";width:18px;height:1px;background:var(--marker)}
+
+  /* Photo uploader */
+  .photo-row{display:flex;align-items:center;gap:18px;margin-bottom:32px}
+  .photo-up{width:88px;height:88px;border-radius:50%;background:var(--field-bg);border:1.5px dashed var(--field-border);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;flex-shrink:0;transition:border-color .25s}
+  .photo-up:hover{border-color:var(--ink)}
+  .photo-up.has-img{border-style:solid;border-color:var(--ink)}
+  .photo-up img{width:100%;height:100%;object-fit:cover}
+  .photo-up .ico{font-family:'DM Serif Display',serif;font-style:italic;font-size:32px;color:var(--muted)}
+  .photo-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .photo-info .lbl{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
+  .photo-info .desc{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
+
+  /* Form grid */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+  .grid .full{grid-column:1 / -1}
+  @media (max-width:580px){.grid{grid-template-columns:1fr}}
+
+  /* Field */
+  .field{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .field-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
+  .field-label .req{color:var(--rust);font-size:10px;line-height:1}
+  .field-label .opt{font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
+  .field-wrap{position:relative}
+  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Montserrat',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
+  .field-input::placeholder{color:var(--muted-2);font-weight:400}
+  .field-input:hover{border-color:var(--field-border-hover)}
+  .field-input:focus{border-color:var(--ink);background:#fff}
+  .field-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;pointer-events:none}
+  .field-icon.serif{font-family:'DM Serif Display',serif;font-style:italic;font-size:17px;color:var(--muted)}
+  .field-error{font-family:'Montserrat',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
+  .field.is-error .field-input{border-color:var(--error)}
+  .field.is-error .field-error{display:block}
+
+  /* Phone field (country + number) */
+  .phone-row{display:grid;grid-template-columns:auto 1fr;gap:8px}
+  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+  .country-sel:hover{border-color:var(--field-border-hover)}
+  .country-sel:focus{border-color:var(--ink);background-color:#fff}
+
+  /* Pill option groups */
+  .pill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .pill-grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pill-grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:780px){.pill-grid.cols-4{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (max-width:580px){.pill-grid,.pill-grid.cols-3,.pill-grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
+  .pill-opt::before{content:"";width:16px;height:16px;border-radius:50%;border:1.5px solid var(--field-border-hover);background:#fff;flex-shrink:0;transition:all .2s}
+  .pill-opt:hover{border-color:var(--field-border-hover)}
+  .pill-opt:hover::before{border-color:var(--ink)}
+  .pill-opt input{position:absolute;opacity:0;pointer-events:none}
+  .pill-opt.checked,.pill-opt input:checked + *{}
+  .pill-opt.checked{background:#fff;border-color:var(--ink);color:var(--ink)}
+  .pill-opt.checked::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px #fff}
+  .pill-opt > span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+  /* Signup intro card */
+  .signup-intro{display:flex;flex-direction:column;gap:20px;max-width:560px}
+  .signup-intro .intro-copy{font-family:'Montserrat',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
+  .signup-intro .intro-perks{display:flex;flex-direction:column;gap:14px;margin:14px 0 8px}
+  .signup-intro .intro-perk{display:grid;grid-template-columns:46px 1fr;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+  .signup-intro .intro-perk:last-child{border-bottom:1px solid var(--line)}
+  .signup-intro .intro-perk .k{font-family:'DM Serif Display',serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
+  .signup-intro .intro-perk strong{display:block;font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .signup-intro .intro-perk span{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
+
+  /* Switch participated */
+  .participated-row{display:flex;gap:8px;margin-top:12px}
+  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
+  .pp-pill:hover{border-color:var(--field-border-hover)}
+  .pp-pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .pp-pill .em{font-family:'DM Serif Display',serif;font-style:italic;font-weight:400;font-size:14px}
+
+  /* Conditional reveal */
+  .conditional{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.22,.7,.2,1),opacity .35s ease,margin-top .45s}
+  .conditional.show{max-height:1200px;opacity:1;margin-top:18px}
+
+  /* Submit row */
+  .submit-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .submit-row .legal{font-family:'Montserrat',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
+  .submit-row .legal a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
+  .btn-primary:hover{background:var(--marker)}
+  .btn-primary .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
+  .btn-primary:hover .a{transform:translateX(4px)}
+
+  /* Login compact form */
+  .login-form{display:flex;flex-direction:column;gap:20px;max-width:440px}
+  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Montserrat',sans-serif;font-size:12px}
+  .login-form .row-between label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);font-weight:500}
+  .login-form .row-between label input{width:14px;height:14px;accent-color:var(--ink)}
+  .login-form .row-between a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
+  .login-form .or::before,.login-form .or::after{content:"";flex:1;height:1px;background:var(--line)}
+  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
+  .social-btn:hover{border-color:var(--ink)}
+  .social-btn .ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .login-form .switch{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
+  .login-form .switch button{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px}
+
+  /* Profile view */
+  .profile-grid{display:grid;grid-template-columns:200px 1fr;gap:40px;margin-top:8px;align-items:flex-start}
+  @media (max-width:980px){.profile-grid{grid-template-columns:1fr;gap:24px}}
+  .profile-card{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .profile-pic{width:160px;height:160px;border-radius:50%;background:var(--field-bg);background-size:cover;background-position:center;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .profile-pic::after{content:'';display:block;width:64%;height:64%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c0bfbb'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.7}
+  .profile-pic.has-photo::after{display:none}
+  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
+  .profile-card .role-pill::before{content:"✦"}
+  .profile-card h3{font-family:'DM Serif Display',serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
+  .profile-card .since{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
+  .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .profile-stat{background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+  .profile-stat .n{font-family:'DM Serif Display',serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
+  .profile-stat .lab{font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
+  .profile-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
+  .profile-info .it{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .profile-info .l{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .profile-info .v{font-family:'Montserrat',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+  .profile-action-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:14px}
+
+  /* Profile card meta wrapper (badge + name + since) */
+  .profile-card-meta{display:flex;flex-direction:column;gap:8px}
+
+  /* Admin panel buttons — desktop: flex wrap (same as before) */
+  .admin-btn-grid{display:flex;flex-wrap:wrap;gap:10px}
+  .admin-btn-grid .btn-primary{flex:0 0 auto}
+
+  /* ════════════════════════════════════════════════════════════
+     MOBILE 9:16 · Adaptado para celulares (≤ 640 px)
+     ════════════════════════════════════════════════════════════ */
+  @media (max-width:640px){
+
+    /* ── Aside: oculto en mobile — la sección de cuenta toma toda la pantalla */
+    .aside{display:none !important}
+    .page{min-height:calc(100svh - 58px)}
+    .form-area{padding:24px 18px 72px}
+
+    /* ── Tabs: ancho completo, texto compacto */
+    .tabs{display:flex;width:100%;align-self:stretch;margin-bottom:24px}
+    .tab{flex:1;padding:11px 6px;font-size:9px;letter-spacing:0.1em;text-align:center;white-space:nowrap}
+
+    /* ── Step head */
+    .step-head{margin-bottom:20px;gap:8px}
+    .step-head h2{font-size:clamp(26px,7.5vw,36px)}
+    .step-head .hint{max-width:100%}
+
+    /* ── Profile card: layout horizontal (foto | badge+nombre+fecha) */
+    .profile-grid{gap:18px}
+    .profile-card{
+      flex-direction:row;
+      align-items:center;
+      gap:16px;
+      padding-bottom:18px;
+      border-bottom:1px solid var(--line)
+    }
+    .profile-pic{
+      width:84px !important;
+      height:84px !important;
+      flex-shrink:0;
+      border-radius:50%
+    }
+    .profile-card-meta{flex:1;min-width:0;gap:5px}
+    .profile-card .role-pill{font-size:9px;padding:5px 10px;align-self:flex-start}
+    .profile-card h3{font-size:21px;line-height:1.05}
+    .profile-card .since{font-size:9.5px;margin-top:0}
+
+    /* ── Stats: 3 columnas compactas */
+    .profile-stats{gap:6px}
+    .profile-stat{padding:12px 8px;border-radius:8px}
+    .profile-stat .n{font-size:20px;margin-bottom:3px}
+    .profile-stat .lab{font-size:8px;letter-spacing:0.1em;line-height:1.45}
+
+    /* ── Info grid: 2 cols con menor separación */
+    .profile-info{gap:10px 12px;margin-top:16px;padding-top:16px}
+    .profile-info .l{font-size:9px;letter-spacing:0.18em}
+    .profile-info .v{font-size:12px}
+
+    /* ── Botones de acción: apilados, ancho completo */
+    .profile-action-row{flex-direction:column;gap:10px;margin-top:20px}
+    .profile-action-row .btn-primary{width:100%;justify-content:center;flex:none !important}
+
+    /* ── Admin panel: grid 2×2 */
+    .admin-btn-grid{display:grid !important;grid-template-columns:1fr 1fr;gap:8px}
+    .admin-btn-grid .btn-primary{
+      width:100%;
+      justify-content:center;
+      text-align:center;
+      font-size:9px;
+      padding:13px 8px;
+      letter-spacing:0.12em;
+      flex:none !important
+    }
+
+    /* ── Login form */
+    .login-form{max-width:100%}
+
+    /* ── Submit row: apilado */
+    .submit-row{flex-direction:column;align-items:stretch;gap:14px}
+    .submit-row .btn-primary{align-self:stretch;justify-content:center}
+
+    /* ── Photo uploader */
+    .photo-up{width:72px;height:72px}
+    .photo-row{gap:14px}
+
+    /* ── CTA signup intro */
+    #openFormBtn,.signup-intro .btn-primary{width:100%;justify-content:center}
+
+    /* ── Toast: ancho contenido en mobile */
+    .toast{width:calc(100% - 40px);max-width:360px;font-size:10px;padding:12px 16px;justify-content:center}
+  }
+
+  /* Extra pequeño: info en 1 columna (< 380px) */
+  @media (max-width:380px){
+    .profile-info{grid-template-columns:1fr}
+    .profile-stat .n{font-size:18px}
+    .tab{font-size:8px;padding:10px 4px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a href="Landing v2.html" class="back"><span class="a">←</span> <span>Volver</span></a>
+  <a href="Landing v2.html" class="brand">Sprinters<sup>®</sup></a>
+  <a href="/cdn-cgi/l/email-protection#274f484b46675457554e49534255544a5d460944484a" class="help">¿Ayuda? <span>· <span class="__cf_email__" data-cfemail="40282f2c2100333032292e342532332d3a216e232f2d">[email&#160;protected]</span></span></a>
+</nav>
+
+<main class="page">
+  <!-- ====== LEFT ASIDE ====== -->
+  <aside class="aside">
+    <div>
+      <div class="lab">Tu cuenta</div>
+      <h1>El bienestar<br/>es el <span class="marker" id="asideMarker"><span class="marker-bg"></span><span class="marker-txt">plan.</span></span></h1>
+      <p class="lede">Convertimos el bienestar en el plan social más exclusivo de Mendoza. La actividad física es la excusa para conectar, descubrir lugares inalcanzables y elevar el estilo de vida.</p>
+
+      <div class="perks">
+        <div class="perk">
+          <div class="icn">→</div>
+          <div><strong>Reservas en un toque</strong><span>Lugar guardado, sin formularios largos cada vez.</span></div>
+        </div>
+        <div class="perk">
+          <div class="icn">✦</div>
+          <div><strong>Tu historia, tu pace</strong><span>Distancias, tiempos y after-runs en un solo lugar.</span></div>
+        </div>
+        <div class="perk">
+          <div class="icn">★</div>
+          <div><strong>Acceso anticipado</strong><span>Los miembros se enteran antes de cada evento.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="signature">let's run.</div>
+      <div class="footer-note">Mendoza · Argentina · EST. 2025</div>
+    </div>
+  </aside>
+
+  <!-- ====== RIGHT FORM ====== -->
+  <section class="form-area">
+    <div class="tabs" id="tabs">
+      <div class="tabs-pill" id="tabsPill"></div>
+      <button class="tab active" data-tab="signup" id="tabSignup">Crear cuenta</button>
+      <button class="tab" data-tab="login" id="tabLogin">Iniciar sesión</button>
+      <button class="tab" data-tab="profile" id="tabProfile" style="display:none">Mi perfil</button>
+    </div>
+
+    <!-- ====== SIGNUP ====== -->
+    <div class="tab-pane" data-pane="signup">
+      <!-- Intro state -->
+      <div id="signupIntro" class="signup-intro">
+        <div class="step-head">
+          <h2>Sumate al <em>club.</em></h2>
+          <div class="hint">¿Ya tenés cuenta? <a href="#" onclick="switchTab('login');return false">Iniciá sesión</a></div>
+        </div>
+        <p class="intro-copy">Una cuenta gratis te alcanza para reservar lugar en cualquier corrida y recibir las novedades del club antes que nadie. Si después querés un plan pago, lo desbloqueás desde tu perfil.</p>
+        <div class="intro-perks">
+          <div class="intro-perk"><div class="k">01</div><div><strong>Gratis para siempre</strong><span>Sin tarjeta, sin contratos. Cancelás cuando quieras.</span></div></div>
+          <div class="intro-perk"><div class="k">02</div><div><strong>2 minutos</strong><span>Mail, contraseña y unos datos básicos. Listo.</span></div></div>
+          <div class="intro-perk"><div class="k">03</div><div><strong>Editable</strong><span>Cambiás lo que quieras desde tu perfil, cuando quieras.</span></div></div>
+        </div>
+        <button type="button" class="btn-primary" id="openFormBtn" style="margin-top:8px;align-self:flex-start">Crear cuenta gratis <span class="a">→</span></button>
+      </div>
+
+      <!-- Actual form, hidden until intro CTA is clicked -->
+      <div id="signupFormWrap" style="display:none">
+        <div class="step-head">
+          <h2>Sumate al <em>club.</em></h2>
+          <div class="hint">Toma 2 minutos. <a href="#" onclick="closeForm();return false">Volver</a></div>
+        </div>
+
+        <form id="signupForm" novalidate>
+          <!-- Sec 1: Contacto -->
+          <div class="section-block">
+            <div class="sec-title">Contacto</div>
+            <div class="grid">
+              <div class="field">
+                <label class="field-label" for="f-email">Mail <span class="req">*</span></label>
+                <div class="field-wrap">
+                  <input class="field-input" type="email" id="f-email" placeholder="tu@mail.com" required />
+                  <span class="field-icon">@</span>
+                </div>
+                <span class="field-error">Ingresá un mail válido.</span>
+              </div>
+              <div class="field">
+                <label class="field-label" for="f-pass">Contraseña <span class="req">*</span></label>
+                <div class="field-wrap">
+                  <input class="field-input" type="password" id="f-pass" placeholder="mín. 8 caracteres" required minlength="8" />
+                  <button type="button" class="field-icon" style="pointer-events:auto;cursor:pointer;background:none;border:none" onclick="togglePass('f-pass',this)" aria-label="Mostrar/ocultar">👁</button>
+                </div>
+                <span class="field-error">Mínimo 8 caracteres.</span>
+              </div>
+
+              <div class="field full">
+                <label class="field-label" for="f-phone-num">Teléfono <span class="req">*</span></label>
+                <div class="phone-row">
+                  <select class="country-sel" id="f-phone-cc">
+                    <option value="+54">🇦🇷 +54 Argentina</option>
+                    <option value="+56">🇨🇱 +56 Chile</option>
+                    <option value="+598">🇺🇾 +598 Uruguay</option>
+                    <option value="+595">🇵🇾 +595 Paraguay</option>
+                    <option value="+591">🇧🇴 +591 Bolivia</option>
+                    <option value="+51">🇵🇪 +51 Perú</option>
+                    <option value="+57">🇨🇴 +57 Colombia</option>
+                    <option value="+58">🇻🇪 +58 Venezuela</option>
+                    <option value="+593">🇪🇨 +593 Ecuador</option>
+                    <option value="+55">🇧🇷 +55 Brasil</option>
+                    <option value="+52">🇲🇽 +52 México</option>
+                    <option value="+34">🇪🇸 +34 España</option>
+                    <option value="+1">🇺🇸 +1 USA / Canadá</option>
+                    <option value="+44">🇬🇧 +44 UK</option>
+                  </select>
+                  <div class="field-wrap">
+                    <input class="field-input" type="tel" id="f-phone-num" placeholder="11 5555 5555" required inputmode="tel" />
+                    <span class="field-icon serif">☏</span>
+                  </div>
+                </div>
+                <span class="field-error">Ingresá un teléfono válido.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sec 2: Tus datos -->
+          <div class="section-block">
+            <div class="sec-title">Tus datos</div>
+
+            <div class="field">
+              <label class="field-label">¿Participaste anteriormente en Sprinters? <span class="req">*</span></label>
+              <div class="participated-row" id="participatedRow">
+                <button type="button" class="pp-pill active" data-participated="no"><span class="em">No,</span> es mi primera vez</button>
+                <button type="button" class="pp-pill" data-participated="yes"><span class="em">Sí,</span> ya participé</button>
+              </div>
+            </div>
+
+            <div class="grid" style="margin-top:18px">
+              <div class="field">
+                <label class="field-label" for="f-name">Nombre <span class="req">*</span></label>
+                <div class="field-wrap">
+                  <input class="field-input" type="text" id="f-name" placeholder="Tu nombre" required />
+                  <span class="field-icon">=</span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label" for="f-last">Apellido <span class="req">*</span></label>
+                <div class="field-wrap">
+                  <input class="field-input" type="text" id="f-last" placeholder="Tu apellido" required />
+                  <span class="field-icon">=</span>
+                </div>
+              </div>
+
+              <div class="field" id="ageField">
+                <label class="field-label" for="f-age">Edad <span class="req">*</span></label>
+                <div class="field-wrap">
+                  <input class="field-input" type="number" id="f-age" placeholder="25" min="14" max="99" required />
+                  <span class="field-icon">#</span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label">Sexo <span class="req">*</span></label>
+                <div class="pill-grid cols-3">
+                  <label class="pill-opt"><input type="radio" name="sexo" value="masculino" /><span>Masculino</span></label>
+                  <label class="pill-opt"><input type="radio" name="sexo" value="femenino" /><span>Femenino</span></label>
+                  <label class="pill-opt"><input type="radio" name="sexo" value="otro" /><span>Otro</span></label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full-width origin grid (4 cols) -->
+            <div class="field" style="margin-top:18px">
+              <label class="field-label">¿De dónde sos? <span class="req">*</span></label>
+              <div class="pill-grid cols-4" id="originGrid">
+                <label class="pill-opt"><input type="radio" name="origen" value="godoy-cruz" /><span>Godoy Cruz</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="capital" /><span>Capital</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="guaymallen" /><span>Guaymallén</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="las-heras" /><span>Las Heras</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="lujan" /><span>Luján de Cuyo</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="maipu" /><span>Maipú</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="otra-provincia" /><span>Otra Provincia</span></label>
+                <label class="pill-opt"><input type="radio" name="origen" value="otro-pais" /><span>Otro País</span></label>
+              </div>
+              <div class="conditional" id="condCual" style="margin-top:0">
+                <div class="field" style="margin-top:14px">
+                  <label class="field-label" for="f-cual">¿De cuál? <span class="req">*</span></label>
+                  <div class="field-wrap">
+                    <input class="field-input" type="text" id="f-cual" placeholder="Ciudad / Provincia / País" />
+                    <span class="field-icon">=</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full-width how-met grid (4 cols) -->
+            <div class="field" style="margin-top:18px" id="howField">
+              <label class="field-label">¿Cómo nos conociste? <span class="req">*</span></label>
+              <div class="pill-grid cols-4">
+                <label class="pill-opt"><input type="radio" name="how" value="instagram" /><span>Instagram</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="tiktok" /><span>TikTok</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="facebook" /><span>Facebook</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="couchsurfing" /><span>Couchsurfing</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="meetup" /><span>MeetUp</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="medios" /><span>Medios</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="amigos" /><span>Amigos</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="hostel" /><span>Hostel</span></label>
+                <label class="pill-opt"><input type="radio" name="how" value="otros" /><span>Otros</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sec 3: Emergencia -->
+          <div class="section-block">
+            <div class="sec-title">Por las dudas</div>
+            <div class="field full">
+              <label class="field-label" for="f-emerg">Contacto de emergencia <span class="req">*</span></label>
+              <div class="field-wrap">
+                <input class="field-input" type="tel" id="f-emerg" placeholder="Nombre · +54 11 5555 5555" required />
+                <span class="field-icon serif">☏</span>
+              </div>
+              <span class="field-error">Ingresá un contacto de emergencia.</span>
+            </div>
+          </div>
+
+          <!-- Sec 4: Foto (al final, opcional) -->
+          <div class="section-block">
+            <div class="sec-title">Foto de perfil <span style="font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <div class="photo-row">
+              <label class="photo-up" id="photoUp">
+                <div class="ico">＋</div>
+                <input type="file" accept="image/*" id="photoInput" />
+              </label>
+              <div class="photo-info">
+                <div class="lbl">Subí una imagen</div>
+                <div class="desc">JPG o PNG, hasta 4 MB. La podés cambiar después desde tu perfil.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-row">
+            <div class="legal">Al crear tu cuenta aceptás los <a href="#">Términos</a> y la <a href="#">Política de Privacidad</a>. Podés borrarla cuando quieras.</div>
+            <button type="submit" class="btn-primary">Crear cuenta <span class="a">→</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ====== LOGIN ====== -->
+    <div class="tab-pane" data-pane="login" style="display:none">
+      <div class="step-head">
+        <h2>Volver al <em>club.</em></h2>
+        <div class="hint">¿No tenés cuenta? <a href="#" onclick="switchTab('signup');return false">Crear una gratis</a>.</div>
+      </div>
+
+      <form class="login-form" id="loginForm" novalidate>
+        <div class="field">
+          <label class="field-label" for="l-email">Mail <span class="req">*</span></label>
+          <div class="field-wrap">
+            <input class="field-input" type="email" id="l-email" placeholder="tu@mail.com" required />
+            <span class="field-icon">@</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="l-pass">Contraseña <span class="req">*</span></label>
+          <div class="field-wrap">
+            <input class="field-input" type="password" id="l-pass" placeholder="••••••••" required />
+            <button type="button" class="field-icon" style="pointer-events:auto;cursor:pointer;background:none;border:none" onclick="togglePass('l-pass',this)">👁</button>
+          </div>
+        </div>
+        <div class="row-between">
+          <label><input type="checkbox" /> Recordarme</label>
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self:flex-start;margin-top:8px">Iniciar sesión <span class="a">→</span></button>
+
+        <div class="switch">¿Primera vez por acá? <button type="button" onclick="switchTab('signup')">Crear una cuenta</button></div>
+      </form>
+    </div>
+
+    <!-- ====== PROFILE (logged in preview) ====== -->
+    <div class="tab-pane" data-pane="profile" style="display:none">
+      <!-- VIEW MODE -->
+      <div id="profileViewMode">
+      <div class="step-head">
+        <h2>Mi <em>perfil.</em></h2>
+        <div class="hint">Acá vivís tu historia en el club. Editá lo que quieras o cerrá sesión.</div>
+      </div>
+      <div class="profile-grid">
+        <div class="profile-card">
+          <div class="profile-pic" id="profilePic"></div>
+          <div class="profile-card-meta">
+            <span class="role-pill" id="profPlanBadge">Plan Free</span>
+            <h3 id="profName">—</h3>
+            <div class="since" id="profSince">Miembro desde · —</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="n" id="profStatEvents">0</div>
+              <div class="lab">Eventos sociales</div>
+            </div>
+            <div class="profile-stat">
+              <div class="n" id="profStatKm">0<span style="font-family:'Inter',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span></div>
+              <div class="lab">Total acumulado</div>
+            </div>
+            <div class="profile-stat">
+              <div class="n" id="profStatSaved">$0</div>
+              <div class="lab">Ahorro como PRO</div>
+            </div>
+          </div>
+
+          <div class="profile-info">
+            <div class="it"><span class="l">Mail</span><span class="v" id="profEmail">—</span></div>
+            <div class="it"><span class="l">Teléfono</span><span class="v" id="profPhone">—</span></div>
+            <div class="it"><span class="l">Nombre completo</span><span class="v" id="profFullName">—</span></div>
+            <div class="it"><span class="l">Edad</span><span class="v" id="profAge">—</span></div>
+            <div class="it"><span class="l">Sexo</span><span class="v" id="profSex">—</span></div>
+            <div class="it"><span class="l">¿De dónde sos?</span><span class="v" id="profOrigin">—</span></div>
+            <div class="it"><span class="l">Nos conociste por</span><span class="v" id="profHow">—</span></div>
+            <div class="it"><span class="l">Contacto emergencia</span><span class="v" id="profEmerg">—</span></div>
+          </div>
+
+          <div class="profile-action-row">
+            <button type="button" class="btn-primary" onclick="showEditMode()" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Editar perfil <span class="a">→</span></button>
+            <button type="button" class="btn-primary">Ver plan <span class="a">→</span></button>
+            <button type="button" class="btn-primary" onclick="logout()" style="background:transparent;color:var(--muted);border:1px solid var(--line);font-size:10px;padding:13px 18px">Cerrar sesión</button>
+          </div>
+          <!-- Admin panel — visible solo para is_admin = true -->
+          <div id="adminPanel" style="display:none;margin-top:24px;padding:18px 0;border-top:1px solid var(--line)">
+            <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
+            <div class="admin-btn-grid">
+              <button type="button" onclick="showToast('Panel de eventos — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
+              <button type="button" onclick="showToast('Partners — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Partners <span class="a">→</span></button>
+              <button type="button" onclick="showToast('Tickets — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Ver tickets <span class="a">→</span></button>
+              <button type="button" onclick="showToast('Planes — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Planes <span class="a">→</span></button>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--line)">
+            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
+              Eliminar mi cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+      </div><!-- /profileViewMode -->
+
+      <!-- EDIT MODE (hidden by default) -->
+      <div id="profileEditMode" style="display:none">
+        <div class="step-head">
+          <h2>Editá tu <em>perfil.</em></h2>
+          <div class="hint"><a href="#" onclick="cancelEdit();return false">← Volver</a></div>
+        </div>
+
+        <!-- Avatar upload -->
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px">
+          <div id="editAvatarPreview" style="width:72px;height:72px;border-radius:50%;background:var(--line) center/cover no-repeat;flex-shrink:0;border:2px solid var(--line)"></div>
+          <div>
+            <label for="editAvatarInput" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:10px">
+              Cambiar foto
+            </label>
+            <input type="file" id="editAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewAvatar(this)">
+            <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'Inter',sans-serif">JPG, PNG o WebP · máx. 2 MB</div>
+          </div>
+        </div>
+
+        <form id="editProfileForm" novalidate>
+          <div class="grid" style="gap:16px;margin-bottom:24px">
+            <div class="field">
+              <label class="field-label" for="ep-name">Nombre <span class="req">*</span></label>
+              <div class="field-wrap">
+                <input class="field-input" type="text" id="ep-name" placeholder="Tu nombre" required maxlength="60" />
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="ep-last">Apellido <span class="req">*</span></label>
+              <div class="field-wrap">
+                <input class="field-input" type="text" id="ep-last" placeholder="Tu apellido" required maxlength="60" />
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-action-row" style="margin-top:8px">
+            <button type="submit" class="btn-primary" id="saveProfileBtn">Guardar cambios <span class="a">→</span></button>
+            <button type="button" class="btn-primary" onclick="cancelEdit()" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Cancelar</button>
+          </div>
+        </form>
+      </div><!-- /profileEditMode -->
+
+    </div>
+  </section>
+
+  <!-- Confirm delete dialog -->
+  <div id="deleteConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:24px">
+    <div style="background:#fff;border-radius:12px;padding:32px;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.18)">
+      <h3 style="font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Inter',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
+      <div style="display:flex;gap:10px">
+        <button type="button" class="btn-primary" onclick="executeDeleteAccount()" style="background:var(--error);flex:1;justify-content:center">Sí, eliminar</button>
+        <button type="button" class="btn-primary" onclick="closeDeleteConfirm()" style="background:#fff;color:var(--ink);border:1px solid var(--ink);flex:1;justify-content:center">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"><span>✓</span> <span id="toastMsg">Cuenta creada</span> <span class="a">→</span></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ===== Marker fill on load =====
+  setTimeout(() => {
+    const m = document.getElementById('asideMarker');
+    if (m) m.classList.add('is-on');
+  }, 700);
+
+  // ===== Pre-select tab via ?tab=signup|login|profile / ?plan=runner =====
+  (function(){
+    const p = new URLSearchParams(location.search);
+    const tab = p.get('tab');
+    const plan = p.get('plan');
+    if (plan) {
+      // Coming from a paid plan → force signup + open form directly
+      switchTab('signup');
+      const intro = document.getElementById('signupIntro');
+      const wrap = document.getElementById('signupFormWrap');
+      if (intro) intro.style.display = 'none';
+      if (wrap) wrap.style.display = '';
+      showToast('Plan ' + plan + ' · completá tu cuenta');
+    } else if (tab) {
+      switchTab(tab);
+    }
+  })();
+
+  // ===== Tabs =====
+  function switchTab(name){
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tab-pane').forEach(p => p.style.display = p.dataset.pane === name ? '' : 'none');
+    positionPill();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  function positionPill(){
+    const active = document.querySelector('.tab.active');
+    const pill = document.getElementById('tabsPill');
+    if (!active || !pill) return;
+    const rect = active.getBoundingClientRect();
+    const parent = active.parentElement.getBoundingClientRect();
+    pill.style.width = rect.width + 'px';
+    pill.style.transform = 'translateX(' + (rect.left - parent.left - 5) + 'px)';
+  }
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+  window.addEventListener('load', positionPill);
+  window.addEventListener('resize', positionPill);
+
+  // ===== Photo uploader =====
+  const photoUp = document.getElementById('photoUp');
+  const photoInput = document.getElementById('photoInput');
+  photoInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      photoUp.innerHTML = '<img src="' + reader.result + '" alt=""/><input type="file" accept="image/*" id="photoInput"/>';
+      photoUp.classList.add('has-img');
+      // Re-bind input
+      const newInput = photoUp.querySelector('input');
+      newInput.addEventListener('change', photoInput.onchange);
+      // Mirror to profile preview
+      const pp = document.getElementById('profilePic');
+      if (pp) pp.style.backgroundImage = 'url(' + reader.result + ')';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ===== Pill option groups (radios styled as pills) =====
+  document.querySelectorAll('.pill-grid').forEach(grid => {
+    grid.addEventListener('change', () => {
+      grid.querySelectorAll('.pill-opt').forEach(p => {
+        const i = p.querySelector('input');
+        p.classList.toggle('checked', !!(i && i.checked));
+      });
+    });
+    grid.querySelectorAll('.pill-opt').forEach(p => {
+      p.addEventListener('click', (e) => {
+        // Allow the native radio change to flow naturally; we just sync visual states
+        setTimeout(() => grid.dispatchEvent(new Event('change')), 0);
+      });
+    });
+  });
+
+  // ===== Participated toggle (controls conditional + ageField + howField) =====
+  let participated = 'no'; // default
+  document.querySelectorAll('#participatedRow .pp-pill').forEach(b => {
+    b.addEventListener('click', () => {
+      participated = b.dataset.participated;
+      document.querySelectorAll('#participatedRow .pp-pill').forEach(x => x.classList.toggle('active', x === b));
+      applyParticipated();
+    });
+  });
+  // Default selection
+  document.querySelector('#participatedRow .pp-pill[data-participated="no"]').classList.add('active');
+  function applyParticipated(){
+    const ageF = document.getElementById('ageField');
+    const howF = document.getElementById('howField');
+    // Edad: siempre requerida (independientemente de si es primera vez o no)
+    if (ageF) ageF.style.display = '';
+    // ¿Cómo nos conociste?: solo para primera vez
+    if (howF) howF.style.display = participated === 'no' ? '' : 'none';
+  }
+  applyParticipated();
+
+  // ===== Origin → ¿De cuál? conditional =====
+  document.getElementById('originGrid').addEventListener('change', () => {
+    const sel = document.querySelector('input[name="origen"]:checked');
+    const cond = document.getElementById('condCual');
+    const cualInput = document.getElementById('f-cual');
+    const show = sel && (sel.value === 'otra-provincia' || sel.value === 'otro-pais');
+    cond.classList.toggle('show', show);
+    if (cualInput) cualInput.required = show;
+  });
+
+  // ===== Toggle password visibility =====
+  function togglePass(id, btn){
+    const i = document.getElementById(id);
+    if (!i) return;
+    i.type = i.type === 'password' ? 'text' : 'password';
+    btn.style.opacity = i.type === 'text' ? 1 : .7;
+  }
+
+  // ===== Signup intro → form transition =====
+  const openBtn = document.getElementById('openFormBtn');
+  if (openBtn) openBtn.addEventListener('click', () => {
+    document.getElementById('signupIntro').style.display = 'none';
+    document.getElementById('signupFormWrap').style.display = '';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+  function closeForm(){
+    document.getElementById('signupIntro').style.display = '';
+    document.getElementById('signupFormWrap').style.display = 'none';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  // ===== Supabase client =====
+  const { createClient } = supabase;
+  const supa = createClient(
+    'https://lzvsttrbofnktnilunwd.supabase.co',
+    'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'
+  );
+
+  // ===== Load profile from DB =====
+  const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const SEX_MAP = { M:'Masculino', F:'Femenino', O:'Otro', masculino:'Masculino', femenino:'Femenino', otro:'Otro' };
+  const ORIGIN_MAP = {
+    'godoy-cruz':'Godoy Cruz', 'capital':'Capital', 'guaymallen':'Guaymallén',
+    'las-heras':'Las Heras', 'lujan':'Luján de Cuyo', 'maipu':'Maipú',
+    'otra-provincia':'Otra Provincia', 'otro-pais':'Otro País'
+  };
+  const HOW_MAP = {
+    'instagram':'Instagram', 'tiktok':'TikTok', 'facebook':'Facebook',
+    'couchsurfing':'Couchsurfing', 'meetup':'MeetUp', 'medios':'Medios',
+    'amigos':'Amigos', 'hostel':'Hostel', 'otros':'Otros'
+  };
+
+  // Keep current user + profile data for edit/delete operations
+  let _currentUser = null;
+  let _currentProfile = null;
+
+  async function loadProfile(user){
+    if (!user) return;
+    _currentUser = user;
+    const { data: p } = await supa.from('users').select('*').eq('id', user.id).maybeSingle();
+    _currentProfile = p;
+    const name = p ? `${p.first_name || ''} ${p.last_name || ''}`.trim() : '';
+
+    const el = (id) => document.getElementById(id);
+
+    // Avatar — show real photo or fall back to generic placeholder
+    if(el('profilePic')){
+      if(p?.avatar_url){
+        el('profilePic').style.backgroundImage = `url('${p.avatar_url}')`;
+        el('profilePic').classList.add('has-photo');
+      } else {
+        el('profilePic').style.backgroundImage = '';
+        el('profilePic').classList.remove('has-photo');
+      }
+    }
+
+    // Name & since
+    if(el('profName'))     el('profName').textContent = name || user.email;
+    if(el('profEmail'))    el('profEmail').textContent = user.email;
+    if(el('profFullName')) el('profFullName').textContent = name || '—';
+    if(el('profPhone'))    el('profPhone').textContent   = p?.phone || '—';
+    if(el('profAge'))      el('profAge').textContent     = p?.age ? p.age + ' años' : '—';
+    if(el('profSex'))      el('profSex').textContent     = SEX_MAP[p?.sex] || '—';
+    if(el('profOrigin'))   el('profOrigin').textContent  = ORIGIN_MAP[p?.origin] || p?.origin || '—';
+    if(el('profHow'))      el('profHow').textContent     = HOW_MAP[p?.how_heard] || p?.how_heard || '—';
+    if(el('profEmerg'))    el('profEmerg').textContent   = p?.emergency_contact || '—';
+    if(el('profSince') && user.created_at){
+      const d = new Date(user.created_at);
+      el('profSince').textContent = `Miembro desde · ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // Stats
+    if(el('profStatEvents')) el('profStatEvents').textContent = p?.social_events_attended ?? 0;
+    if(el('profStatKm'))     el('profStatKm').innerHTML = (p?.total_km ?? 0) + '<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatSaved'))  el('profStatSaved').textContent = p?.total_money_saved ? '$' + Number(p.total_money_saved).toLocaleString('es-AR') : '$0';
+
+    // Plan badge & admin panel
+    const badge = el('profPlanBadge');
+    if(p?.is_admin){
+      if(badge){ badge.textContent = '★ Admin'; badge.style.cssText += ';background:var(--rust);color:#fff'; }
+      const ap = el('adminPanel');
+      if(ap) ap.style.display = '';
+    } else {
+      const { data: sub } = await supa.from('subscriptions')
+        .select('status, membership_plans(name)')
+        .eq('user_id', user.id).eq('status','active').maybeSingle();
+      if(badge) badge.textContent = sub?.membership_plans?.name ? '✦ ' + sub.membership_plans.name : 'Plan Free';
+    }
+  }
+
+  // ===== Clear profile on logout =====
+  function clearProfile(){
+    _currentUser = null;
+    _currentProfile = null;
+    const ids = ['profName','profEmail','profFullName','profPhone','profAge','profSex','profOrigin','profHow','profEmerg'];
+    const el = (id) => document.getElementById(id);
+    ids.forEach(id => { const e = el(id); if(e) e.textContent = '—'; });
+    if(el('profSince')) el('profSince').textContent = 'Miembro desde · —';
+    if(el('profStatEvents')) el('profStatEvents').textContent = '0';
+    if(el('profStatKm'))     el('profStatKm').innerHTML = '0<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatSaved'))  el('profStatSaved').textContent = '$0';
+    if(el('profilePic')){ el('profilePic').style.backgroundImage = ''; el('profilePic').classList.remove('has-photo'); }
+    if(el('profPlanBadge'))  el('profPlanBadge').textContent = 'Plan Free';
+    if(el('adminPanel'))     el('adminPanel').style.display = 'none';
+    cancelEdit();
+  }
+
+  // ===== Auth-gated UI: show/hide tabs based on session =====
+  function setAuthUI(loggedIn){
+    const show = (id, vis) => { const e = document.getElementById(id); if(e) e.style.display = vis ? '' : 'none'; };
+    show('tabSignup', !loggedIn);
+    show('tabLogin',  !loggedIn);
+    show('tabProfile', loggedIn);
+    if(!loggedIn) positionPill();
+  }
+
+  // ===== Session management =====
+  supa.auth.onAuthStateChange(async (event, session) => {
+    if(event === 'SIGNED_OUT' || !session){
+      setAuthUI(false);
+      clearProfile();
+      const params = new URLSearchParams(location.search);
+      if(!params.get('plan')) switchTab('login');
+      return;
+    }
+    // SIGNED_IN, TOKEN_REFRESHED, INITIAL_SESSION
+    // Switch tab + show auth UI IMMEDIATELY — don't wait for profile data
+    setAuthUI(true);
+    const params = new URLSearchParams(location.search);
+    if(!params.get('tab') && !params.get('plan')) switchTab('profile');
+    // Load profile data asynchronously (fields fill in after queries resolve)
+    await loadProfile(session.user);
+  });
+
+  // ===== Logout =====
+  async function logout(){
+    showToast('Cerrando sesión…');
+    await supa.auth.signOut();
+    // Drive UI directly — don't wait for onAuthStateChange (may not fire reliably)
+    clearProfile();
+    setAuthUI(false);
+    switchTab('login');
+  }
+
+  // ===== Edit profile =====
+  function showEditMode(){
+    const el = (id) => document.getElementById(id);
+    // Pre-fill from stored profile data (not parsed display text)
+    if(el('ep-name')) el('ep-name').value = _currentProfile?.first_name || '';
+    if(el('ep-last')) el('ep-last').value = _currentProfile?.last_name || '';
+    // Mirror current avatar into edit preview
+    const pic = el('profilePic');
+    const preview = el('editAvatarPreview');
+    if(pic && preview) preview.style.backgroundImage = pic.style.backgroundImage;
+
+    el('profileViewMode').style.display = 'none';
+    el('profileEditMode').style.display = '';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  function cancelEdit(){
+    const el = (id) => document.getElementById(id);
+    const vm = el('profileViewMode');
+    const em = el('profileEditMode');
+    if(vm) vm.style.display = '';
+    if(em) em.style.display = 'none';
+    // Clear file input
+    const fi = el('editAvatarInput');
+    if(fi) fi.value = '';
+    const preview = el('editAvatarPreview');
+    if(preview) preview.dataset.newFile = '';
+  }
+
+  function previewAvatar(input){
+    const file = input.files?.[0];
+    if(!file) return;
+    if(file.size > 2 * 1024 * 1024){ showToast('La foto debe pesar menos de 2 MB'); input.value=''; return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const preview = document.getElementById('editAvatarPreview');
+      if(preview){ preview.style.backgroundImage = `url('${e.target.result}')`; preview.style.backgroundSize='cover'; preview.style.backgroundPosition='center'; }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  document.getElementById('editProfileForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(!_currentUser){ showToast('Error: sesión expirada'); return; }
+
+    const firstName = (document.getElementById('ep-name')?.value || '').trim();
+    const lastName  = (document.getElementById('ep-last')?.value || '').trim();
+    if(!firstName){ showToast('Ingresá tu nombre'); return; }
+
+    const btn = document.getElementById('saveProfileBtn');
+    if(btn) btn.disabled = true;
+    showToast('Guardando…');
+
+    let avatarUrl = null;
+    const fileInput = document.getElementById('editAvatarInput');
+    const file = fileInput?.files?.[0];
+
+    // Upload avatar if a new file was selected
+    if(file){
+      const ext = file.name.split('.').pop().toLowerCase();
+      const path = `${_currentUser.id}/avatar.${ext}`;
+      const { error: uploadErr } = await supa.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
+      if(uploadErr){
+        console.error('[edit] avatar upload:', uploadErr.message);
+        showToast('Error al subir la foto: ' + uploadErr.message);
+        if(btn) btn.disabled = false;
+        return;
+      }
+      const { data: urlData } = supa.storage.from('avatars').getPublicUrl(path);
+      // Bust cache with timestamp
+      avatarUrl = urlData.publicUrl + '?t=' + Date.now();
+    }
+
+    const updates = { first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() };
+    if(avatarUrl) updates.avatar_url = avatarUrl;
+
+    const { error: upErr } = await supa.from('users').update(updates).eq('id', _currentUser.id);
+    if(upErr){
+      console.error('[edit] update error:', upErr.message);
+      showToast('Error al guardar: ' + upErr.message);
+      if(btn) btn.disabled = false;
+      return;
+    }
+
+    showToast('Perfil actualizado');
+    await loadProfile(_currentUser);
+    cancelEdit();
+    if(btn) btn.disabled = false;
+  });
+
+  // ===== Delete account (soft delete) =====
+  function confirmDeleteAccount(){
+    const overlay = document.getElementById('deleteConfirmOverlay');
+    if(overlay){ overlay.style.display = 'flex'; }
+  }
+  function closeDeleteConfirm(){
+    const overlay = document.getElementById('deleteConfirmOverlay');
+    if(overlay){ overlay.style.display = 'none'; }
+  }
+  async function executeDeleteAccount(){
+    if(!_currentUser){ showToast('Error: sesión expirada'); return; }
+    closeDeleteConfirm();
+    showToast('Eliminando cuenta…');
+    // Soft delete: set deleted_at timestamp (audit trail preserved)
+    const { error } = await supa.from('users')
+      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .eq('id', _currentUser.id);
+    if(error){
+      console.error('[delete] error:', error.message);
+      showToast('Error al eliminar: ' + error.message);
+      return;
+    }
+    showToast('Cuenta eliminada · hasta pronto');
+    setTimeout(async () => {
+      await supa.auth.signOut();
+      clearProfile();
+      setAuthUI(false);
+      switchTab('login');
+    }, 1200);
+  }
+
+  // ===== Signup submit =====
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailEl = document.getElementById('f-email');
+    const passEl  = document.getElementById('f-pass');
+    let valid = true;
+    function setError(input, on){
+      const f = input?.closest('.field');
+      if (!f) return;
+      f.classList.toggle('is-error', on);
+      if (on) valid = false;
+    }
+    setError(emailEl, !emailEl.value || !emailEl.checkValidity());
+    setError(passEl,  !passEl.value  || passEl.value.length < 8);
+    if (!valid){
+      const firstError = document.querySelector('.field.is-error');
+      if (firstError) firstError.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    const firstName = (document.getElementById('f-name')?.value || '').trim();
+    const lastName  = (document.getElementById('f-last')?.value || '').trim();
+    const age       = parseInt(document.getElementById('f-age')?.value) || null;
+    // DB sex column is CHAR(1) CHECK IN ('M','F','O') — map from form values
+    const SEX_TO_DB = { masculino:'M', femenino:'F', otro:'O' };
+    const sexRaw    = document.querySelector('input[name="sexo"]:checked')?.value || null;
+    const sex       = SEX_TO_DB[sexRaw] || null;
+    const originRaw = document.querySelector('input[name="origen"]:checked')?.value || null;
+    const cuaVal    = (document.getElementById('f-cual')?.value || '').trim();
+    // For Otra Provincia / Otro País, store the typed city/place name instead of the generic key
+    const origin    = (originRaw === 'otra-provincia' || originRaw === 'otro-pais') && cuaVal ? cuaVal : originRaw;
+    const emerg     = (document.getElementById('f-emerg')?.value || '').trim() || null;
+    const cc        = document.getElementById('f-phone-cc')?.value || '+54';
+    const phoneNum  = (document.getElementById('f-phone-num')?.value || '').trim();
+    const phone     = phoneNum ? (cc + ' ' + phoneNum) : null;
+    const howHeard  = document.querySelector('input[name="how"]:checked')?.value || null;
+
+    showToast('Creando cuenta…');
+
+    const { data, error } = await supa.auth.signUp({
+      email: emailEl.value.trim(),
+      password: passEl.value,
+      // Todos los campos del form van en metadata para que el trigger
+      // handle_new_auth_user() los guarde en public.users incluso cuando
+      // email confirmation está activo (data.session == null).
+      options: { data: { first_name: firstName, last_name: lastName,
+        age, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard } }
+    });
+
+    if(error){
+      showToast('Error: ' + error.message);
+      return;
+    }
+
+    // Supabase returns {user: null, error: null} when the email is already registered
+    // (prevents email enumeration). Also check identities for older behavior.
+    if(!data.user || data.user.identities?.length === 0){
+      showToast('Ese mail ya tiene una cuenta. Iniciá sesión.');
+      setTimeout(() => switchTab('login'), 1400);
+      return;
+    }
+
+    // Email confirmation required: user created but session is null — can't upsert yet
+    if(!data.session){
+      showToast('¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
+      setTimeout(() => switchTab('login'), 2000);
+      return;
+    }
+
+    // Full signup — session active, upsert extended profile fields
+    // (trigger creates base row; upsert adds the rest — error logged, not thrown)
+    const { error: upsertErr } = await supa.from('users').upsert({
+      id: data.user.id, first_name: firstName, last_name: lastName,
+      age, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard
+    });
+    if(upsertErr) console.error('[signup] upsert error:', upsertErr.message);
+
+    setAuthUI(true);
+    switchTab('profile');
+    await loadProfile(data.user);
+    showToast('¡Bienvenido al club!');
+  });
+
+  // ===== Login submit =====
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = (document.getElementById('l-email')?.value || '').trim();
+    const pass  = document.getElementById('l-pass')?.value || '';
+    if(!email || !pass){ showToast('Completá los campos'); return; }
+
+    showToast('Iniciando sesión…');
+    const { data, error } = await supa.auth.signInWithPassword({ email, password: pass });
+
+    if(error){
+      showToast('Mail o contraseña incorrectos');
+      return;
+    }
+
+    setAuthUI(true);
+    switchTab('profile');
+    await loadProfile(data.user);
+    showToast('Sesión iniciada · bienvenido de vuelta');
+  });
+
+  // ===== Toast =====
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>

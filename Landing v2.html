@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sprinters · Social Run Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  // Auto-redirect to mobile version on small / touch devices (override with ?force=desktop)
+  (function(){
+    try{
+      var p = new URLSearchParams(location.search);
+      var force = p.get('force');
+      if (force === 'desktop') return;
+      try { if (window.self !== window.top) return; } catch(e){ return; }
+      var isMobile = window.matchMedia('(max-width: 760px)').matches;
+      if (force === 'mobile' || isMobile){
+        location.replace('Landing-mobile.html' + (force ? '?force=mobile' : ''));
+      }
+    }catch(e){}
+  })();
+</script>
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#0a0a0a;
+    --ink-2:#1a1a1a;
+    --muted:#6b6b6b;
+    --muted-2:#a3a3a3;
+    --line:rgba(10,10,10,.10);
+    --line-2:rgba(10,10,10,.06);
+    --rust:#C24A1F;
+    --cream:#f5f1ea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11";}
+  body{overflow-x:hidden}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+  .serif{font-family:'DM Serif Display',serif;font-weight:400;letter-spacing:-0.01em}
+  .script{font-family:'Allura',cursive;font-weight:400}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:0.04em}
+  .eyebrow{font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--muted)}
+
+  /* ====== REVEAL ANIMATIONS ====== */
+  [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity 1.2s cubic-bezier(.22,.7,.2,1),transform 1.2s cubic-bezier(.22,.7,.2,1);transition-delay:var(--rd,0ms);will-change:transform,opacity}
+  [data-reveal="fade"]{transform:none}
+  [data-reveal="left"]{transform:translateX(-36px)}
+  [data-reveal="right"]{transform:translateX(36px)}
+  [data-reveal="scale"]{transform:scale(.96)}
+  [data-reveal="blur"]{filter:blur(14px);transition:opacity 1.4s cubic-bezier(.22,.7,.2,1),transform 1.4s cubic-bezier(.22,.7,.2,1),filter 1.4s cubic-bezier(.22,.7,.2,1)}
+  [data-reveal].is-in{opacity:1;transform:none;filter:none}
+  /* per-character splits */
+  .split-chars{display:inline-block}
+  .split-chars .ch{display:inline-block;opacity:0;transform:translateY(40%);transition:opacity .9s cubic-bezier(.22,.7,.2,1),transform .9s cubic-bezier(.22,.7,.2,1);transition-delay:var(--cd,0ms)}
+  .split-chars.is-in .ch{opacity:1;transform:none}
+
+  /* ====== NAV ====== */
+  nav.top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px 36px;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+  nav.top.scrolled{background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line-2)}
+  nav.top .brand{font-weight:700;letter-spacing:0.10em;font-size:13px;color:var(--ink)}
+  nav.top .brand sup{font-size:9px;opacity:.5;margin-left:1px}
+  nav.top .links{display:flex;gap:32px;font-size:12px;letter-spacing:0.04em;font-weight:500;color:var(--ink)}
+  nav.top .links a{position:relative;padding:6px 0;opacity:.7;transition:opacity .2s}
+  nav.top .links a:hover{opacity:1}
+  nav.top .cta{font-size:12px;letter-spacing:0.04em;font-weight:500;border:1px solid var(--ink);padding:10px 18px;border-radius:999px;transition:all .25s;color:var(--ink)}
+  nav.top .cta:hover{background:var(--ink);color:#fff}
+  @media (max-width:900px){nav.top .links{display:none}nav.top{padding:18px 22px}}
+
+  /* ====== FLOW SECTIONS (pinned + rotate-in) ====== */
+  section[data-flow-section], footer[data-flow-section]{position:relative;min-height:100vh;width:100%;overflow:hidden;padding:0!important;background:transparent}
+  .flow-art-container{position:relative;min-height:100vh;width:100%;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:clamp(80px,9vh,120px) 36px;transform-origin:bottom left;will-change:transform}
+  /* keep nav above all */
+  nav.top{z-index:200}
+  @media (max-width:900px){.flow-art-container{padding:80px 22px}}
+
+  /* ====== HERO ====== */
+  .hero{position:relative;color:var(--ink);display:flex;flex-direction:column}
+  .hero-inner{max-width:1480px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:stretch}
+
+  /* LEFT — hero image */
+  .hero-photo{position:relative;border-radius:6px;overflow:hidden;background:#1a1a1a;min-height:600px;height:100%}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform 2.4s cubic-bezier(.22,.7,.2,1);filter:saturate(.92)}
+  .hero-photo.is-in img{transform:scale(1)}
+  .hero-photo .pcap{position:absolute;left:18px;bottom:16px;color:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;opacity:.85;z-index:3;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+  .hero-photo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5));pointer-events:none;z-index:2}
+
+  /* RIGHT — text stack */
+  .hero-right{display:flex;flex-direction:column;justify-content:center;padding:8px 0 0 8px;gap:0}
+  .hero-headline{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(64px,9.2vw,168px);line-height:.86;letter-spacing:-0.022em;color:var(--ink);text-transform:uppercase;margin-bottom:34px}
+  .hero-headline .l{display:block}
+  .hero-headline .apos{font-feature-settings:"smcp"}
+
+  /* ====== Marker highlight (animated yellow sweep) ====== */
+  .marker{position:relative;display:inline-block;white-space:nowrap}
+  .marker-bg{position:absolute;left:-0.08em;right:-0.08em;top:-0.05em;bottom:-0.05em;background:#024939;transform-origin:left center;transform:scaleX(0);z-index:0;border-radius:2px}
+  .marker-txt{position:relative;z-index:1;transition:color .35s ease .55s}
+  .marker.is-on .marker-bg{animation:marker-fill .9s cubic-bezier(.22,.7,.2,1) forwards}
+  .marker.is-on .marker-txt{color:#e5e5cc}
+  @keyframes marker-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .hero-logo{display:flex;align-items:flex-start;flex-direction:column;margin-bottom:0}
+  .hero-logo .sp-mark{font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;font-size:clamp(42px,5.6vw,92px);line-height:.92;letter-spacing:-0.035em;color:var(--ink);display:inline-block;position:relative;text-transform:uppercase}
+  .hero-logo .sp-mark sup{font-family:'Montserrat',sans-serif;font-style:normal;font-weight:500;font-size:.20em;vertical-align:super;opacity:.5;letter-spacing:0;margin-left:.05em;top:-.65em;position:relative}
+  .hero-logo .sp-sub{display:flex;align-items:center;gap:14px;margin-top:10px;width:100%;font-family:'Montserrat',sans-serif;font-size:clamp(10px,.85vw,12px);letter-spacing:0.48em;text-transform:uppercase;font-weight:400;color:var(--ink)}
+  .hero-logo .sp-sub .l{flex:1;height:1px;background:var(--ink);opacity:.28}
+  .hero-logo .sp-sub span{white-space:nowrap}
+  .hero-meta{display:flex;flex-direction:column;gap:4px;margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-size:12px;letter-spacing:0.08em;font-weight:500;transition:all .25s;cursor:pointer;border:none;font-family:inherit}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.primary:hover{background:var(--rust)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--ink)}
+  .btn .arrow{transition:transform .25s}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  @media (max-width:900px){
+    .hero{padding:96px 22px 36px}
+    .hero-inner{grid-template-columns:1fr;gap:28px}
+    .hero-photo{min-height:360px;aspect-ratio:4/5;height:auto}
+    .hero-right{padding:0;gap:0}
+  }
+
+  /* ====== METRICS ====== */
+  .metrics{padding:140px 36px;background:var(--bg)}
+  .metrics-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;border-top:1px solid var(--line);padding-top:64px}
+  .metric{display:flex;flex-direction:column;gap:12px}
+  .metric .n{font-family:'DM Serif Display',serif;font-size:clamp(48px,5vw,80px);line-height:.95;letter-spacing:-0.025em;color:var(--ink);font-weight:400}
+  .metric .n .pct{font-family:'Inter';font-size:.42em;font-weight:500;vertical-align:super;margin-left:2px;color:var(--muted)}
+  .metric .l{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500;max-width:200px;line-height:1.6}
+  @media (max-width:900px){
+    .metrics{padding:96px 22px}
+    .metrics-inner{grid-template-columns:1fr 1fr;gap:36px 24px}
+  }
+
+  /* ====== PILLARS ====== */
+  .pillars{padding:80px 36px 140px;background:var(--bg)}
+  .pillars-inner{max-width:1320px;margin:0 auto}
+  .pillars-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:64px;flex-wrap:wrap}
+  .pillars-head h2{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,72px);line-height:1;letter-spacing:-0.02em;color:var(--ink);font-weight:400}
+  .pillars-head h2 em{font-style:italic}
+  .pillars-head .note{font-size:13px;color:var(--muted);max-width:280px;line-height:1.6}
+  .pillars-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .pillar-card{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/5;background:#222;color:#fff;display:block;cursor:pointer}
+  .pillar-card .ph{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.4s cubic-bezier(.22,.7,.2,1);filter:saturate(.92) brightness(.78)}
+  .pillar-card:hover .ph{transform:scale(1.05)}
+  .pillar-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,0) 35%,rgba(0,0,0,.8) 100%);pointer-events:none}
+  .pillar-card .pill-body{position:absolute;left:32px;right:32px;bottom:32px;z-index:2;display:flex;flex-direction:column;gap:12px}
+  .pillar-card .pill-num{font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.85;font-weight:500}
+  .pillar-card h3{font-family:'DM Serif Display',serif;font-size:clamp(40px,5vw,68px);line-height:.92;letter-spacing:-0.02em;font-weight:400}
+  .pillar-card h3 em{font-style:italic}
+  .pillar-card .pill-line{font-size:14px;line-height:1.5;opacity:.88;max-width:380px;margin-top:4px}
+  .pillar-card .pill-cta{margin-top:8px;display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;align-self:flex-start}
+  .pillar-card .pill-cta .a{transition:transform .25s;font-family:'DM Serif Display';font-size:16px;line-height:1}
+  .pillar-card:hover .pill-cta .a{transform:translateX(4px)}
+  @media (max-width:900px){
+    .pillars{padding:48px 22px 96px}
+    .pillars-grid{grid-template-columns:1fr;gap:16px}
+    .pillar-card{aspect-ratio:3/4}
+    .pillar-card .pill-body{left:22px;right:22px;bottom:22px}
+  }
+
+  /* ====== AGENDA ====== */
+  .agenda{padding:140px 36px;background:var(--bg);border-top:1px solid var(--line)}
+  .agenda-inner{max-width:1320px;margin:0 auto}
+  .agenda-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:64px;flex-wrap:wrap}
+  .agenda-head h2{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,72px);line-height:1;letter-spacing:-0.02em;color:var(--ink);font-weight:400}
+  .agenda-head h2 em{font-style:italic}
+  .agenda-head .note{font-size:13px;color:var(--muted);max-width:280px;line-height:1.6}
+  .agenda-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .ev{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:#1a1a1a;color:#fff;cursor:pointer;transition:transform .5s cubic-bezier(.22,.7,.2,1)}
+  .ev:hover{transform:translateY(-6px)}
+  .ev img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1);filter:saturate(.94)}
+  .ev:hover img{transform:scale(1.06)}
+  .ev::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,.85) 100%);pointer-events:none}
+  .ev-body{position:absolute;inset:0;padding:22px;z-index:2;display:flex;flex-direction:column;justify-content:space-between}
+  .ev-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .ev-tag{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18)}
+  .ev-date{font-family:'DM Serif Display',serif;font-style:italic;font-size:13px;opacity:.92}
+  .ev-bottom{display:flex;flex-direction:column;gap:6px}
+  .ev-title{font-family:'DM Serif Display',serif;font-size:24px;line-height:1.08;font-weight:400}
+  .ev-title em{font-style:italic}
+  .ev-sub{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;opacity:.82;font-weight:500;margin-bottom:4px}
+  @media (max-width:900px){
+    .agenda{padding:96px 22px}
+    .agenda-grid{grid-template-columns:1fr 1fr;gap:14px}
+    .ev{aspect-ratio:3/4}
+  }
+  @media (max-width:560px){.agenda-grid{grid-template-columns:1fr}.ev{aspect-ratio:4/5}}
+
+  /* ====== GALLERY ====== */
+  .gallery{padding:140px 36px;background:var(--bg);border-top:1px solid var(--line)}
+  .gallery-inner{max-width:1320px;margin:0 auto}
+  .gallery-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:64px;flex-wrap:wrap}
+  .gallery-head h2{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,72px);line-height:1;letter-spacing:-0.02em;color:var(--ink);font-weight:400}
+  .gallery-head h2 .script{font-family:'Allura',cursive;color:var(--rust);font-size:1.1em;display:inline-block;transform:translateY(.05em) rotate(-3deg);margin-left:.04em}
+  .gallery-head .note{font-size:13px;color:var(--muted);max-width:300px;line-height:1.6}
+  .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;grid-auto-rows:1fr}
+  .g-fig{position:relative;overflow:hidden;border-radius:6px;background:#222;aspect-ratio:1/1}
+  .g-fig.tall{aspect-ratio:4/6}
+  .g-fig.wide{aspect-ratio:2/1;grid-column:span 2}
+  .g-fig img{width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)}
+  .g-fig:hover img{transform:scale(1.05)}
+  .g-fig figcaption{position:absolute;left:14px;bottom:12px;color:#fff;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;text-shadow:0 1px 8px rgba(0,0,0,.6);z-index:2}
+  .g-fig::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));pointer-events:none}
+  @media (max-width:900px){
+    .gallery{padding:96px 22px}
+    .gallery-grid{grid-template-columns:1fr 1fr}
+    .g-fig.wide{grid-column:span 2}
+  }
+  @media (max-width:560px){.gallery-grid{grid-template-columns:1fr}.g-fig.wide{grid-column:span 1}}
+
+  /* ====== HOW ====== */
+  .how{padding:140px 36px;background:var(--bg);border-top:1px solid var(--line)}
+  .how-inner{max-width:1320px;margin:0 auto}
+  .how h2{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,72px);line-height:1;letter-spacing:-0.02em;color:var(--ink);margin-bottom:80px;max-width:900px;font-weight:400}
+  .how h2 em{font-style:italic}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+  .step{display:flex;flex-direction:column;gap:14px;padding-top:24px;border-top:1px solid var(--ink)}
+  .step .num{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;color:var(--muted);font-weight:400}
+  .step h4{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.15;color:var(--ink);font-weight:400;letter-spacing:-0.01em}
+  .step p{font-size:13.5px;line-height:1.6;color:var(--muted)}
+  @media (max-width:900px){.how{padding:96px 22px}.steps{grid-template-columns:1fr 1fr;gap:32px}}
+
+  /* ====== LEADERS ====== */
+  .leaders{padding:140px 36px;background:var(--bg);border-top:1px solid var(--line)}
+  .leaders-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:.95fr 1fr;gap:80px;align-items:center}
+  .leaders-photo{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#222}
+  .leaders-photo img{width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)}
+  .leaders-photo:hover img{transform:scale(1.04)}
+  .leaders h2{font-family:'DM Serif Display',serif;font-size:clamp(40px,5vw,68px);line-height:1.02;letter-spacing:-0.02em;color:var(--ink);margin-bottom:18px;font-weight:400}
+  .leaders h2 em{font-style:italic}
+  .leaders .lede{font-size:15px;line-height:1.65;color:var(--muted);margin-bottom:40px;max-width:460px}
+  .roster{border-top:1px solid var(--line)}
+  .leader{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:20px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .leader .idx{font-family:'DM Serif Display';font-style:italic;font-size:13px;color:var(--muted-2)}
+  .leader .name{font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--ink);font-weight:400}
+  .leader .role{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--muted);text-align:right}
+  @media (max-width:900px){
+    .leaders{padding:96px 22px}
+    .leaders-inner{grid-template-columns:1fr;gap:48px}
+  }
+
+  /* ====== PARTNERS ====== */
+  .partners{padding:80px 36px;border-top:1px solid var(--line);background:var(--bg)}
+  .partners-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:48px;flex-wrap:wrap}
+  .partners .label{font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--muted)}
+  .partners .logos{display:flex;gap:48px;flex-wrap:wrap;font-family:'DM Serif Display';font-size:22px;color:var(--ink);align-items:center;opacity:.85}
+  .partners .logos span{transition:opacity .2s;opacity:.55}
+  .partners .logos span:hover{opacity:1}
+  .partners .logos .it{font-style:italic}
+
+  /* ====== CTA ====== */
+  .cta-section{padding:160px 36px 140px;background:var(--bg);border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+  .cta-inner{max-width:900px;margin:0 auto;position:relative}
+  .cta-section .eyebrow{margin-bottom:32px}
+  .cta-section h2{font-family:'DM Serif Display',serif;font-size:clamp(56px,9vw,140px);line-height:.92;letter-spacing:-0.025em;margin-bottom:48px;color:var(--ink);font-weight:400}
+  .cta-section h2 em{font-style:italic}
+  .cta-section h2 .script{font-family:'Allura',cursive;color:var(--rust);font-size:.78em;display:inline-block;transform:translateY(.04em) rotate(-3deg);margin-left:.04em;font-weight:400}
+  .cta-section p{font-size:16px;line-height:1.55;max-width:520px;margin:0 auto 48px;color:var(--muted)}
+  .cta-form{display:flex;gap:6px;max-width:460px;margin:0 auto;border:1px solid var(--ink);border-radius:999px;padding:5px;background:#fff}
+  .cta-form input{flex:1;border:none;background:transparent;padding:13px 18px;font-family:inherit;font-size:14px;color:var(--ink);outline:none}
+  .cta-form input::placeholder{color:var(--muted-2)}
+  .cta-form button{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:13px 22px;font-family:inherit;font-size:12px;letter-spacing:0.08em;font-weight:500;transition:background .25s}
+  .cta-form button:hover{background:var(--rust)}
+  @media (max-width:900px){.cta-section{padding:120px 22px}}
+
+  /* ====== FOOTER ====== */
+  footer{padding:80px 36px 32px;background:var(--bg);border-top:1px solid var(--line)}
+  footer .top{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:64px;padding-bottom:48px;border-bottom:1px solid var(--line)}
+  footer .brand-mark{font-family:'Inter';font-weight:700;letter-spacing:0.06em;font-size:30px;line-height:1;color:var(--ink)}
+  footer .brand-mark sup{font-size:14px;opacity:.4;vertical-align:super}
+  footer .tagline{font-family:'DM Serif Display';font-style:italic;font-size:16px;margin-top:14px;color:var(--muted)}
+  footer .blurb{font-size:13px;margin-top:18px;color:var(--muted);line-height:1.65;max-width:320px}
+  footer h5{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:var(--muted)}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  footer ul a{font-size:14px;color:var(--ink);opacity:.8;transition:opacity .2s}
+  footer ul a:hover{opacity:1;color:var(--rust)}
+  footer .bottom{max-width:1320px;margin:32px auto 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap;gap:12px;font-weight:500}
+  .giant{max-width:1320px;margin:80px auto 24px;font-family:'DM Serif Display';font-size:clamp(72px,16vw,240px);line-height:.85;letter-spacing:-0.04em;font-style:italic;color:var(--ink);user-select:none;opacity:.06}
+  @media (max-width:900px){footer{padding:64px 22px 24px}footer .top{grid-template-columns:1fr 1fr;gap:36px}}
+
+  /* utility */
+  .hide-mobile{display:initial}
+  @media (max-width:700px){.hide-mobile{display:none}}
+
+  /* ====== HERO: fit 16:9 viewport ====== */
+  section.hero{min-height:0;height:100vh;overflow:hidden}
+  section.hero>.flow-art-container{min-height:0;padding:clamp(60px,5.5vh,80px) 36px clamp(24px,3vh,40px)}
+  section.hero .hero-inner{height:100%}
+  section.hero .hero-photo{min-height:min(440px,58vh)}
+  section.hero .hero-headline{font-size:clamp(48px,min(9.2vw,13vh),152px)}
+  section.hero .hero-logo .sp-mark{font-size:clamp(36px,min(5.6vw,8vh),80px)}
+
+  /* ====== PAGE INDEX ====== */
+  #page-index{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;align-items:flex-end;gap:16px}
+  #page-index a{display:flex;align-items:center;gap:10px;padding:2px 0;outline:none}
+  .idx-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+  #page-index a:hover .idx-label,#page-index a.active .idx-label{opacity:1;transform:none}
+  .idx-dot{width:5px;height:5px;border-radius:50%;border:1.5px solid var(--muted-2);background:transparent;transition:all .25s;flex-shrink:0}
+  #page-index a.active .idx-dot{background:var(--ink);border-color:var(--ink);width:7px;height:7px}
+  #page-index a:hover .idx-dot{border-color:var(--ink)}
+  @media(max-width:900px){#page-index{display:none}}
+</style>
+</head>
+<body>
+
+<nav class="top" id="topnav">
+  <div class="brand">SPRINTERS<sup>®</sup></div>
+  <div class="links">
+    <a href="#pilares">Pilares</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#galeria">Galería</a>
+    <a href="#lideres">Líderes</a>
+  </div>
+  <a href="#join" class="cta">Sumate</a>
+  <a href="Cuenta.html" class="cta" style="margin-left:10px">Mi cuenta</a>
+</nav>
+
+<aside id="page-index" aria-label="Índice de secciones">
+  <a href="#hero">      <span class="idx-label">Inicio</span>        <span class="idx-dot"></span></a>
+  <a href="#pilares">   <span class="idx-label">Pilares</span>        <span class="idx-dot"></span></a>
+  <a href="#agenda">    <span class="idx-label">Agenda</span>         <span class="idx-dot"></span></a>
+  <a href="#galeria">   <span class="idx-label">Galería</span>        <span class="idx-dot"></span></a>
+  <a href="#como">      <span class="idx-label">Cómo funciona</span> <span class="idx-dot"></span></a>
+  <a href="#lideres">   <span class="idx-label">Líderes</span>        <span class="idx-dot"></span></a>
+  <a href="#join">      <span class="idx-label">Sumarse</span>        <span class="idx-dot"></span></a>
+</aside>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="hero" data-flow-section data-screen-label="01 Hero">
+  <div class="flow-art-container">
+  <div class="hero-inner">
+    <!-- LEFT: hero image -->
+    <div class="hero-photo" data-reveal="scale" id="heroPhoto">
+      <img src="images/hero-fountain.jpg" alt="Sprinters corriendo en Mendoza" />
+      <div class="pcap">Mendoza · Sábado 10:00 AM</div>
+    </div>
+
+    <!-- RIGHT: text stack — LET'S RUN TOGETHER (largest) → Sprinters wordmark → meta -->
+    <div class="hero-right">
+      <h1 class="hero-headline" data-reveal="blur">
+        <span class="l">Let<span class="apos">’</span>s Run</span>
+        <span class="l"><span class="marker" id="heroMarker"><span class="marker-bg"></span><span class="marker-txt">Together</span></span></span>
+      </h1>
+
+      <div class="hero-logo" data-reveal style="--rd:500ms">
+        <span class="sp-mark">Sprinters<sup>®</sup></span>
+        <div class="sp-sub"><span>Social</span><span class="l"></span><span>Run</span><span class="l"></span><span>Club</span></div>
+      </div>
+
+      <div class="hero-actions" data-reveal style="--rd:800ms">
+        <a href="#agenda" class="btn primary">Próxima corrida <span class="arrow">→</span></a>
+        <a href="#pilares" class="btn ghost">Conocer</a>
+      </div>
+      <div class="hero-meta" data-reveal="fade" style="--rd:1100ms">
+        <div>MENDOZA · ARGENTINA</div>
+        <div>FIRST SOCIAL RUN CLUB OF MENDOZA</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== PILLARS ===================== -->
+<section class="pillars" id="pilares" data-flow-section data-screen-label="02 Pilares">
+  <div class="flow-art-container">
+  <div class="pillars-inner">
+    <div class="pillars-head">
+      <h2 data-reveal>Dos pilares,<br/>una misma <em>corrida.</em></h2>
+      <div class="note" data-reveal style="--rd:200ms">Elegí por dónde empezar. O hacé las dos, como casi todos.</div>
+    </div>
+    <div class="pillars-grid">
+      <a class="pillar-card" href="Suscripcion Running.html" data-reveal style="--rd:0ms">
+        <div class="ph" style="background-image:url('images/group-running.jpg')"></div>
+        <div class="pill-body">
+          <div class="pill-num">PILAR 01 · RUNNING</div>
+          <h3>Running <em>Club.</em></h3>
+          <p class="pill-line">Sábados 10:00. Tres distancias, dos coaches, un calentamiento sin vergüenza.</p>
+          <span class="pill-cta">Sumarme al run <span class="a">→</span></span>
+        </div>
+      </a>
+      <a class="pillar-card" href="Suscripcion Social.html" data-reveal style="--rd:180ms">
+        <div class="ph" style="background-image:url('images/cafe-talk.jpg')"></div>
+        <div class="pill-body">
+          <div class="pill-num">PILAR 02 · SOCIAL</div>
+          <h3>Social <em>Club.</em></h3>
+          <p class="pill-line">After-runs curados. Un café que abre solo para nosotros, una bodega que descorcha algo distinto.</p>
+          <span class="pill-cta">Sumarme al plan <span class="a">→</span></span>
+        </div>
+      </a>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== AGENDA ===================== -->
+<section class="agenda" id="agenda" data-flow-section data-screen-label="03 Agenda">
+  <div class="flow-art-container">
+  <div class="agenda-inner">
+    <div class="agenda-head">
+      <h2 data-reveal>Próximas <em>fechas.</em></h2>
+      <div class="note" data-reveal style="--rd:200ms">Inscripción gratis hasta 24 hs antes. Los after-runs se llenan rápido.</div>
+    </div>
+    <div class="agenda-grid">
+      <article class="ev" data-reveal style="--rd:0ms">
+        <img src="images/run-autumn.jpg" alt="Let's Run Otoño Edition" />
+        <div class="ev-body">
+          <div class="ev-top">
+            <span class="ev-tag">Running</span>
+            <span class="ev-date">SÁB 23 · MAY</span>
+          </div>
+          <div class="ev-bottom">
+            <div class="ev-sub">Prado Español · 9:30 AM</div>
+            <div class="ev-title">Let's Run · <em>Otoño</em></div>
+          </div>
+        </div>
+      </article>
+      <article class="ev" data-reveal style="--rd:140ms">
+        <img src="images/cafe-talk.jpg" alt="Run + Coffee" />
+        <div class="ev-body">
+          <div class="ev-top">
+            <span class="ev-tag">Run &amp; Coffee</span>
+            <span class="ev-date">SÁB 30 · MAY</span>
+          </div>
+          <div class="ev-bottom">
+            <div class="ev-sub">Bianco &amp; Nero · 4K–8K</div>
+            <div class="ev-title">Run. <em>Coffee.</em></div>
+          </div>
+        </div>
+      </article>
+      <article class="ev" data-reveal style="--rd:280ms">
+        <img src="images/poster-maraton.jpg" alt="Run + Wine vol III" />
+        <div class="ev-body">
+          <div class="ev-top">
+            <span class="ev-tag">Run &amp; Wine</span>
+            <span class="ev-date">VIE 06 · JUN</span>
+          </div>
+          <div class="ev-bottom">
+            <div class="ev-sub">MalaBoca · 19:30 H</div>
+            <div class="ev-title">Run &amp; <em>Wine</em> III</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== GALLERY ===================== -->
+<section class="gallery" id="galeria" data-flow-section data-screen-label="04 Galería">
+  <div class="flow-art-container">
+  <div class="gallery-inner">
+    <div class="gallery-head">
+      <h2 data-reveal>Una corrida.<br/>Mil <span class="script">postales.</span></h2>
+      <div class="note" data-reveal style="--rd:200ms">Lo que se ve cada sábado entre los plátanos, las mesas largas y los amaneceres.</div>
+    </div>
+    <div class="gallery-grid">
+      <figure class="g-fig" data-reveal style="--rd:0ms">
+        <img src="images/group-running.jpg" alt="Grupo corriendo" />
+        <figcaption>Salida grupal</figcaption>
+      </figure>
+      <figure class="g-fig wide" data-reveal style="--rd:100ms">
+        <img src="images/brunch-girl.jpg" alt="Brunch" />
+        <figcaption>Brunch · BRÖD</figcaption>
+      </figure>
+      <figure class="g-fig" data-reveal style="--rd:220ms">
+        <img src="images/two-runners.jpg" alt="Pace partners" />
+        <figcaption>Pace partners</figcaption>
+      </figure>
+
+      <figure class="g-fig" data-reveal style="--rd:60ms">
+        <img src="images/run-trees-1.jpg" alt="Corriendo bajo árboles" />
+        <figcaption>Bajo los plátanos</figcaption>
+      </figure>
+      <figure class="g-fig" data-reveal style="--rd:160ms">
+        <img src="images/yoga.jpg" alt="Yoga al aire libre" />
+        <figcaption>Yoga &amp; reset</figcaption>
+      </figure>
+      <figure class="g-fig" data-reveal style="--rd:260ms">
+        <img src="images/couple-running.jpg" alt="Pareja corriendo" />
+        <figcaption>Sub-5 minutos</figcaption>
+      </figure>
+      <figure class="g-fig" data-reveal style="--rd:360ms">
+        <img src="images/shoes.webp" alt="Zapatillas" />
+        <figcaption>Línea de salida</figcaption>
+      </figure>
+
+      <figure class="g-fig" data-reveal style="--rd:120ms">
+        <img src="images/girls-park.jpg" alt="Chicas en el parque" />
+        <figcaption>Cooldown</figcaption>
+      </figure>
+      <figure class="g-fig wide" data-reveal style="--rd:220ms">
+        <img src="images/picnic-mate.jpg" alt="Picnic con mate" />
+        <figcaption>Sobremesa</figcaption>
+      </figure>
+      <figure class="g-fig" data-reveal style="--rd:340ms">
+        <img src="images/run-trees-2.jpg" alt="Largo del sábado" />
+        <figcaption>Largo del sábado</figcaption>
+      </figure>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== HOW ===================== -->
+<section class="how" id="como" data-flow-section>
+  <div class="flow-art-container">
+  <div class="how-inner">
+    <h2 data-reveal>Cómo se <em>suma</em> uno.<br/>Cuatro pasos, ninguno difícil.</h2>
+    <div class="steps">
+      <div class="step" data-reveal style="--rd:0ms">
+        <div class="num">01 — Agenda</div>
+        <h4>Mirá la agenda</h4>
+        <p>Elegí la corrida o el after-run que más te tiente. Hay opciones todos los fines de semana.</p>
+      </div>
+      <div class="step" data-reveal style="--rd:140ms">
+        <div class="num">02 — Reserva</div>
+        <h4>Reservá tu lugar</h4>
+        <p>Inscripción gratis vía Instagram o WhatsApp. Confirmás cupo y recibís el punto exacto.</p>
+      </div>
+      <div class="step" data-reveal style="--rd:280ms">
+        <div class="num">03 — Corrida</div>
+        <h4>Vení a correr</h4>
+        <p>Warm-up suave, tres distancias, dos coaches que abren y cierran el grupo. Nadie corre solo.</p>
+      </div>
+      <div class="step" data-reveal style="--rd:420ms">
+        <div class="num">04 — After</div>
+        <h4>Quedate</h4>
+        <p>El after-run es lo mejor. Bajamos un cambio, comemos rico, conocés gente nueva.</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== LEADERS ===================== -->
+<section class="leaders" id="lideres" data-flow-section data-screen-label="06 Líderes">
+  <div class="flow-art-container">
+  <div class="leaders-inner">
+    <div class="leaders-photo" data-reveal="scale">
+      <img src="images/leaders-trio.jpg" alt="Run leaders" />
+    </div>
+    <div>
+      <h2 data-reveal>Los que <em>abren</em><br/>y cierran <em>el grupo.</em></h2>
+      <p class="lede" data-reveal style="--rd:160ms">Tres referentes que entienden el ritmo del que recién empieza y el del que ya vino a sumar kilómetros. Nadie corre solo.</p>
+      <div class="roster" data-reveal style="--rd:280ms">
+        <div class="leader">
+          <div class="idx">01</div>
+          <div class="name">Inés</div>
+          <div class="role">Founder &amp; Run Coach</div>
+        </div>
+        <div class="leader">
+          <div class="idx">02</div>
+          <div class="name">Alan</div>
+          <div class="role">Co-founder · Estrategia</div>
+        </div>
+        <div class="leader">
+          <div class="idx">03</div>
+          <div class="name">Nico</div>
+          <div class="role">Run Coach &amp; Comunidad</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="cta-section" id="join" data-flow-section>
+  <div class="flow-art-container">
+  <div class="cta-inner">
+    <div class="eyebrow" data-reveal="fade">Listos · Ya</div>
+    <h2 data-reveal>¿Listo para este<br/><span class="script">run juntos?</span></h2>
+    <p data-reveal style="--rd:200ms">Dejá tu mail y te avisamos del próximo encuentro antes que a nadie. Sin spam — solo el plan que no te querés perder.</p>
+    <form class="cta-form" data-reveal style="--rd:340ms" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Listo'">
+      <input type="email" placeholder="tu@mail.com" required />
+      <button type="submit">Sumarme</button>
+    </form>
+  </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="community" data-flow-section>
+  <div class="flow-art-container" style="justify-content:space-between;gap:48px">
+  <div class="top">
+    <div>
+      <div class="brand-mark">SPRINTERS<sup>®</sup></div>
+      <div class="tagline">Social · Run · Club</div>
+      <p class="blurb">El primer Social Run Club de Mendoza. Creado en mayo 2025 por Inés y Alan. Una experiencia que va mucho más allá de salir a correr.</p>
+    </div>
+    <div>
+      <h5>Club</h5>
+      <ul>
+        <li><a href="#pilares">Pilares</a></li>
+        <li><a href="#agenda">Agenda</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#join">Sumarse</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Encuentros</h5>
+      <ul>
+        <li><a href="#">Fuente de los Continentes</a></li>
+        <li><a href="#">Prado Español</a></li>
+        <li><a href="#">Parque San Martín</a></li>
+        <li><a href="#">Ciclovía G. Cruz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Seguinos</h5>
+      <ul>
+        <li><a href="https://instagram.com/sprintersmza">@sprintersmza</a></li>
+        <li><a href="https://beacons.ai/sprintersmza">beacons.ai/sprintersmza</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#40333032292e342532332d3a2100272d21292c6e232f2d"><span class="__cf_email__" data-cfemail="2a595a5843445e4f585947504b6a4d474b434604494547">[email&#160;protected]</span></a></li>
+        <li><a href="tel:+542619293884">+54 261 929 8844</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="giant">sprinters</div>
+  <div class="bottom">
+    <div>© 2026 Sprinters · First Social Run Club of Mendoza, AR</div>
+    <div><a href="Landing-mobile.html?force=mobile" style="opacity:.85;border-bottom:1px solid currentColor;padding-bottom:1px">Ver versión móvil ↗</a> &nbsp;·&nbsp; Let's run together</div>
+  </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ===== Smooth scroll + ScrollTrigger integration =====
+  let lenis;
+  try {
+    lenis = new Lenis({ duration: 1.15, smoothWheel: true, lerp: 0.09 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    window.__lenis = lenis;
+  } catch(e){}
+
+  // ===== In-page nav =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const el = document.querySelector(id);
+        if (el) {
+          e.preventDefault();
+          if (window.__lenis) window.__lenis.scrollTo(el, { offset: -20 });
+          else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // ===== Scrolled nav state =====
+  const nav = document.getElementById('topnav');
+  const updateNav = () => {
+    if (window.scrollY > 60) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  };
+  updateNav();
+  window.addEventListener('scroll', updateNav, { passive:true });
+
+  // ===== Reveal-on-scroll via IntersectionObserver =====
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+  // ===== Marker highlight trigger — fires after headline reveals =====
+  (function(){
+    const m = document.getElementById('heroMarker');
+    if (!m) return;
+    setTimeout(() => m.classList.add('is-on'), 1400);
+  })();
+
+  // ===== FLOW ART: pin + rotate-in transition between sections =====
+  (function(){
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+    if (window.matchMedia('(max-width:760px)').matches) return; // skip on mobile
+
+    const sections = Array.from(document.querySelectorAll('[data-flow-section]'));
+    sections.forEach((section, i) => {
+      gsap.set(section, { zIndex: i + 1 });
+      const inner = section.querySelector('.flow-art-container');
+      if (!inner) return;
+
+      if (i > 0) {
+        gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
+        gsap.to(inner, {
+          rotation: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'top 25%',
+            scrub: true,
+          },
+        });
+      }
+
+      if (i < sections.length - 1) {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'bottom bottom',
+          end: 'bottom top',
+          pin: true,
+          pinSpacing: false,
+        });
+      }
+    });
+
+    ScrollTrigger.refresh();
+  })();
+
+  // ===== Page index active state =====
+  (function(){
+    const links = Array.from(document.querySelectorAll('#page-index a'));
+    const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+    const setActive = id => links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { threshold: 0.4 });
+    sections.forEach(s => io.observe(s));
+    if (sections[0]) setActive(sections[0].id);
+  })();
+</script>
+</body>
+</html>

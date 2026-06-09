@@ -1,0 +1,13 @@
+# Secretos — nunca commitear
+.env
+.env.*
+
+# Dependencias y entornos
+node_modules/
+.venv/
+
+# Tooling local (contiene secretos: service_role key, DB password)
+.claude/
+.gstack/
+.agents/
+skills-lock.json
