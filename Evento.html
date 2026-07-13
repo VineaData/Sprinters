@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sprinters · Evento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; --ink:#141412; --muted:#6b6b6b; --line:rgba(20,20,18,.14); --cream:#f6f3ee; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+  .jost{font-family:'Jost',sans-serif}
+  .eyebrow{font-family:'Jost';font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+
+  /* ===== Top bar ===== */
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,48px);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topbar .back{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
+  .topbar .back:hover{opacity:1}
+  .topbar .brand{font-family:'Jost';font-weight:500;letter-spacing:.24em;font-size:14px;text-transform:uppercase}
+
+  /* ===== Hero split ===== */
+  .hero{display:grid;grid-template-columns:1fr 1fr;min-height:640px}
+  @media (max-width:900px){.hero{grid-template-columns:1fr;min-height:auto}}
+  .hero-img-col{position:relative;overflow:hidden;background:#111}
+  .hero-img-col img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  @media (max-width:900px){.hero-img-col{aspect-ratio:4/5}.hero-img-col img{position:static;height:100%}}
+
+  .hero-info-col{position:relative;padding:clamp(40px,5vw,72px);display:flex;flex-direction:column;justify-content:center;overflow:hidden;color:#fff}
+  .hero-info-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(22px) saturate(1.1) brightness(.6);transform:scale(1.15);z-index:0}
+  .hero-info-fade{position:absolute;inset:0;background:linear-gradient(160deg,rgba(9,22,24,.72) 0%,rgba(9,22,24,.88) 100%);z-index:1}
+  .hero-info-content{position:relative;z-index:2}
+
+  .hero-info-content .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 22px}
+  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
+
+  .hero-info-content h1{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
+  .hero-info-content .desc{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.85);font-weight:300;max-width:52ch;margin-bottom:26px}
+
+  .itinerary{display:flex;flex-direction:column;gap:0;margin-bottom:26px;max-width:420px}
+  .itinerary-item{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:12px 0;border-top:1px solid rgba(255,255,255,.16)}
+  .itinerary-item:last-child{border-bottom:1px solid rgba(255,255,255,.16)}
+  .itinerary-item .t{font-family:'Jost';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
+  .itinerary-item .l{font-size:13px;color:rgba(255,255,255,.85);font-weight:300}
+
+  .price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:22px}
+  .price-row .amount{font-family:'Jost';font-size:32px;font-weight:400}
+  .price-row .note{font-size:12px;color:rgba(255,255,255,.6)}
+  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--teal-lt);color:#0b2a2e;padding:8px 14px;border-radius:999px;margin-bottom:22px}
+
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.4)}
+  .btn-ghost:hover{background:rgba(255,255,255,.18)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .urgency{font-family:'Jost';font-size:11.5px;letter-spacing:.08em;color:var(--teal-lt);margin-bottom:8px}
+  .urgency.warn{color:#f3b98a}
+
+  /* ===== Inscripción section ===== */
+  .insc{max-width:760px;margin:0 auto;padding:clamp(60px,8vh,96px) clamp(20px,5vw,0) clamp(80px,10vh,120px)}
+  .insc .eyebrow{margin-bottom:14px;display:block}
+  .insc h2{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
+
+  .card{background:var(--cream);border-radius:8px;padding:clamp(24px,3vw,36px)}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
+  .status-pill.ok{background:#dcefe0;color:#1e5e34}
+  .status-pill.pending{background:#fdf0d5;color:#8a5a12}
+  .status-pill.rejected{background:#fbe2e0;color:#a02418}
+
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+  .toggle-row:last-of-type{border-bottom:1px solid var(--line)}
+  .toggle-row .lab{font-size:13.5px;font-weight:500}
+  .toggle-row .sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .switch{position:relative;width:46px;height:26px;border-radius:999px;background:#d8d4cb;flex-shrink:0;transition:background .2s;border:none;cursor:pointer}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .switch.on{background:var(--teal)}
+  .switch.on::after{transform:translateX(20px)}
+
+  .transfer-box{margin-top:22px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:8px}
+  .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+  .transfer-box .k{font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .transfer-box .v{font-size:14px;font-weight:600}
+  .copy-btn{font-family:'Jost';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
+  .copy-btn:hover{background:var(--teal);color:#fff}
+
+  .upload-row{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--ink);font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .file-name{font-size:12.5px;color:var(--muted)}
+
+  .legal-note{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:16px}
+
+  .footer-mini{text-align:center;padding:40px 20px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="Landing v2.html#agenda" class="back"><span>←</span> Volver a la agenda</a>
+  <a href="Landing v2.html" class="brand">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup></a>
+  <a href="Cuenta.html" class="back" id="navAccount">Mi cuenta</a>
+</nav>
+
+<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Jost';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
+
+<div id="notFoundState" style="display:none;padding:120px 20px;text-align:center">
+  <div class="eyebrow" style="margin-bottom:14px">Ups</div>
+  <h2 class="jost" style="font-weight:300;text-transform:uppercase;font-size:32px;margin-bottom:16px">No encontramos este evento</h2>
+  <p style="color:var(--muted);margin-bottom:24px">Puede que ya haya pasado o el link esté mal. Volvé a la agenda para ver las próximas fechas.</p>
+  <a href="Landing v2.html#agenda" class="btn btn-primary" style="display:inline-flex">Ver agenda →</a>
+</div>
+
+<div id="eventContent" style="display:none">
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-img-col">
+      <img id="evImg" src="" alt="" />
+    </div>
+    <div class="hero-info-col">
+      <div class="hero-info-bg" id="evBgBlur"></div>
+      <div class="hero-info-fade"></div>
+      <div class="hero-info-content">
+        <div class="eyebrow" id="evEyebrow">Evento</div>
+        <div class="meta-row" id="evMetaRow"></div>
+        <h1 id="evTitle">—</h1>
+        <p class="desc" id="evDesc"></p>
+
+        <div id="evItinerary" class="itinerary" style="display:none"></div>
+
+        <div id="evUrgency" class="urgency" style="display:none"></div>
+        <div id="evProBadge" class="pro-badge" style="display:none">✦ Incluido en tu Training Pro</div>
+        <div id="evPriceRow" class="price-row"></div>
+
+        <div class="cta-row">
+          <a href="#inscripcion" class="btn btn-primary" id="ctaReservar">Reservar mi lugar →</a>
+          <button type="button" class="btn btn-ghost" id="ctaShare">Compartir por WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INSCRIPCIÓN ===== -->
+  <section class="insc" id="inscripcion">
+    <span class="eyebrow">Tu lugar</span>
+    <h2>Reservá tu lugar</h2>
+    <div class="card" id="inscCard"><!-- llenado por JS --></div>
+    <p class="legal-note">Los eventos pagos se confirman por transferencia bancaria. Subís tu comprobante acá mismo y un admin del club lo revisa en menos de 24 hs — nada de tarjetas ni pasarelas de pago.</p>
+  </section>
+</div>
+
+<div class="footer-mini">© 2026 Sprinters · Mendoza, AR</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const supa = window.supabase.createClient(
+    'https://lzvsttrbofnktnilunwd.supabase.co',
+    'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'
+  );
+
+  // ───────────────────────────────────────────────────────────────
+  // Datos de transferencia del club — EDITAR ACÁ con los reales.
+  // (mismo criterio que los planes Social: placeholder editable)
+  // ───────────────────────────────────────────────────────────────
+  const BANK = {
+    alias: 'SPRINTERS.MZA',
+    cbu: '0000003100000000000000',
+    titular: 'Sprinters Run Club SRL',
+    cuit: '30-00000000-0'
+  };
+
+  const EV_IMG_DEFAULT = { running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg' };
+  const EV_TAG = { running: 'Running', social: 'Social' };
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmtDate = (iso) => new Intl.DateTimeFormat('es-AR', { weekday:'long', day:'2-digit', month:'long' }).format(new Date(iso));
+  const fmtTime = (iso) => new Intl.DateTimeFormat('es-AR', { hour:'2-digit', minute:'2-digit' }).format(new Date(iso));
+
+  const evId = new URLSearchParams(location.search).get('id');
+  let session = null;
+  let event_ = null;
+  let existingReg = null;
+  let userIsPro = false;
+
+  function show(id, on){ const e = document.getElementById(id); if (e) e.style.display = on ? '' : 'none'; }
+
+  async function init(){
+    if (!evId){ show('loadingState', false); show('notFoundState', true); return; }
+
+    const { data: { session: s } } = await supa.auth.getSession();
+    session = s;
+    const navAcc = document.getElementById('navAccount');
+    if (session && navAcc) navAcc.textContent = 'Mi cuenta ✓';
+
+    const { data: ev, error } = await supa.from('events').select('*').eq('id', evId).maybeSingle();
+    if (error || !ev){ show('loadingState', false); show('notFoundState', true); return; }
+    event_ = ev;
+
+    if (session){
+      const { data: sub } = await supa.from('subscriptions')
+        .select('status, membership_plans(name)')
+        .eq('user_id', session.user.id).eq('status', 'active').maybeSingle();
+      userIsPro = sub?.membership_plans?.name === 'Training Pro';
+
+      const { data: reg } = await supa.from('event_registrations')
+        .select('*').eq('event_id', evId).eq('user_id', session.user.id).maybeSingle();
+      existingReg = reg || null;
+    }
+
+    render();
+    show('loadingState', false);
+    show('eventContent', true);
+  }
+
+  function effectivePrice(){
+    if (event_.included_in_running_pro && userIsPro) return 0;
+    return Number(event_.base_price || 0);
+  }
+
+  function render(){
+    const img = event_.cover_image_url || EV_IMG_DEFAULT[event_.branch] || EV_IMG_DEFAULT.social;
+    document.getElementById('evImg').src = img;
+    document.getElementById('evImg').alt = event_.title;
+    document.getElementById('evBgBlur').style.backgroundImage = `url('${img}')`;
+    document.title = 'Sprinters · ' + event_.title;
+
+    document.getElementById('evEyebrow').textContent = EV_TAG[event_.branch] || event_.branch || 'Evento';
+    document.getElementById('evTitle').textContent = event_.title;
+    document.getElementById('evDesc').textContent = event_.description || '';
+    if (!event_.description) document.getElementById('evDesc').style.display = 'none';
+
+    // Meta chips: fecha, hora, ubicación
+    const metaRow = document.getElementById('evMetaRow');
+    const chips = [fmtDate(event_.event_date), fmtTime(event_.event_date) + ' hs'];
+    if (event_.location_text) chips.push(event_.location_text);
+    metaRow.innerHTML = chips.map(c => `<span class="meta-chip">${esc(c)}</span>`).join('');
+
+    // Itinerario
+    const itin = Array.isArray(event_.itinerary) ? event_.itinerary : [];
+    const itinEl = document.getElementById('evItinerary');
+    if (itin.length){
+      itinEl.style.display = '';
+      itinEl.innerHTML = itin.map(it => `
+        <div class="itinerary-item">
+          <div class="t">${esc(it.time || '')}</div>
+          <div class="l">${esc(it.label || '')}</div>
+        </div>`).join('');
+    }
+
+    // Urgencia / cutoff
+    const urgencyEl = document.getElementById('evUrgency');
+    if (event_.sales_cutoff){
+      const cutoff = new Date(event_.sales_cutoff);
+      const now = new Date();
+      const hrsLeft = (cutoff - now) / 36e5;
+      if (hrsLeft <= 0){
+        urgencyEl.textContent = 'Inscripción cerrada';
+        urgencyEl.classList.add('warn');
+        urgencyEl.style.display = '';
+      } else if (hrsLeft <= 48){
+        urgencyEl.textContent = hrsLeft <= 24 ? 'Cierra hoy · quedan pocas horas' : 'Cierra mañana';
+        urgencyEl.classList.add('warn');
+        urgencyEl.style.display = '';
+      }
+    }
+    if (event_.total_capacity != null){
+      const left = event_.total_capacity - (event_.sold_tickets || 0);
+      if (left <= 10 && left > 0){
+        const extra = `Quedan ${left} lugares`;
+        urgencyEl.textContent = urgencyEl.style.display === '' ? urgencyEl.textContent + ' · ' + extra : extra;
+        urgencyEl.style.display = '';
+      }
+    }
+
+    // Precio / badge Pro
+    const price = effectivePrice();
+    if (event_.included_in_running_pro && userIsPro){
+      show('evProBadge', true);
+    }
+    const priceRow = document.getElementById('evPriceRow');
+    if (price === 0){
+      priceRow.innerHTML = `<span class="amount">Gratis</span>`;
+    } else {
+      priceRow.innerHTML = `<span class="amount">$${price.toLocaleString('es-AR')}</span><span class="note">transferencia · comprobante</span>`;
+    }
+
+    // Compartir
+    document.getElementById('ctaShare').addEventListener('click', () => {
+      const text = `Vengo a ${event_.title} con Sprinters — ${fmtDate(event_.event_date)}. ${location.href}`;
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    });
+
+    renderInscripcion();
+  }
+
+  function closedByCutoff(){
+    return event_.sales_cutoff && new Date(event_.sales_cutoff) <= new Date();
+  }
+  function soldOut(){
+    return event_.total_capacity != null && (event_.total_capacity - (event_.sold_tickets || 0)) <= 0;
+  }
+
+  function renderInscripcion(){
+    const card = document.getElementById('inscCard');
+
+    if (!session){
+      card.innerHTML = `
+        <p style="margin-bottom:18px;font-size:14px;line-height:1.6">Necesitás una cuenta gratis para reservar tu lugar. Se crea en dos minutos.</p>
+        <a href="Cuenta.html?event=${encodeURIComponent(evId)}" class="btn btn-primary" style="background:var(--ink)">Crear cuenta y reservar →</a>`;
+      return;
+    }
+
+    if (closedByCutoff() && !existingReg){
+      card.innerHTML = `<p style="font-size:14px">La inscripción para este evento ya cerró. Mirá la próxima fecha en la <a href="Landing v2.html#agenda" style="text-decoration:underline">agenda</a>.</p>`;
+      return;
+    }
+    if (soldOut() && !existingReg){
+      card.innerHTML = `<p style="font-size:14px">Se agotó el cupo de este evento. Sumate a la próxima — se llenan rápido.</p>`;
+      return;
+    }
+
+    const price = effectivePrice();
+    const needsPayment = price > 0;
+
+    if (existingReg){
+      renderExistingRegistration(card, needsPayment);
+      return;
+    }
+
+    // Sin inscripción todavía → formulario
+    let html = '';
+    if (event_.has_after_run){
+      html += `
+        <div class="toggle-row">
+          <div>
+            <div class="lab">¿Te quedás al after-run?</div>
+            <div class="sub">Bajamos un cambio y comemos algo todos juntos.</div>
+          </div>
+          <button type="button" class="switch" id="afterRunSwitch"></button>
+        </div>`;
+    }
+    html += `
+      <div style="padding-top:${event_.has_after_run ? '4px' : '0'}">
+        <button type="button" class="btn btn-primary" id="reserveBtn" style="margin-top:16px">
+          ${needsPayment ? 'Reservar y ver datos de transferencia →' : 'Confirmar mi lugar →'}
+        </button>
+      </div>`;
+    card.innerHTML = html;
+
+    let afterRunOn = false;
+    const sw = document.getElementById('afterRunSwitch');
+    if (sw) sw.addEventListener('click', () => { afterRunOn = !afterRunOn; sw.classList.toggle('on', afterRunOn); });
+
+    document.getElementById('reserveBtn').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true; btn.textContent = 'Reservando…';
+      const { data, error } = await supa.from('event_registrations')
+        .insert({ event_id: evId, user_id: session.user.id, after_run: afterRunOn })
+        .select().single();
+      if (error){
+        if (error.code === '23505'){
+          const { data: reg } = await supa.from('event_registrations')
+            .select('*').eq('event_id', evId).eq('user_id', session.user.id).maybeSingle();
+          existingReg = reg;
+        } else {
+          alert('No pudimos reservar tu lugar: ' + error.message);
+          btn.disabled = false; btn.textContent = needsPayment ? 'Reservar y ver datos de transferencia →' : 'Confirmar mi lugar →';
+          return;
+        }
+      } else {
+        existingReg = data;
+      }
+      renderInscripcion();
+    });
+  }
+
+  function renderExistingRegistration(card, needsPayment){
+    const reg = existingReg;
+    let statusHtml = '';
+    if (!needsPayment || reg.payment_status === 'not_required'){
+      statusHtml = `<div class="status-pill ok">✓ Ya estás anotado</div><p style="font-size:13.5px;color:var(--muted)">Te esperamos — cualquier cambio te avisamos por mail.</p>`;
+    } else if (reg.payment_status === 'verified'){
+      statusHtml = `<div class="status-pill ok">✓ Pago confirmado</div><p style="font-size:13.5px;color:var(--muted)">¡Nos vemos ahí!</p>`;
+    } else if (reg.payment_status === 'pending_review'){
+      statusHtml = `<div class="status-pill pending">⏳ Comprobante en revisión</div><p style="font-size:13.5px;color:var(--muted)">Lo revisamos en menos de 24 hs y te confirmamos.</p>`;
+    } else if (reg.payment_status === 'rejected'){
+      statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">Revisá el monto y subí uno nuevo.</p>`;
+    }
+
+    let afterRunHtml = '';
+    if (event_.has_after_run){
+      afterRunHtml = `
+        <div class="toggle-row">
+          <div>
+            <div class="lab">¿Te quedás al after-run?</div>
+            <div class="sub">Podés cambiarlo cuando quieras antes del evento.</div>
+          </div>
+          <button type="button" class="switch${reg.after_run ? ' on' : ''}" id="afterRunSwitch"></button>
+        </div>`;
+    }
+
+    card.innerHTML = statusHtml + afterRunHtml +
+      (needsPayment && (reg.payment_status === 'not_required' || reg.payment_status === 'rejected') ? transferBoxHtml() : '');
+
+    const sw = document.getElementById('afterRunSwitch');
+    if (sw) sw.addEventListener('click', async () => {
+      const on = !sw.classList.contains('on');
+      sw.classList.toggle('on', on);
+      const { error } = await supa.from('event_registrations').update({ after_run: on }).eq('id', reg.id);
+      if (!error) existingReg.after_run = on;
+    });
+
+    wireTransferUpload(card, reg);
+  }
+
+  function transferBoxHtml(){
+    return `
+      <div class="transfer-box">
+        <div class="row"><span class="k">Alias</span><span class="v">${esc(BANK.alias)}</span><button type="button" class="copy-btn" data-copy="${esc(BANK.alias)}">Copiar</button></div>
+        <div class="row"><span class="k">CBU</span><span class="v">${esc(BANK.cbu)}</span><button type="button" class="copy-btn" data-copy="${esc(BANK.cbu)}">Copiar</button></div>
+        <div class="row"><span class="k">Titular</span><span class="v">${esc(BANK.titular)}</span></div>
+        <div class="row"><span class="k">CUIT</span><span class="v">${esc(BANK.cuit)}</span></div>
+      </div>
+      <div class="upload-row">
+        <label class="file-btn">＋ Subir comprobante<input type="file" id="receiptInput" accept="image/*,application/pdf" style="display:none" /></label>
+        <span class="file-name" id="receiptFileName">JPG, PNG o PDF · hasta 5 MB</span>
+      </div>`;
+  }
+
+  function wireTransferUpload(card, reg){
+    card.querySelectorAll('.copy-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        navigator.clipboard?.writeText(b.getAttribute('data-copy'));
+        const orig = b.textContent; b.textContent = '✓'; setTimeout(() => b.textContent = orig, 1200);
+      });
+    });
+    const input = card.querySelector('#receiptInput');
+    if (!input) return;
+    input.addEventListener('change', async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024){ alert('El archivo debe pesar menos de 5 MB'); input.value = ''; return; }
+      const nameEl = document.getElementById('receiptFileName');
+      nameEl.textContent = 'Subiendo…';
+      const ext = file.name.split('.').pop().toLowerCase();
+      const path = `${session.user.id}/${reg.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('payment-receipts').upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr){
+        nameEl.textContent = 'Error al subir: ' + upErr.message;
+        return;
+      }
+      const { error: rpcErr } = await supa.rpc('submit_event_receipt', { reg_id: reg.id, receipt_path: path });
+      if (rpcErr){
+        nameEl.textContent = 'Subimos el archivo pero no pudimos confirmarlo: ' + rpcErr.message;
+        return;
+      }
+      existingReg.payment_status = 'pending_review';
+      renderInscripcion();
+    });
+  }
+
+  init();
+});
+</script>
+</body>
+</html>

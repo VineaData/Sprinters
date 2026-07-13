@@ -1,0 +1,11 @@
+# Sprinters — Supabase project config
+project_id = "lzvsttrbofnktnilunwd"
+
+# create-subscription: lo llama el usuario logueado → requiere su JWT
+[functions.create-subscription]
+verify_jwt = true
+
+# mp-webhook: lo llama Mercado Pago (sin JWT de Supabase) → debe quedar público.
+# La autenticidad se valida con la firma x-signature de MP dentro de la función.
+[functions.mp-webhook]
+verify_jwt = false

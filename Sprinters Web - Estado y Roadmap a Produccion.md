@@ -41,7 +41,7 @@ El sitio de Sprinters es visualmente sólido y de alto nivel de diseño. El fron
 | `index.html` | Redirect a Landing v2 | ✅ |
 | `Landing v2.html` | Landing desktop completa | ✅ |
 | `Landing-mobile.html` | Landing mobile completa | ✅ |
-| `Suscripcion Running.html` | Planes Running Club | ⚠️ Sin acción real |
+| `Suscripcion Running.html` | Planes Running Team | ⚠️ Sin acción real |
 | `Suscripcion Social.html` | Planes Social Club | ⚠️ Sin pago real |
 | `Cuenta.html` | Auth + perfil | ⚠️ Funcional pero incompleto |
 | `subs.css` | Estilos compartidos subscripciones | ✅ |
@@ -234,8 +234,8 @@ Tiene `display:none` declarado dos veces en el atributo style inline — es inof
 ### Sprint 1 — Fundamentos (crítico)
 - [ ] Verificar y completar schema Supabase (trigger, tablas, RLS)
 - [ ] Implementar password reset (`resetPasswordForEmail`)
-- [ ] Conectar formulario CTA newsletter a Supabase
-- [ ] Reemplazar account overlay mobile para usar `Cuenta.html`
+
+> **Decisión 2026-06-09:** Mobile queda fuera de alcance por ahora — primero la web desktop funcional, después se adapta a mobile. Newsletter eliminada del plan (no existe una newsletter hoy).
 
 ### Sprint 2 — Operación real
 - [ ] Crear tabla `events` y cargar agenda desde DB

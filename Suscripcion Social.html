@@ -17,6 +17,11 @@
   <a href="Suscripcion Running.html" class="cta">Ver running →</a>
 </nav>
 
+<!-- Aviso de plan pendiente: se completó Social pero eligió también un plan Running al registrarse -->
+<div id="pendingPlanBanner" style="display:none;background:var(--teal,#1f7f8c);color:#fff;text-align:center;padding:14px 20px;font-family:'Montserrat',sans-serif;font-size:12.5px;letter-spacing:.02em">
+  Todavía te falta tu plan <strong id="pendingPlanLabel"></strong> — <a href="#" id="pendingPlanLink" style="color:#fff;text-decoration:underline;font-weight:600">completar ahora →</a>
+</div>
+
 <header class="sub-hero" data-screen-label="01 Hero · Social">
   <div class="pillar-tag">Pilar 02 / Social Club</div>
   <h1>Vení y pasá un<br/>buen rato en <span class="marker" id="subMarker"><span class="marker-bg"></span><span class="marker-txt">grupo.</span></span></h1>
@@ -137,8 +142,8 @@
 <section class="foot-block">
   <div class="inner">
     <h3>¿Todavía no <em>corrés?</em></h3>
-    <p>El Running Club tiene 2 planes pensados para sumarte sin presión. Coach incluido, todas las distancias, y un grupo que te espera en cada esquina del parque.</p>
-    <a href="Suscripcion Running.html" class="btn">Ver planes de Running Club <span class="a">→</span></a>
+    <p>El Running Team tiene 2 planes pensados para sumarte sin presión. Coach incluido, todas las distancias, y un grupo que te espera en cada esquina del parque.</p>
+    <a href="Suscripcion Running.html" class="btn">Ver planes de Running Team <span class="a">→</span></a>
   </div>
 </section>
 
@@ -152,6 +157,24 @@
   (function(){
     const m = document.getElementById('subMarker');
     if (m) setTimeout(() => m.classList.add('is-on'), 600);
+  })();
+
+  // ===== Aviso de plan pendiente (elegido en el signup junto con este) =====
+  (function(){
+    try {
+      const pending = JSON.parse(sessionStorage.getItem('sprinters_pending_plan') || 'null');
+      if (!pending || !pending.payPage) return;
+      const here = decodeURIComponent(location.pathname.split('/').pop() || '');
+      if (pending.payPage === here) return; // ya estamos en esa página
+      const banner = document.getElementById('pendingPlanBanner');
+      const label = document.getElementById('pendingPlanLabel');
+      const link = document.getElementById('pendingPlanLink');
+      if (!banner || !link) return;
+      label.textContent = pending.label || '';
+      link.href = pending.payPage + '?pay=' + encodeURIComponent(pending.paySlug);
+      link.addEventListener('click', () => sessionStorage.removeItem('sprinters_pending_plan'));
+      banner.style.display = 'block';
+    } catch(e){}
   })();
 
   // ===== Pricing data — monthly vs yearly =====
@@ -217,6 +240,22 @@
     applyPeriod('monthly');
   });
   window.addEventListener('resize', positionPill);
+
+  // ===== Si venimos de elegir un plan Social en el signup (?pay=slug), resaltamos esa card =====
+  // (El cobro real de Social todavía no está integrado con Mercado Pago — ver Sprinters Web -
+  // Mercado Pago doc, Flujo B depende del onboarding Marketplace de cada local. Por ahora
+  // dejamos el plan elegido bien visible para que lo confirme con el botón.)
+  (function(){
+    const paySlug = new URLSearchParams(location.search).get('pay');
+    if (!paySlug) return;
+    const slugToPlan = { 'social-day': 'day', 'social-pass': 'pass', 'founders-circle': 'founders' };
+    const card = document.querySelector(`[data-plan="${slugToPlan[paySlug] || ''}"]`);
+    if (card){
+      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+      card.style.outline = '2px solid var(--teal, #1f7f8c)';
+      card.style.outlineOffset = '4px';
+    }
+  })();
 </script>
 </body>
 </html>

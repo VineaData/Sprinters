@@ -1,13 +1,31 @@
-# Secretos — nunca commitear
+# Entornos virtuales y dependencias de Python
+.venv/
+venv/
+ENV/
+env/
+
+# Dependencias de Node (Frontend)
+node_modules/
+
+# Variables de entorno y credenciales (¡Muy importante por seguridad!)
 .env
 .env.*
+!.env.example
 
-# Dependencias y entornos
-node_modules/
-.venv/
-
-# Tooling local (contiene secretos: service_role key, DB password)
+# Archivos de configuración locales e IA (Agentes/Claude/etc.)
+.agents/
 .claude/
 .gstack/
-.agents/
-skills-lock.json
+
+# Base de datos local (si contiene datos locales o reportes)
+db/
+
+# Archivos del sistema operativo o editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Evitar subir planes, metodologías y estados de trabajo
+Sprinters Web - *.md
+Sprinters Web - *

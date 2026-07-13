@@ -537,7 +537,32 @@
             </div>
           </div>
 
-          <!-- Sec 4: Foto (al final, opcional) -->
+          <!-- Sec 4: Suscripción (opcional, elegís al crear la cuenta) -->
+          <div class="section-block">
+            <div class="sec-title">Tu plan <span style="font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil. Running y Social son independientes — si querés, elegís los dos.</p>
+
+            <div class="field">
+              <label class="field-label">Running Team</label>
+              <div class="pill-grid cols-3" id="planRunningGrid">
+                <label class="pill-opt"><input type="radio" name="planRunning" value="" checked /><span>Ninguno por ahora</span></label>
+                <label class="pill-opt"><input type="radio" name="planRunning" value="core" /><span>Core · $35.000/mes</span></label>
+                <label class="pill-opt"><input type="radio" name="planRunning" value="pro" /><span>Pro · $50.000/mes</span></label>
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:18px">
+              <label class="field-label">Social Club</label>
+              <div class="pill-grid cols-4" id="planSocialGrid">
+                <label class="pill-opt"><input type="radio" name="planSocial" value="" checked /><span>Ninguno por ahora</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="social-day" /><span>Day · $6.500/evento</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="social-pass" /><span>Pass · $19.000/mes</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="founders-circle" /><span>Founder's Circle · $38.000/mes</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sec 5: Foto (al final, opcional) -->
           <div class="section-block">
             <div class="sec-title">Foto de perfil <span style="font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
             <div class="photo-row">
@@ -724,25 +749,62 @@
 <div class="toast" id="toast"><span>✓</span> <span id="toastMsg">Cuenta creada</span> <span class="a">→</span></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ===== Mapeo de planes → página de checkout =====
+  // Running (Core/Pro) vive en Suscripcion Running.html, Social (Day/Pass/Founder's) en Suscripcion Social.html.
+  // Antes el redirect post-signup asumía siempre Running, así que un plan Social rompía en silencio.
+  const PLAN_PAGE = {
+    core: 'Suscripcion Running.html', pro: 'Suscripcion Running.html',
+    'social-day': 'Suscripcion Social.html', 'social-pass': 'Suscripcion Social.html', 'founders-circle': 'Suscripcion Social.html'
+  };
+  const PLAN_LABEL = {
+    core: 'Training Core', pro: 'Training Pro',
+    'social-day': 'Social Day', 'social-pass': 'Social Pass', 'founders-circle': "Founder's Circle"
+  };
+  function planTargetUrl(slug){
+    const page = PLAN_PAGE[slug];
+    return page ? page + '?pay=' + encodeURIComponent(slug) : null;
+  }
+  // Si el usuario eligió un plan Running Y un plan Social a la vez, no podemos pagar los
+  // dos al mismo tiempo (cada uno redirige a Mercado Pago). Mandamos primero al de Running
+  // y dejamos el Social guardado para retomarlo — las páginas de Suscripción leen esta key.
+  function goToPlanOrPending(runningSlug, socialSlug, fallback){
+    if (runningSlug && socialSlug){
+      sessionStorage.setItem('sprinters_pending_plan', JSON.stringify({
+        paySlug: socialSlug, payPage: PLAN_PAGE[socialSlug], label: PLAN_LABEL[socialSlug]
+      }));
+      return planTargetUrl(runningSlug);
+    }
+    if (runningSlug) return planTargetUrl(runningSlug);
+    if (socialSlug) return planTargetUrl(socialSlug);
+    return fallback || null;
+  }
+
   // ===== Marker fill on load =====
   setTimeout(() => {
     const m = document.getElementById('asideMarker');
     if (m) m.classList.add('is-on');
   }, 700);
 
-  // ===== Pre-select tab via ?tab=signup|login|profile / ?plan=runner =====
+  // ===== Pre-select tab via ?tab=signup|login|profile / ?plan=core|pro|social-day|social-pass|founders-circle =====
   (function(){
     const p = new URLSearchParams(location.search);
     const tab = p.get('tab');
     const plan = p.get('plan');
-    if (plan) {
-      // Coming from a paid plan → force signup + open form directly
+    const event = p.get('event');
+    if (plan || event) {
+      // Coming from a paid plan or an event signup → force signup + open form directly
       switchTab('signup');
       const intro = document.getElementById('signupIntro');
       const wrap = document.getElementById('signupFormWrap');
       if (intro) intro.style.display = 'none';
       if (wrap) wrap.style.display = '';
-      showToast('Plan ' + plan + ' · completá tu cuenta');
+      // Pre-marcamos el plan elegido en el selector para que quede reflejado en el form
+      if (plan && PLAN_PAGE[plan]) {
+        const group = PLAN_PAGE[plan] === 'Suscripcion Running.html' ? 'planRunning' : 'planSocial';
+        const radio = document.querySelector(`input[name="${group}"][value="${plan}"]`);
+        if (radio) radio.checked = true;
+      }
+      showToast(event ? 'Creá tu cuenta gratis para reservar tu lugar' : 'Plan ' + (PLAN_LABEL[plan] || plan) + ' · completá tu cuenta');
     } else if (tab) {
       switchTab(tab);
     }
@@ -962,7 +1024,7 @@
   }
 
   // ===== Session management =====
-  supa.auth.onAuthStateChange(async (event, session) => {
+  supa.auth.onAuthStateChange((event, session) => {
     if(event === 'SIGNED_OUT' || !session){
       setAuthUI(false);
       clearProfile();
@@ -975,8 +1037,11 @@
     setAuthUI(true);
     const params = new URLSearchParams(location.search);
     if(!params.get('tab') && !params.get('plan')) switchTab('profile');
-    // Load profile data asynchronously (fields fill in after queries resolve)
-    await loadProfile(session.user);
+    // IMPORTANTE: NO hacer llamadas a supabase (supa.from/auth) DENTRO de este
+    // callback — el cliente mantiene un lock interno y se produce un deadlock
+    // que cuelga la query del perfil (→ perfil vacío al refrescar). Lo diferimos
+    // con setTimeout(…,0) para que corra fuera del callback (workaround oficial).
+    setTimeout(() => { loadProfile(session.user); }, 0);
   });
 
   // ===== Logout =====
@@ -1146,6 +1211,8 @@
     const phoneNum  = (document.getElementById('f-phone-num')?.value || '').trim();
     const phone     = phoneNum ? (cc + ' ' + phoneNum) : null;
     const howHeard  = document.querySelector('input[name="how"]:checked')?.value || null;
+    const runningSlug = document.querySelector('input[name="planRunning"]:checked')?.value || '';
+    const socialSlug  = document.querySelector('input[name="planSocial"]:checked')?.value || '';
 
     showToast('Creando cuenta…');
 
@@ -1172,8 +1239,12 @@
       return;
     }
 
-    // Email confirmation required: user created but session is null — can't upsert yet
+    // Email confirmation required: user created but session is null — can't upsert yet.
+    // Guardamos el plan elegido para retomarlo cuando confirme e inicie sesión.
     if(!data.session){
+      if (runningSlug || socialSlug){
+        sessionStorage.setItem('sprinters_signup_plan_choice', JSON.stringify({ runningSlug, socialSlug }));
+      }
       showToast('¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
       setTimeout(() => switchTab('login'), 2000);
       return;
@@ -1190,6 +1261,23 @@
     setAuthUI(true);
     switchTab('profile');
     await loadProfile(data.user);
+    // Si eligió un plan Running y/o Social, lo llevamos al checkout correcto
+    // (si eligió los dos, primero Running y el Social queda pendiente — ver goToPlanOrPending)
+    const planTarget = goToPlanOrPending(runningSlug, socialSlug, null);
+    if(planTarget){
+      showToast('¡Cuenta creada! Te llevamos a pagar tu plan…');
+      setTimeout(() => { location.href = planTarget; }, 1200);
+      return;
+    }
+    // Si vino a inscribirse a un evento (?event=<id>), volvemos a la página del
+    // evento a completar la reserva (ahí vive el formulario y, si es pago, la
+    // transferencia + comprobante)
+    const _event = new URLSearchParams(location.search).get('event');
+    if(_event){
+      showToast('¡Cuenta creada! Te llevamos a completar tu lugar…');
+      setTimeout(() => { location.href = 'Evento.html?id=' + encodeURIComponent(_event); }, 1200);
+      return;
+    }
     showToast('¡Bienvenido al club!');
   });
 
@@ -1211,6 +1299,27 @@
     setAuthUI(true);
     switchTab('profile');
     await loadProfile(data.user);
+    // Si vino desde un plan pago (?plan=core|pro|social-day|social-pass|founders-circle) lo llevamos
+    // al checkout correcto. Si el plan se eligió antes de confirmar el mail, lo leemos de sessionStorage.
+    const _plan = new URLSearchParams(location.search).get('plan');
+    let _pending = null;
+    try { _pending = JSON.parse(sessionStorage.getItem('sprinters_signup_plan_choice') || 'null'); } catch(e){}
+    const loginTarget = _pending
+      ? goToPlanOrPending(_pending.runningSlug, _pending.socialSlug, null)
+      : (_plan ? planTargetUrl(_plan) : null);
+    if(loginTarget){
+      sessionStorage.removeItem('sprinters_signup_plan_choice');
+      showToast('Sesión iniciada · te llevamos a pagar…');
+      setTimeout(() => { location.href = loginTarget; }, 1000);
+      return;
+    }
+    // Si vino a inscribirse a un evento (?event=<id>), volvemos a la página del evento
+    const _event = new URLSearchParams(location.search).get('event');
+    if(_event){
+      showToast('Sesión iniciada · te llevamos a completar tu lugar…');
+      setTimeout(() => { location.href = 'Evento.html?id=' + encodeURIComponent(_event); }, 1000);
+      return;
+    }
     showToast('Sesión iniciada · bienvenido de vuelta');
   });
 
