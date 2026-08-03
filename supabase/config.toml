@@ -9,3 +9,8 @@ verify_jwt = true
 # La autenticidad se valida con la firma x-signature de MP dentro de la función.
 [functions.mp-webhook]
 verify_jwt = false
+
+# admin-create-user: lo llama un admin logueado desde Admin.html → requiere su JWT
+# (la función revalida is_admin puertas adentro, igual que las funciones SQL admin_*)
+[functions.admin-create-user]
+verify_jwt = true

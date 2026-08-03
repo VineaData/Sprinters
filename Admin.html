@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sprinters · Admin</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<style>
+  :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; --ink:#141412; --muted:#6b6b6b; --line:rgba(20,20,18,.14); --cream:#f6f3ee; --error:#b91c1c; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button,input,select,textarea{font-family:inherit}
+  button{cursor:pointer}
+  .jost{font-family:'Jost',sans-serif}
+  .eyebrow{font-family:'Jost';font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,4vw,48px);background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topbar a{font-family:'Jost';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.8}
+  .topbar a:hover{opacity:1}
+  .topbar .brand{font-weight:500;letter-spacing:.24em;font-size:14px}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,4vw,48px) 100px}
+
+  h1{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,44px);margin-bottom:6px}
+  .sub{color:var(--muted);font-size:13.5px;margin-bottom:28px}
+
+  .tabs{display:inline-flex;background:var(--cream);border-radius:999px;padding:4px;gap:2px;margin-bottom:28px}
+  .tab-btn{padding:11px 22px;border:none;background:none;border-radius:999px;font-family:'Jost';font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--muted);transition:all .2s}
+  .tab-btn.active{background:var(--ink);color:#fff}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
+  .search-input{flex:1;min-width:200px;height:42px;border:1px solid var(--line);border-radius:8px;padding:0 14px;font-size:13.5px;outline:none;background:var(--cream)}
+  .search-input:focus{border-color:var(--ink)}
+  .chk-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:'Jost';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;border:none;transition:filter .2s,background .2s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-ghost{background:#fff;border:1px solid var(--ink);color:var(--ink)}
+  .btn-sm{padding:7px 14px;font-size:10.5px}
+  .btn-danger{background:none;color:var(--error);border:1px solid var(--error)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{text-align:left;font-family:'Jost';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line)}
+  tbody td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr.inactive{opacity:.5}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-family:'Jost';font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+  .badge.admin{background:#fde2d2;color:#9a3d12}
+  .badge.pub{background:#dcefe0;color:#1e5e34}
+  .badge.unpub{background:#eee;color:#888}
+  .badge.inactive{background:#f4d9d7;color:#8a1f16}
+  .row-actions{display:flex;gap:8px}
+  .empty-row td{text-align:center;color:var(--muted);padding:36px 0}
+
+  /* ===== Modal ===== */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,10,.5);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:12px;padding:32px;max-width:640px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2)}
+  .modal h3{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:24px;margin-bottom:20px}
+  .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .f-grid .full{grid-column:1/-1}
+  @media (max-width:560px){.f-grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field label{font-family:'Jost';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .field input, .field select, .field textarea{height:42px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font-size:13.5px;outline:none;background:var(--cream)}
+  .field textarea{height:auto;padding:10px 12px;resize:vertical;min-height:70px}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--ink)}
+  .field-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+  .switch{position:relative;width:44px;height:24px;border-radius:999px;background:#d8d4cb;border:none;flex-shrink:0}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+  .switch.on{background:var(--teal)}
+  .switch.on::after{transform:translateX(20px)}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+  .modal-err{background:#fbe2e0;color:#a02418;padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
+
+  .gate-msg{padding:120px 20px;text-align:center;font-family:'Jost';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="Cuenta.html">← Mi cuenta</a>
+  <span class="brand jost">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup> · Admin</span>
+  <a href="#" id="logoutLink">Cerrar sesión</a>
+</nav>
+
+<div id="gate" class="gate-msg">Verificando acceso…</div>
+
+<div id="adminApp" class="wrap" style="display:none">
+  <span class="eyebrow">Panel de administración</span>
+  <h1>Gestión del club</h1>
+  <p class="sub">ABM de usuarios y eventos. Todos los cambios pasan por funciones que revalidan que sos admin del lado del servidor.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="usuarios">Usuarios</button>
+    <button class="tab-btn" data-tab="eventos">Eventos</button>
+  </div>
+
+  <!-- ===== USUARIOS ===== -->
+  <section id="panel-usuarios">
+    <div class="toolbar">
+      <input type="text" class="search-input" id="userSearch" placeholder="Buscar por nombre, mail o teléfono…" />
+      <label class="chk-label"><input type="checkbox" id="userShowInactive" /> Mostrar inactivos</label>
+      <button class="btn btn-primary" id="newUserBtn">+ Nuevo usuario</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Rol</th><th>Desde</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="usersTbody"><tr class="empty-row"><td colspan="7">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== EVENTOS ===== -->
+  <section id="panel-eventos" style="display:none">
+    <div class="toolbar">
+      <input type="text" class="search-input" id="eventSearch" placeholder="Buscar por título…" />
+      <label class="chk-label"><input type="checkbox" id="eventShowInactive" /> Mostrar inactivos</label>
+      <button class="btn btn-primary" id="newEventBtn">+ Nuevo evento</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Título</th><th>Fecha</th><th>Rama</th><th>Precio</th><th>Publicado</th><th>Cupo</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="eventsTbody"><tr class="empty-row"><td colspan="8">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- ===== MODAL USUARIO ===== -->
+<div class="modal-bg" id="userModalBg">
+  <div class="modal">
+    <h3 id="userModalTitle">Editar usuario</h3>
+    <div class="modal-err" id="userModalErr"></div>
+    <form id="userForm">
+      <div class="f-grid">
+        <div class="field full" id="userEmailField">
+          <label>Email <span style="color:var(--error)">*</span></label>
+          <input type="email" id="u-email" />
+        </div>
+        <div class="field full" id="userPassField">
+          <label>Contraseña <span style="color:var(--error)">*</span></label>
+          <input type="password" id="u-pass" minlength="8" placeholder="mín. 8 caracteres" />
+        </div>
+        <div class="field"><label>Nombre</label><input type="text" id="u-first" /></div>
+        <div class="field"><label>Apellido</label><input type="text" id="u-last" /></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="u-phone" /></div>
+        <div class="field"><label>Edad</label><input type="number" id="u-age" min="14" max="99" /></div>
+        <div class="field">
+          <label>Sexo</label>
+          <select id="u-sex"><option value="">—</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select>
+        </div>
+        <div class="field"><label>Origen</label><input type="text" id="u-origin" /></div>
+        <div class="field full"><label>Contacto de emergencia</label><input type="text" id="u-emerg" /></div>
+        <div class="field full"><label>Cómo nos conoció</label><input type="text" id="u-how" /></div>
+        <div class="field"><label>Eventos sociales</label><input type="number" id="u-events" min="0" /></div>
+        <div class="field"><label>Km totales</label><input type="number" id="u-km" min="0" step="0.1" /></div>
+        <div class="field full"><label>Ahorro como PRO ($)</label><input type="number" id="u-saved" min="0" /></div>
+      </div>
+      <div class="field-toggle">
+        <div><strong style="font-size:13px">Es administrador</strong><div style="font-size:11.5px;color:var(--muted)">Acceso total a este panel</div></div>
+        <button type="button" class="switch" id="u-admin-switch"></button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="userModalCancel">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="userModalSave">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== MODAL EVENTO ===== -->
+<div class="modal-bg" id="eventModalBg">
+  <div class="modal" style="max-width:720px">
+    <h3 id="eventModalTitle">Editar evento</h3>
+    <div class="modal-err" id="eventModalErr"></div>
+    <form id="eventForm">
+      <div class="f-grid">
+        <div class="field full"><label>Título <span style="color:var(--error)">*</span></label><input type="text" id="e-title" required /></div>
+        <div class="field"><label>Fecha y hora <span style="color:var(--error)">*</span></label><input type="datetime-local" id="e-date" required /></div>
+        <div class="field"><label>Ubicación</label><input type="text" id="e-location" /></div>
+        <div class="field full">
+          <label>Imagen del evento</label>
+          <div id="e-image-preview" style="display:none;margin-bottom:8px;width:100%;max-height:160px;overflow:hidden;border-radius:8px;border:1px solid var(--line)"><img id="e-image-preview-img" style="width:100%;display:block" /></div>
+          <input type="file" id="e-image-file" accept="image/*" />
+          <div id="e-image-status" style="font-size:11.5px;color:var(--muted);margin-top:4px"></div>
+        </div>
+        <div class="field"><label>Precio Run ($, vacío = gratis)</label><input type="number" id="e-price" min="0" placeholder="5000" /></div>
+        <div class="field"><label>Cupo total (vacío = sin límite)</label><input type="number" id="e-capacity" min="1" /></div>
+        <div class="field full"><label>Cierre de inscripción (opcional)</label><input type="datetime-local" id="e-cutoff" /></div>
+        <div class="field full"><label>Descripción</label><textarea id="e-desc"></textarea></div>
+        <div class="field full">
+          <label>Itinerario — una línea por paso: "09:30 - Salida Prado Español"</label>
+          <textarea id="e-itinerary" placeholder="09:30 - Salida&#10;10:15 - Vuelta al punto&#10;10:30 - After run"></textarea>
+        </div>
+      </div>
+      <div class="field-toggle"><div><strong style="font-size:13px">After-run</strong><div style="font-size:11.5px;color:var(--muted)">El evento tiene reserva de after-run</div></div><button type="button" class="switch" id="e-afterrun-switch"></button></div>
+      <div class="field full" id="e-afterrun-price-field" style="display:none;margin:-6px 0 14px">
+        <label>Precio after-run ($)</label>
+        <input type="number" id="e-afterrun-price" min="0" placeholder="Ej. 3000" />
+      </div>
+      <div class="field-toggle"><div><strong style="font-size:13px">Incluido en Training Pro</strong><div style="font-size:11.5px;color:var(--muted)">Los Pro entran sin costo</div></div><button type="button" class="switch" id="e-pro-switch"></button></div>
+      <div class="field-toggle"><div><strong style="font-size:13px">Publicado</strong><div style="font-size:11.5px;color:var(--muted)">Visible en la agenda del sitio</div></div><button type="button" class="switch on" id="e-published-switch"></button></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="eventModalCancel">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="eventModalSave">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const waitFor = (cond, cb, tries) => {
+    tries = tries || 0;
+    if (cond()) return cb();
+    if (tries > 80) return;
+    setTimeout(() => waitFor(cond, cb, tries + 1), 60);
+  };
+
+  waitFor(() => window.supabase, () => {
+    const supa = window.supabase.createClient(
+      'https://lzvsttrbofnktnilunwd.supabase.co',
+      'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'
+    );
+
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const fmtDate = (iso) => iso ? new Intl.DateTimeFormat('es-AR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(iso)) : '—';
+    const toDatetimeLocal = (iso) => {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    };
+
+    // ================================================================
+    // GATE — solo admins pasan
+    // ================================================================
+    let currentUserId = null;
+    (async () => {
+      const { data: { session } } = await supa.auth.getSession();
+      if (!session) { location.href = 'Cuenta.html?tab=login'; return; }
+      currentUserId = session.user.id;
+      const { data: profile, error } = await supa.from('users').select('is_admin').eq('id', session.user.id).maybeSingle();
+      if (error || !profile?.is_admin) {
+        document.getElementById('gate').textContent = 'No tenés acceso a este panel.';
+        setTimeout(() => location.href = 'Cuenta.html', 1800);
+        return;
+      }
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('adminApp').style.display = '';
+      loadUsers();
+      loadEvents();
+    })();
+
+    document.getElementById('logoutLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supa.auth.signOut();
+      location.href = 'Cuenta.html';
+    });
+
+    // ================================================================
+    // TABS
+    // ================================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        const tab = btn.getAttribute('data-tab');
+        document.getElementById('panel-usuarios').style.display = tab === 'usuarios' ? '' : 'none';
+        document.getElementById('panel-eventos').style.display = tab === 'eventos' ? '' : 'none';
+      });
+    });
+
+    // ================================================================
+    // USUARIOS
+    // ================================================================
+    async function loadUsers(){
+      const tbody = document.getElementById('usersTbody');
+      const search = document.getElementById('userSearch').value.trim();
+      const includeInactive = document.getElementById('userShowInactive').checked;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Cargando…</td></tr>`;
+      const { data, error } = await supa.rpc('admin_list_users', { p_search: search || null, p_include_inactive: includeInactive });
+      if (error){
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${esc(error.message)}</td></tr>`;
+        return;
+      }
+      if (!data || !data.length){
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No hay usuarios para mostrar.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(u => `
+        <tr class="${u.deleted_at ? 'inactive' : ''}" data-id="${esc(u.id)}">
+          <td>${esc(u.first_name)} ${esc(u.last_name)}</td>
+          <td>${esc(u.email)}</td>
+          <td>${esc(u.phone || '—')}</td>
+          <td>${u.is_admin ? '<span class="badge admin">Admin</span>' : '—'}</td>
+          <td>${fmtDate(u.created_at)}</td>
+          <td>${u.deleted_at ? '<span class="badge inactive">Inactivo</span>' : '<span class="badge pub">Activo</span>'}</td>
+          <td class="row-actions">
+            <button class="btn btn-ghost btn-sm" data-edit-user="${esc(u.id)}">Editar</button>
+            ${u.deleted_at
+              ? `<button class="btn btn-ghost btn-sm" data-restore-user="${esc(u.id)}">Reactivar</button>`
+              : `<button class="btn btn-danger btn-sm" data-delete-user="${esc(u.id)}">Eliminar</button>`}
+          </td>
+        </tr>`).join('');
+
+      tbody.querySelectorAll('[data-edit-user]').forEach(b => b.addEventListener('click', () => {
+        const row = data.find(u => u.id === b.getAttribute('data-edit-user'));
+        openUserModal(row);
+      }));
+      tbody.querySelectorAll('[data-delete-user]').forEach(b => b.addEventListener('click', async () => {
+        if (!confirm('¿Dar de baja a este usuario? Podés reactivarlo después.')) return;
+        const { error } = await supa.rpc('admin_soft_delete_user', { p_user_id: b.getAttribute('data-delete-user') });
+        if (error) alert('No pudimos eliminarlo: ' + error.message); else loadUsers();
+      }));
+      tbody.querySelectorAll('[data-restore-user]').forEach(b => b.addEventListener('click', async () => {
+        const { error } = await supa.rpc('admin_restore_user', { p_user_id: b.getAttribute('data-restore-user') });
+        if (error) alert('No pudimos reactivarlo: ' + error.message); else loadUsers();
+      }));
+    }
+
+    let userSearchTimer;
+    document.getElementById('userSearch').addEventListener('input', () => { clearTimeout(userSearchTimer); userSearchTimer = setTimeout(loadUsers, 350); });
+    document.getElementById('userShowInactive').addEventListener('change', loadUsers);
+
+    let editingUserId = null;
+    function openUserModal(user){
+      editingUserId = user ? user.id : null;
+      document.getElementById('userModalErr').style.display = 'none';
+      document.getElementById('userModalTitle').textContent = user ? 'Editar usuario' : 'Nuevo usuario';
+      document.getElementById('userEmailField').style.display = user ? 'none' : '';
+      document.getElementById('userPassField').style.display = user ? 'none' : '';
+      document.getElementById('u-email').required = !user;
+      document.getElementById('u-pass').required = !user;
+      document.getElementById('u-email').value = user?.email || '';
+      document.getElementById('u-pass').value = '';
+      document.getElementById('u-first').value = user?.first_name || '';
+      document.getElementById('u-last').value = user?.last_name || '';
+      document.getElementById('u-phone').value = user?.phone || '';
+      document.getElementById('u-age').value = user?.age ?? '';
+      document.getElementById('u-sex').value = user?.sex || '';
+      document.getElementById('u-origin').value = user?.origin || '';
+      document.getElementById('u-emerg').value = user?.emergency_contact || '';
+      document.getElementById('u-how').value = user?.how_heard || '';
+      document.getElementById('u-events').value = user?.social_events_attended ?? '';
+      document.getElementById('u-km').value = user?.total_km ?? '';
+      document.getElementById('u-saved').value = user?.total_money_saved ?? '';
+      document.getElementById('u-admin-switch').classList.toggle('on', !!user?.is_admin);
+      document.getElementById('userModalBg').classList.add('show');
+    }
+    document.getElementById('newUserBtn').addEventListener('click', () => openUserModal(null));
+    document.getElementById('userModalCancel').addEventListener('click', () => document.getElementById('userModalBg').classList.remove('show'));
+    document.getElementById('u-admin-switch').addEventListener('click', function(){ this.classList.toggle('on'); });
+
+    document.getElementById('userForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('userModalErr');
+      errBox.style.display = 'none';
+      const isAdminOn = document.getElementById('u-admin-switch').classList.contains('on');
+      const saveBtn = document.getElementById('userModalSave');
+      saveBtn.disabled = true;
+
+      try {
+        if (!editingUserId){
+          // Alta: requiere la Edge Function admin-create-user (service_role del lado del servidor).
+          const { data: { session } } = await supa.auth.getSession();
+          const email = document.getElementById('u-email').value.trim();
+          const password = document.getElementById('u-pass').value;
+          if (!email || password.length < 8) throw new Error('Completá mail y una contraseña de al menos 8 caracteres.');
+          const { data, error } = await supa.functions.invoke('admin-create-user', {
+            body: {
+              email, password,
+              first_name: document.getElementById('u-first').value.trim(),
+              last_name: document.getElementById('u-last').value.trim(),
+              phone: document.getElementById('u-phone').value.trim() || null,
+              is_admin: isAdminOn,
+            }
+          });
+          if (error) throw new Error(error.message || 'No pudimos crear el usuario');
+          if (data?.error) throw new Error(data.error);
+        } else {
+          const { error } = await supa.rpc('admin_update_user', {
+            p_user_id: editingUserId,
+            p_first_name: document.getElementById('u-first').value.trim() || null,
+            p_last_name: document.getElementById('u-last').value.trim() || null,
+            p_phone: document.getElementById('u-phone').value.trim() || null,
+            p_age: document.getElementById('u-age').value ? parseInt(document.getElementById('u-age').value) : null,
+            p_sex: document.getElementById('u-sex').value || null,
+            p_origin: document.getElementById('u-origin').value.trim() || null,
+            p_emergency_contact: document.getElementById('u-emerg').value.trim() || null,
+            p_how_heard: document.getElementById('u-how').value.trim() || null,
+            p_is_admin: isAdminOn,
+            p_social_events_attended: document.getElementById('u-events').value ? parseInt(document.getElementById('u-events').value) : null,
+            p_total_km: document.getElementById('u-km').value ? parseFloat(document.getElementById('u-km').value) : null,
+            p_total_money_saved: document.getElementById('u-saved').value ? parseFloat(document.getElementById('u-saved').value) : null,
+          });
+          if (error) throw new Error(error.message);
+        }
+        document.getElementById('userModalBg').classList.remove('show');
+        loadUsers();
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.style.display = '';
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
+
+    // ================================================================
+    // EVENTOS
+    // ================================================================
+    const BRANCH_LABEL = { running: 'Running', social: 'Social' };
+
+    async function loadEvents(){
+      const tbody = document.getElementById('eventsTbody');
+      const search = document.getElementById('eventSearch').value.trim();
+      const includeInactive = document.getElementById('eventShowInactive').checked;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Cargando…</td></tr>`;
+      const { data, error } = await supa.rpc('admin_list_events', { p_search: search || null, p_include_inactive: includeInactive });
+      if (error){
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Error: ${esc(error.message)}</td></tr>`;
+        return;
+      }
+      if (!data || !data.length){
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No hay eventos para mostrar.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(ev => `
+        <tr class="${ev.deleted_at ? 'inactive' : ''}" data-id="${esc(ev.id)}">
+          <td>${esc(ev.title)}</td>
+          <td>${fmtDate(ev.event_date)}</td>
+          <td>${esc(BRANCH_LABEL[ev.branch] || ev.branch)}</td>
+          <td>${ev.base_price ? '$' + Number(ev.base_price).toLocaleString('es-AR') : 'Gratis'}${ev.has_after_run && ev.after_run_price ? ' + after $' + Number(ev.after_run_price).toLocaleString('es-AR') : ''}</td>
+          <td>${ev.is_published ? '<span class="badge pub">Sí</span>' : '<span class="badge unpub">No</span>'}</td>
+          <td>${ev.total_capacity != null ? (ev.sold_tickets || 0) + ' / ' + ev.total_capacity : '—'}</td>
+          <td>${ev.deleted_at ? '<span class="badge inactive">Inactivo</span>' : '<span class="badge pub">Activo</span>'}</td>
+          <td class="row-actions">
+            <button class="btn btn-ghost btn-sm" data-edit-event="${esc(ev.id)}">Editar</button>
+            ${ev.deleted_at
+              ? `<button class="btn btn-ghost btn-sm" data-restore-event="${esc(ev.id)}">Reactivar</button>`
+              : `<button class="btn btn-danger btn-sm" data-delete-event="${esc(ev.id)}">Eliminar</button>`}
+          </td>
+        </tr>`).join('');
+
+      tbody.querySelectorAll('[data-edit-event]').forEach(b => b.addEventListener('click', () => {
+        const row = data.find(ev => ev.id === b.getAttribute('data-edit-event'));
+        openEventModal(row);
+      }));
+      tbody.querySelectorAll('[data-delete-event]').forEach(b => b.addEventListener('click', async () => {
+        if (!confirm('¿Dar de baja este evento? Deja de verse en la agenda; podés reactivarlo después.')) return;
+        const { error } = await supa.rpc('admin_soft_delete_event', { p_event_id: b.getAttribute('data-delete-event') });
+        if (error) alert('No pudimos eliminarlo: ' + error.message); else loadEvents();
+      }));
+      tbody.querySelectorAll('[data-restore-event]').forEach(b => b.addEventListener('click', async () => {
+        const { error } = await supa.rpc('admin_restore_event', { p_event_id: b.getAttribute('data-restore-event') });
+        if (error) alert('No pudimos reactivarlo: ' + error.message); else loadEvents();
+      }));
+    }
+
+    let eventSearchTimer;
+    document.getElementById('eventSearch').addEventListener('input', () => { clearTimeout(eventSearchTimer); eventSearchTimer = setTimeout(loadEvents, 350); });
+    document.getElementById('eventShowInactive').addEventListener('change', loadEvents);
+
+    function itineraryToText(itin){
+      if (!Array.isArray(itin)) return '';
+      return itin.map(it => `${it.time || ''} - ${it.label || ''}`).join('\n');
+    }
+    function textToItinerary(text){
+      return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+        const idx = line.indexOf(' - ');
+        if (idx === -1) return { time: '', label: line };
+        return { time: line.slice(0, idx).trim(), label: line.slice(idx + 3).trim() };
+      });
+    }
+
+    let editingEventId = null;
+    let pendingImageFile = null;
+    let currentImageUrl = '';
+
+    function toggleAfterRunPriceField(){
+      const on = document.getElementById('e-afterrun-switch').classList.contains('on');
+      document.getElementById('e-afterrun-price-field').style.display = on ? '' : 'none';
+    }
+
+    function openEventModal(ev){
+      editingEventId = ev ? ev.id : null;
+      pendingImageFile = null;
+      currentImageUrl = ev?.cover_image_url || '';
+      document.getElementById('eventModalErr').style.display = 'none';
+      document.getElementById('eventModalTitle').textContent = ev ? 'Editar evento' : 'Nuevo evento';
+      document.getElementById('e-title').value = ev?.title || '';
+      document.getElementById('e-date').value = toDatetimeLocal(ev?.event_date);
+      document.getElementById('e-location').value = ev?.location_text || '';
+      document.getElementById('e-image-file').value = '';
+      document.getElementById('e-image-status').textContent = '';
+      const preview = document.getElementById('e-image-preview');
+      if (currentImageUrl){
+        document.getElementById('e-image-preview-img').src = currentImageUrl;
+        preview.style.display = '';
+      } else {
+        preview.style.display = 'none';
+      }
+      document.getElementById('e-price').value = ev ? (ev?.base_price ?? '') : 5000;
+      document.getElementById('e-capacity').value = ev?.total_capacity ?? '';
+      document.getElementById('e-cutoff').value = toDatetimeLocal(ev?.sales_cutoff);
+      document.getElementById('e-desc').value = ev?.description || '';
+      document.getElementById('e-itinerary').value = itineraryToText(ev?.itinerary);
+      document.getElementById('e-afterrun-switch').classList.toggle('on', !!ev?.has_after_run);
+      document.getElementById('e-afterrun-price').value = ev?.after_run_price ?? '';
+      toggleAfterRunPriceField();
+      document.getElementById('e-pro-switch').classList.toggle('on', !!ev?.included_in_running_pro);
+      document.getElementById('e-published-switch').classList.toggle('on', ev ? !!ev.is_published : true);
+      document.getElementById('eventModalBg').classList.add('show');
+    }
+    document.getElementById('newEventBtn').addEventListener('click', () => openEventModal(null));
+    document.getElementById('eventModalCancel').addEventListener('click', () => document.getElementById('eventModalBg').classList.remove('show'));
+    document.getElementById('e-afterrun-switch').addEventListener('click', function(){ this.classList.toggle('on'); toggleAfterRunPriceField(); });
+    ['e-pro-switch', 'e-published-switch'].forEach(id => {
+      document.getElementById(id).addEventListener('click', function(){ this.classList.toggle('on'); });
+    });
+    document.getElementById('e-image-file').addEventListener('change', () => {
+      const file = document.getElementById('e-image-file').files[0];
+      pendingImageFile = file || null;
+      if (file){
+        document.getElementById('e-image-preview-img').src = URL.createObjectURL(file);
+        document.getElementById('e-image-preview').style.display = '';
+        document.getElementById('e-image-status').textContent = 'Se sube al guardar.';
+      }
+    });
+
+    document.getElementById('eventForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('eventModalErr');
+      errBox.style.display = 'none';
+      const saveBtn = document.getElementById('eventModalSave');
+      saveBtn.disabled = true;
+
+      try {
+        const title = document.getElementById('e-title').value.trim();
+        const dateVal = document.getElementById('e-date').value;
+        if (!title || !dateVal) throw new Error('Título y fecha son obligatorios.');
+
+        // Subir imagen nueva si se eligió un archivo
+        let imageUrl = currentImageUrl || null;
+        if (pendingImageFile){
+          document.getElementById('e-image-status').textContent = 'Subiendo imagen…';
+          const ext = (pendingImageFile.name.split('.').pop() || 'jpg').toLowerCase();
+          const path = `${editingEventId || crypto.randomUUID()}/${Date.now()}.${ext}`;
+          const { error: upErr } = await supa.storage.from('event-images').upload(path, pendingImageFile, { upsert: true, contentType: pendingImageFile.type });
+          if (upErr) throw new Error('No pudimos subir la imagen: ' + upErr.message);
+          const { data: pub } = supa.storage.from('event-images').getPublicUrl(path);
+          imageUrl = pub?.publicUrl || imageUrl;
+          document.getElementById('e-image-status').textContent = '';
+        }
+
+        const afterRunOn = document.getElementById('e-afterrun-switch').classList.contains('on');
+        const afterRunPriceVal = document.getElementById('e-afterrun-price').value;
+
+        const params = {
+          p_title: title,
+          p_event_date: new Date(dateVal).toISOString(),
+          p_location_text: document.getElementById('e-location').value.trim() || null,
+          p_cover_image_url: imageUrl,
+          p_base_price: document.getElementById('e-price').value ? parseFloat(document.getElementById('e-price').value) : null,
+          p_total_capacity: document.getElementById('e-capacity').value ? parseInt(document.getElementById('e-capacity').value) : null,
+          p_sales_cutoff: document.getElementById('e-cutoff').value ? new Date(document.getElementById('e-cutoff').value).toISOString() : null,
+          p_description: document.getElementById('e-desc').value.trim() || null,
+          p_itinerary: textToItinerary(document.getElementById('e-itinerary').value),
+          p_has_after_run: afterRunOn,
+          p_included_in_running_pro: document.getElementById('e-pro-switch').classList.contains('on'),
+          p_is_published: document.getElementById('e-published-switch').classList.contains('on'),
+          p_after_run_price: afterRunOn && afterRunPriceVal ? parseFloat(afterRunPriceVal) : null,
+        };
+
+        if (!editingEventId){
+          const { error } = await supa.rpc('admin_create_event', params);
+          if (error) throw new Error(error.message);
+        } else {
+          const { error } = await supa.rpc('admin_update_event', {
+            p_event_id: editingEventId,
+            ...params,
+            p_clear_after_run_price: !afterRunOn || !afterRunPriceVal,
+          });
+          if (error) throw new Error(error.message);
+        }
+        document.getElementById('eventModalBg').classList.remove('show');
+        loadEvents();
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.style.display = '';
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

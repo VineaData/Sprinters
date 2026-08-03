@@ -552,12 +552,12 @@
             </div>
 
             <div class="field" style="margin-top:18px">
-              <label class="field-label">Social Club</label>
-              <div class="pill-grid cols-4" id="planSocialGrid">
-                <label class="pill-opt"><input type="radio" name="planSocial" value="" checked /><span>Ninguno por ahora</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="social-day" /><span>Day · $6.500/evento</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="social-pass" /><span>Pass · $19.000/mes</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="founders-circle" /><span>Founder's Circle · $38.000/mes</span></label>
+              <label class="field-label">Social Club <span style="text-transform:none;font-weight:700;color:#8a5a12;letter-spacing:0">· Próximamente</span></label>
+              <div class="pill-grid cols-4" id="planSocialGrid" style="opacity:.5">
+                <label class="pill-opt"><input type="radio" name="planSocial" value="" checked disabled /><span>Ninguno por ahora</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="social-day" disabled /><span>Day · Próximamente</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="social-pass" disabled /><span>Pass · Próximamente</span></label>
+                <label class="pill-opt"><input type="radio" name="planSocial" value="founders-circle" disabled /><span>Founder's Circle · Próximamente</span></label>
               </div>
             </div>
           </div>
@@ -609,12 +609,49 @@
         </div>
         <div class="row-between">
           <label><input type="checkbox" /> Recordarme</label>
-          <a href="#">¿Olvidaste tu contraseña?</a>
+          <a href="#" onclick="showForgotPassword();return false">¿Olvidaste tu contraseña?</a>
         </div>
         <button type="submit" class="btn-primary" style="align-self:flex-start;margin-top:8px">Iniciar sesión <span class="a">→</span></button>
 
         <div class="switch">¿Primera vez por acá? <button type="button" onclick="switchTab('signup')">Crear una cuenta</button></div>
       </form>
+
+      <!-- ====== FORGOT PASSWORD (pedir link) ====== -->
+      <div id="forgotPasswordPanel" style="display:none">
+        <div class="step-head">
+          <h2>Recuperar <em>contraseña.</em></h2>
+          <div class="hint">Te mandamos un link a tu mail para elegir una nueva.</div>
+        </div>
+        <form id="forgotPasswordForm" novalidate>
+          <div class="field">
+            <label class="field-label" for="fp-email">Mail <span class="req">*</span></label>
+            <div class="field-wrap">
+              <input class="field-input" type="email" id="fp-email" placeholder="tu@mail.com" required />
+              <span class="field-icon">@</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="fpSendBtn" style="align-self:flex-start;margin-top:8px">Enviar link <span class="a">→</span></button>
+          <div class="switch"><a href="#" onclick="hideForgotPassword();return false">← Volver a iniciar sesión</a></div>
+        </form>
+      </div>
+
+      <!-- ====== SET NEW PASSWORD (vuelve del mail de recuperación) ====== -->
+      <div id="resetPasswordPanel" style="display:none">
+        <div class="step-head">
+          <h2>Elegí tu nueva <em>contraseña.</em></h2>
+          <div class="hint">Ya verificamos que sos vos — elegí una contraseña nueva para tu cuenta.</div>
+        </div>
+        <form id="resetPasswordForm" novalidate>
+          <div class="field">
+            <label class="field-label" for="rp-pass">Nueva contraseña <span class="req">*</span></label>
+            <div class="field-wrap">
+              <input class="field-input" type="password" id="rp-pass" placeholder="mín. 8 caracteres" minlength="8" required />
+              <button type="button" class="field-icon" style="pointer-events:auto;cursor:pointer;background:none;border:none" onclick="togglePass('rp-pass',this)">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="rpSaveBtn" style="align-self:flex-start;margin-top:8px">Guardar contraseña <span class="a">→</span></button>
+        </form>
+      </div>
     </div>
 
     <!-- ====== PROFILE (logged in preview) ====== -->
@@ -664,16 +701,16 @@
 
           <div class="profile-action-row">
             <button type="button" class="btn-primary" onclick="showEditMode()" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Editar perfil <span class="a">→</span></button>
-            <button type="button" class="btn-primary">Ver plan <span class="a">→</span></button>
+            <button type="button" class="btn-primary" onclick="location.href='Suscripcion Running.html'">Ver plan <span class="a">→</span></button>
             <button type="button" class="btn-primary" onclick="logout()" style="background:transparent;color:var(--muted);border:1px solid var(--line);font-size:10px;padding:13px 18px">Cerrar sesión</button>
           </div>
           <!-- Admin panel — visible solo para is_admin = true -->
           <div id="adminPanel" style="display:none;margin-top:24px;padding:18px 0;border-top:1px solid var(--line)">
             <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
             <div class="admin-btn-grid">
-              <button type="button" onclick="showToast('Panel de eventos — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
+              <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
+              <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar usuarios <span class="a">→</span></button>
               <button type="button" onclick="showToast('Partners — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Partners <span class="a">→</span></button>
-              <button type="button" onclick="showToast('Tickets — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Ver tickets <span class="a">→</span></button>
               <button type="button" onclick="showToast('Planes — proximamente')" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Planes <span class="a">→</span></button>
             </div>
           </div>
@@ -1025,6 +1062,13 @@
 
   // ===== Session management =====
   supa.auth.onAuthStateChange((event, session) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      switchTab('login');
+      const lf = document.getElementById('loginForm'); if(lf) lf.style.display = 'none';
+      const fp = document.getElementById('forgotPasswordPanel'); if(fp) fp.style.display = 'none';
+      const rp = document.getElementById('resetPasswordPanel'); if(rp) rp.style.display = '';
+      return;
+    }
     if(event === 'SIGNED_OUT' || !session){
       setAuthUI(false);
       clearProfile();
@@ -1321,6 +1365,49 @@
       return;
     }
     showToast('Sesión iniciada · bienvenido de vuelta');
+  });
+
+  // ===== Olvidé mi contraseña =====
+  function showForgotPassword(){
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('forgotPasswordPanel').style.display = '';
+    const le = document.getElementById('l-email')?.value?.trim();
+    if(le) document.getElementById('fp-email').value = le;
+  }
+  function hideForgotPassword(){
+    document.getElementById('forgotPasswordPanel').style.display = 'none';
+    document.getElementById('loginForm').style.display = '';
+  }
+
+  document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = (document.getElementById('fp-email')?.value || '').trim();
+    if(!email){ showToast('Ingresá tu mail'); return; }
+    const btn = document.getElementById('fpSendBtn');
+    btn.disabled = true;
+    const { error } = await supa.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin + location.pathname
+    });
+    btn.disabled = false;
+    if(error){ showToast('No pudimos enviar el link: ' + error.message); return; }
+    showToast('Te enviamos un link a ' + email + ' para elegir tu nueva contraseña');
+    hideForgotPassword();
+  });
+
+  // ===== Elegir nueva contraseña (llega desde el link del mail) =====
+  document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pass = document.getElementById('rp-pass')?.value || '';
+    if(pass.length < 8){ showToast('La contraseña debe tener al menos 8 caracteres'); return; }
+    const btn = document.getElementById('rpSaveBtn');
+    btn.disabled = true;
+    const { error } = await supa.auth.updateUser({ password: pass });
+    btn.disabled = false;
+    if(error){ showToast('No pudimos actualizar la contraseña: ' + error.message); return; }
+    showToast('Contraseña actualizada · iniciá sesión de nuevo');
+    document.getElementById('resetPasswordPanel').style.display = 'none';
+    document.getElementById('loginForm').style.display = '';
+    await supa.auth.signOut();
   });
 
   // ===== Toast =====

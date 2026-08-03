@@ -37,6 +37,7 @@
   a:hover{color:var(--teal)}
   ::selection{background:var(--teal);color:#fff}
   @keyframes kenburns{from{transform:scale(1.14)}to{transform:scale(1.02)}}
+  @keyframes skelPulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
   /* ====== Responsive breakpoints ======
      Los viewports angostos (<760px) se van a Landing-mobile.html (ver script
@@ -197,59 +198,12 @@
       <p style="margin:22px auto 0;max-width:520px;font-size:14px;line-height:1.7;color:#6b6b6b;font-weight:300">Abierta a todos. Para reservar tu lugar solo necesitás tu cuenta gratis — los after-runs se llenan rápido.</p>
     </div>
     <div id="agendaGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:start">
-
-      <a href="#" data-reveal class="tour" style="display:block;opacity:0;transform:translateY(34px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a">
-          <img class="tour-img" src="images/run-autumn.jpg" alt="Let's Run Otoño" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
-          <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">Running</span>
-        </div>
-        <div style="text-align:center;padding:22px 8px 0">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Sáb 23 · May</div>
-          <h4 style="font-family:'Jost';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">Let's Run · Otoño</h4>
-          <p style="font-size:12px;color:#8a8a8a;font-weight:300">Prado Español · 9:30 AM</p>
-        </div>
-      </a>
-
-      <a href="#" data-reveal data-rd="120" class="tour" style="display:block;opacity:0;transform:translateY(34px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div style="position:relative;border-radius:6px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a;border:1.5px solid var(--teal);box-shadow:0 24px 60px -28px rgba(31,127,140,.5);transform:translateY(-16px)">
-          <img class="tour-img" src="images/cafe-talk.jpg" alt="Run & Coffee" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
-          <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#0b2a2e;background:var(--teal-lt);padding:6px 11px;border-radius:999px">Run &amp; Coffee</span>
-        </div>
-        <div style="text-align:center;padding:22px 8px 0;transform:translateY(-16px)">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Sáb 30 · May</div>
-          <h4 style="font-family:'Jost';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">Run. Coffee.</h4>
-          <p style="font-size:12px;color:#8a8a8a;font-weight:300">Bianco &amp; Nero · 4K–8K</p>
-        </div>
-      </a>
-
-      <a href="#" data-reveal data-rd="240" class="tour" style="display:block;opacity:0;transform:translateY(34px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a">
-          <img class="tour-img" src="images/poster-maraton.jpg" alt="Run & Wine III" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
-          <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">Run &amp; Wine</span>
-        </div>
-        <div style="text-align:center;padding:22px 8px 0">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Vie 06 · Jun</div>
-          <h4 style="font-family:'Jost';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">Run &amp; Wine III</h4>
-          <p style="font-size:12px;color:#8a8a8a;font-weight:300">MalaBoca · 19:30 H</p>
-        </div>
-      </a>
-
-      <a href="#" data-reveal data-rd="360" class="tour" style="display:block;opacity:0;transform:translateY(34px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a">
-          <img class="tour-img" src="images/run-trees-2.jpg" alt="Long Run Dominguero" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
-          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
-          <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">Running</span>
-        </div>
-        <div style="text-align:center;padding:22px 8px 0">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Dom 08 · Jun</div>
-          <h4 style="font-family:'Jost';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">Long Run</h4>
-          <p style="font-size:12px;color:#8a8a8a;font-weight:300">Parque San Martín · 8:00 AM</p>
-        </div>
-      </a>
-
+      <!-- Se llena con las fechas reales desde Supabase (loadAgenda). Mientras carga
+           mostramos un skeleton; si no hay eventos futuros publicados, un aviso. -->
+      <div class="agenda-skel" style="border-radius:4px;aspect-ratio:3/4.4;background:linear-gradient(100deg,#e9e5db 30%,#f3f0ea 50%,#e9e5db 70%);background-size:200% 100%;animation:skelPulse 1.4s ease-in-out infinite"></div>
+      <div class="agenda-skel" style="border-radius:4px;aspect-ratio:3/4.4;background:linear-gradient(100deg,#e9e5db 30%,#f3f0ea 50%,#e9e5db 70%);background-size:200% 100%;animation:skelPulse 1.4s ease-in-out infinite .15s"></div>
+      <div class="agenda-skel" style="border-radius:4px;aspect-ratio:3/4.4;background:linear-gradient(100deg,#e9e5db 30%,#f3f0ea 50%,#e9e5db 70%);background-size:200% 100%;animation:skelPulse 1.4s ease-in-out infinite .3s"></div>
+      <div class="agenda-skel" style="border-radius:4px;aspect-ratio:3/4.4;background:linear-gradient(100deg,#e9e5db 30%,#f3f0ea 50%,#e9e5db 70%);background-size:200% 100%;animation:skelPulse 1.4s ease-in-out infinite .45s"></div>
     </div>
   </div>
 </section>
@@ -268,16 +222,16 @@
         <img src="images/group-running.jpg" alt="Salida grupal" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
       </figure>
       <figure data-reveal data-rd="90" class="g-fig" style="position:relative;overflow:hidden;border-radius:4px;grid-column:span 2;grid-row:span 2;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <img src="images/two-runners.jpg" alt="Pace partners" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
+        <img src="images/two-runners.jpg" alt="Pace partners" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
       </figure>
       <figure data-reveal data-rd="150" class="g-fig" style="position:relative;overflow:hidden;border-radius:4px;grid-column:span 2;grid-row:span 2;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <img src="images/brunch-girl.jpg" alt="Brunch" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
+        <img src="images/brunch-girl.jpg" alt="Brunch" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
       </figure>
       <figure data-reveal data-rd="210" class="g-fig" style="position:relative;overflow:hidden;border-radius:4px;grid-column:span 2;grid-row:span 2;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <img src="images/picnic-mate.jpg" alt="Sobremesa" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
+        <img src="images/picnic-mate.jpg" alt="Sobremesa" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
       </figure>
       <figure data-reveal data-rd="270" class="g-fig" style="position:relative;overflow:hidden;border-radius:4px;grid-column:span 2;grid-row:span 2;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <img src="images/run-trees-1.jpg" alt="Bajo los plátanos" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
+        <img src="images/run-trees-1.jpg" alt="Bajo los plátanos" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
       </figure>
     </div>
   </div>
@@ -287,7 +241,7 @@
 <section id="lideres" data-screen-label="05 Líderes" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#f6f3ee">
   <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:.9fr 1fr;gap:clamp(40px,6vw,88px);align-items:center">
     <div data-reveal style="position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:4px;background:#222;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <img class="lead-img" src="images/leaders-trio.jpg" alt="Run leaders" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
+      <img class="lead-img" src="images/leaders-trio.jpg" alt="Run leaders" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
     </div>
     <div data-reveal data-rd="150" style="opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
       <div style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:22px">Los líderes</div>
@@ -551,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function(){
       return `
         <a href="Evento.html?id=${encodeURIComponent(ev.id)}" class="tour" style="display:block">
           <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a">
-            <img class="tour-img" src="${esc(img)}" alt="${esc(ev.title)}" onerror="this.src='${EV_IMG_DEFAULT.social}'" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
+            <img class="tour-img" src="${esc(img)}" alt="${esc(ev.title)}" loading="lazy" decoding="async" onerror="this.src='${EV_IMG_DEFAULT.social}'" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
             <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
             <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">${esc(EV_TAG[ev.branch] || ev.branch)}</span>
           </div>
@@ -580,7 +534,19 @@ document.addEventListener('DOMContentLoaded', function(){
           .is('deleted_at', null)
           .gte('event_date', nowIso).order('event_date', { ascending: true }).limit(4);
       }
-      if (q.error || !q.data || !q.data.length) return; // se mantienen las cards estáticas
+      if (q.error) {
+        console.error('[agenda] error cargando eventos:', q.error.message);
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;font-family:'Jost';font-size:13px;color:#a3a3a3">No pudimos cargar la agenda ahora mismo.</div>`;
+        return;
+      }
+      if (!q.data || !q.data.length) {
+        // Ninguna fila con is_published=true, deleted_at NULL y event_date en el futuro.
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0">
+          <p style="font-family:'Jost';font-size:14px;letter-spacing:.05em;color:#8a8a8a;margin-bottom:14px">Estamos por anunciar la próxima fecha.</p>
+          <a href="https://instagram.com/sprintersmza" style="font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal);padding-bottom:4px">Seguinos en @sprintersmza →</a>
+        </div>`;
+        return;
+      }
       grid.innerHTML = q.data.map(renderEvent).join('');
       grid.querySelectorAll('.tour').forEach(card => {
         const img = card.querySelector('.tour-img');
