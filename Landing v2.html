@@ -77,13 +77,30 @@
     /* Líderes: sacar la columna del número para ganar ancho */
     #lideres div[style*="grid-template-columns:32px 1fr auto"]{grid-template-columns:1fr auto !important;gap:12px !important}
     #lideres div[style*="grid-template-columns:32px 1fr auto"] > :first-child{display:none}
-    /* Form de leads: input y botón apilados.
-       OJO con el !important: el <form> tiene border-radius:999px y gap:6px
-       en el atributo style, y un estilo inline le gana a cualquier selector
-       de la hoja. Sin !important quedaba apilado pero con radio de píldora,
-       o sea una elipse gigante con el botón desbordando. */
-    #leadForm{flex-direction:column;border-radius:20px !important;gap:8px !important;padding:10px !important}
-    #leadForm input{padding:12px 14px !important;text-align:center}
+    /* Form de leads en mobile.
+       En desktop es una píldora que contiene input + botón en fila. Apilado
+       eso no funciona: el contenedor queda alto y con border-radius:999px se
+       convierte en una elipse, con el botón saliéndose por las curvas.
+       Solución: en mobile el contenedor se disuelve (sin borde, sin padding,
+       sin fondo) y cada control lleva su propia píldora. Así no hay radio que
+       ajustar ni forma posible de que algo desborde.
+       Todo va con !important porque esas propiedades están en el atributo
+       style= del <form>, que le gana a cualquier selector de la hoja. */
+    #leadForm{
+      flex-direction:column;
+      border:none !important;
+      border-radius:0 !important;
+      padding:0 !important;
+      background:transparent !important;
+      gap:10px !important;
+    }
+    #leadForm input{
+      border:1px solid #141412 !important;
+      border-radius:999px !important;
+      background:#fff !important;
+      padding:15px 20px !important;
+      text-align:center;
+    }
     #leadForm button{width:100%}
     footer > div:first-child{grid-template-columns:1fr !important;gap:32px !important}
     footer > div:last-child{flex-direction:column;align-items:flex-start !important}
