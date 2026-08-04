@@ -6,7 +6,7 @@
 <title>Sprinters · Tu cuenta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -26,7 +26,7 @@
     --error:#b91c1c;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{background:var(--bg);color:var(--ink);font-family:'Montserrat','Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
   body{min-height:100vh;overflow-x:clip}
   a{color:inherit;text-decoration:none}
   img{display:block;max-width:100%}
@@ -43,12 +43,12 @@
 
   /* ====== Top nav ====== */
   nav.top{position:sticky;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 36px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
-  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
+  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
   nav.top .back:hover{opacity:1}
-  nav.top .back .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;line-height:1}
-  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Montserrat',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
-  nav.top .brand sup{font-family:'Montserrat',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
-  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
+  nav.top .back .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1}
+  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Inter',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
+  nav.top .brand sup{font-family:'Inter',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
+  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
   @media (max-width:720px){nav.top{padding:14px 18px}nav.top .help span{display:none}nav.top .back span:not(.a){display:none}}
 
   /* ====== Layout ====== */
@@ -57,18 +57,18 @@
 
   /* ===== Aside hero ===== */
   .aside{background:var(--ink);color:#fff;padding:80px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:100%}
-  .aside .lab{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
+  .aside .lab{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
   .aside .lab::before{content:"";width:30px;height:1px;background:currentColor;opacity:.6}
-  .aside h1{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
+  .aside h1{font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
   .aside h1 em{font-style:italic;color:var(--marker-fg)}
-  .aside .lede{font-family:'Montserrat',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
+  .aside .lede{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
   .aside .perks{display:flex;flex-direction:column;gap:18px;margin-top:40px}
-  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
-  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
-  .aside .perk strong{display:block;font-family:'Montserrat',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
+  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
+  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
+  .aside .perk strong{display:block;font-family:'Inter',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
   .aside .perk span{opacity:.7}
-  .aside .signature{font-family:'Allura',cursive;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
-  .aside .footer-note{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
+  .aside .signature{font-family:'Inter',sans-serif;font-style:italic;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
+  .aside .footer-note{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
   @media (max-width:980px){.aside{padding:64px 28px 48px;min-height:auto}.aside h1{font-size:48px}.aside .signature{font-size:38px;margin-top:24px}}
 
   /* ===== Form area ===== */
@@ -78,20 +78,20 @@
   /* Tabs */
   .tabs{position:relative;display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px;gap:0;align-self:flex-start;margin-bottom:36px}
   .tabs-pill{position:absolute;top:5px;left:5px;height:calc(100% - 10px);background:var(--ink);border-radius:999px;transition:transform .45s cubic-bezier(.32,.72,.18,1),width .45s cubic-bezier(.32,.72,.18,1);z-index:0}
-  .tab{position:relative;z-index:1;background:transparent;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
+  .tab{position:relative;z-index:1;background:transparent;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
   .tab.active{color:#fff}
 
   /* Form titles */
   .step-head{margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .step-head h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
+  .step-head h2{font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
   .step-head h2 em{font-style:italic}
-  .step-head .hint{font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
+  .step-head .hint{font-family:'Inter',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
   .step-head .hint a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
 
   /* Sections */
   .section-block{margin-top:36px}
   .section-block:first-of-type{margin-top:0}
-  .section-block .sec-title{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .section-block .sec-title{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
   .section-block .sec-title::before{content:"";width:18px;height:1px;background:var(--marker)}
 
   /* Photo uploader */
@@ -100,10 +100,10 @@
   .photo-up:hover{border-color:var(--ink)}
   .photo-up.has-img{border-style:solid;border-color:var(--ink)}
   .photo-up img{width:100%;height:100%;object-fit:cover}
-  .photo-up .ico{font-family:'DM Serif Display',serif;font-style:italic;font-size:32px;color:var(--muted)}
+  .photo-up .ico{font-family:'Inter',sans-serif;font-style:italic;font-size:32px;color:var(--muted)}
   .photo-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
-  .photo-info .lbl{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
-  .photo-info .desc{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
+  .photo-info .lbl{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
+  .photo-info .desc{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
 
   /* Form grid */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
@@ -112,23 +112,23 @@
 
   /* Field */
   .field{display:flex;flex-direction:column;gap:8px;min-width:0}
-  .field-label{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
+  .field-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
   .field-label .req{color:var(--rust);font-size:10px;line-height:1}
-  .field-label .opt{font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
+  .field-label .opt{font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
   .field-wrap{position:relative}
-  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Montserrat',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
+  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
   .field-input::placeholder{color:var(--muted-2);font-weight:400}
   .field-input:hover{border-color:var(--field-border-hover)}
   .field-input:focus{border-color:var(--ink);background:#fff}
   .field-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;pointer-events:none}
-  .field-icon.serif{font-family:'DM Serif Display',serif;font-style:italic;font-size:17px;color:var(--muted)}
-  .field-error{font-family:'Montserrat',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
+  .field-icon.serif{font-family:'Inter',sans-serif;font-style:italic;font-size:17px;color:var(--muted)}
+  .field-error{font-family:'Inter',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
   .field.is-error .field-input{border-color:var(--error)}
   .field.is-error .field-error{display:block}
 
   /* Phone field (country + number) */
   .phone-row{display:grid;grid-template-columns:auto 1fr;gap:8px}
-  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
   .country-sel:hover{border-color:var(--field-border-hover)}
   .country-sel:focus{border-color:var(--ink);background-color:#fff}
 
@@ -138,7 +138,7 @@
   .pill-grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:780px){.pill-grid.cols-4{grid-template-columns:repeat(3,minmax(0,1fr))}}
   @media (max-width:580px){.pill-grid,.pill-grid.cols-3,.pill-grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
+  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
   .pill-opt::before{content:"";width:16px;height:16px;border-radius:50%;border:1.5px solid var(--field-border-hover);background:#fff;flex-shrink:0;transition:all .2s}
   .pill-opt:hover{border-color:var(--field-border-hover)}
   .pill-opt:hover::before{border-color:var(--ink)}
@@ -150,20 +150,20 @@
 
   /* Signup intro card */
   .signup-intro{display:flex;flex-direction:column;gap:20px;max-width:560px}
-  .signup-intro .intro-copy{font-family:'Montserrat',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
+  .signup-intro .intro-copy{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
   .signup-intro .intro-perks{display:flex;flex-direction:column;gap:14px;margin:14px 0 8px}
   .signup-intro .intro-perk{display:grid;grid-template-columns:46px 1fr;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
   .signup-intro .intro-perk:last-child{border-bottom:1px solid var(--line)}
-  .signup-intro .intro-perk .k{font-family:'DM Serif Display',serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
-  .signup-intro .intro-perk strong{display:block;font-family:'Montserrat',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
-  .signup-intro .intro-perk span{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
+  .signup-intro .intro-perk .k{font-family:'Inter',sans-serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
+  .signup-intro .intro-perk strong{display:block;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .signup-intro .intro-perk span{font-family:'Inter',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
 
   /* Switch participated */
   .participated-row{display:flex;gap:8px;margin-top:12px}
-  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
+  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
   .pp-pill:hover{border-color:var(--field-border-hover)}
   .pp-pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
-  .pp-pill .em{font-family:'DM Serif Display',serif;font-style:italic;font-weight:400;font-size:14px}
+  .pp-pill .em{font-family:'Inter',sans-serif;font-style:italic;font-weight:400;font-size:14px}
 
   /* Conditional reveal */
   .conditional{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.22,.7,.2,1),opacity .35s ease,margin-top .45s}
@@ -171,25 +171,25 @@
 
   /* Submit row */
   .submit-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .submit-row .legal{font-family:'Montserrat',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
+  .submit-row .legal{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
   .submit-row .legal a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
   .btn-primary:hover{background:var(--marker)}
-  .btn-primary .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
+  .btn-primary .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
   .btn-primary:hover .a{transform:translateX(4px)}
 
   /* Login compact form */
   .login-form{display:flex;flex-direction:column;gap:20px;max-width:440px}
-  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Montserrat',sans-serif;font-size:12px}
+  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;font-size:12px}
   .login-form .row-between label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);font-weight:500}
   .login-form .row-between label input{width:14px;height:14px;accent-color:var(--ink)}
   .login-form .row-between a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
+  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
   .login-form .or::before,.login-form .or::after{content:"";flex:1;height:1px;background:var(--line)}
-  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
+  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
   .social-btn:hover{border-color:var(--ink)}
   .social-btn .ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700}
-  .login-form .switch{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
+  .login-form .switch{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
   .login-form .switch button{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px}
 
   /* Profile view */
@@ -199,23 +199,23 @@
   .profile-pic{width:160px;height:160px;border-radius:50%;background:var(--field-bg);background-size:cover;background-position:center;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
   .profile-pic::after{content:'';display:block;width:64%;height:64%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c0bfbb'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.7}
   .profile-pic.has-photo::after{display:none}
-  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
+  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
   .profile-card .role-pill::before{content:"✦"}
-  .profile-card h3{font-family:'DM Serif Display',serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
-  .profile-card .since{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
+  .profile-card h3{font-family:'Inter',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
+  .profile-card .since{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
   .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .profile-stat{background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-  .profile-stat .n{font-family:'DM Serif Display',serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
-  .profile-stat .lab{font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
+  .profile-stat .n{font-family:'Inter',sans-serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
+  .profile-stat .lab{font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
   .profile-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
   .profile-info .it{display:flex;flex-direction:column;gap:4px;min-width:0}
-  .profile-info .l{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
-  .profile-info .v{font-family:'Montserrat',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+  .profile-info .l{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .profile-info .v{font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
   .profile-action-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
 
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast .a{font-family:'DM Serif Display',serif;font-style:italic;font-size:14px}
+  .toast .a{font-family:'Inter',sans-serif;font-style:italic;font-size:14px}
 
   /* Profile card meta wrapper (badge + name + since) */
   .profile-card-meta{display:flex;flex-direction:column;gap:8px}
@@ -467,11 +467,14 @@
               </div>
 
               <div class="field" id="ageField">
-                <label class="field-label" for="f-age">Edad <span class="req">*</span></label>
+                <label class="field-label" for="f-birth">Fecha de nacimiento <span class="req">*</span></label>
                 <div class="field-wrap">
-                  <input class="field-input" type="number" id="f-age" placeholder="25" min="14" max="99" required />
-                  <span class="field-icon">#</span>
+                  <input class="field-input" type="date" id="f-birth" required />
+                  <span class="field-icon">@</span>
                 </div>
+                <!-- La edad no se pide: se calcula sola y se muestra como confirmación.
+                     En la base la deriva el trigger sync_age_from_birth_date. -->
+                <div id="ageHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
               </div>
               <div class="field">
                 <label class="field-label">Sexo <span class="req">*</span></label>
@@ -535,36 +538,48 @@
               </div>
               <span class="field-error">Ingresá un contacto de emergencia.</span>
             </div>
+
+            <!-- Apto físico · opcional al registrarse (2026-08-04).
+                 Se sube después de crear la cuenta, porque el bucket privado
+                 exige una sesión activa para saber a qué carpeta va. Si el
+                 signup requiere confirmar el mail, se lo pedimos desde el perfil. -->
+            <div class="field full" style="margin-top:18px">
+              <label class="field-label" for="signupMedCert">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
+              <label for="signupMedCert" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:11px 18px;font-size:10px;margin-top:4px">
+                Adjuntar apto físico
+              </label>
+              <input type="file" id="signupMedCert" accept="image/*,application/pdf" style="display:none" />
+              <div id="signupMedCertName" style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
+            </div>
           </div>
 
           <!-- Sec 4: Suscripción (opcional, elegís al crear la cuenta) -->
           <div class="section-block">
-            <div class="sec-title">Tu plan <span style="font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
-            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil. Running y Social son independientes — si querés, elegís los dos.</p>
+            <div class="sec-title">Tu plan <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil.</p>
 
             <div class="field">
               <label class="field-label">Running Team</label>
               <div class="pill-grid cols-3" id="planRunningGrid">
                 <label class="pill-opt"><input type="radio" name="planRunning" value="" checked /><span>Ninguno por ahora</span></label>
                 <label class="pill-opt"><input type="radio" name="planRunning" value="core" /><span>Core · $35.000/mes</span></label>
-                <label class="pill-opt"><input type="radio" name="planRunning" value="pro" /><span>Pro · $50.000/mes</span></label>
+                <label class="pill-opt"><input type="radio" name="planRunning" value="plus" /><span>Plus · $50.000/mes</span></label>
               </div>
             </div>
 
-            <div class="field" style="margin-top:18px">
-              <label class="field-label">Social Club <span style="text-transform:none;font-weight:700;color:#8a5a12;letter-spacing:0">· Próximamente</span></label>
-              <div class="pill-grid cols-4" id="planSocialGrid" style="opacity:.5">
-                <label class="pill-opt"><input type="radio" name="planSocial" value="" checked disabled /><span>Ninguno por ahora</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="social-day" disabled /><span>Day · Próximamente</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="social-pass" disabled /><span>Pass · Próximamente</span></label>
-                <label class="pill-opt"><input type="radio" name="planSocial" value="founders-circle" disabled /><span>Founder's Circle · Próximamente</span></label>
+            <!-- Social Club: oculto hasta que el pilar esté listo (2026-08-04).
+                 Se deja el radio "ninguno" para que la lógica de planes siga
+                 leyendo un valor vacío sin tener que ramificar por null. -->
+            <div class="field" id="planSocialField" hidden style="display:none">
+              <div class="pill-grid" id="planSocialGrid">
+                <label class="pill-opt"><input type="radio" name="planSocial" value="" checked disabled /><span>Ninguno</span></label>
               </div>
             </div>
           </div>
 
           <!-- Sec 5: Foto (al final, opcional) -->
           <div class="section-block">
-            <div class="sec-title">Foto de perfil <span style="font-family:'DM Serif Display',serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <div class="sec-title">Foto de perfil <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
             <div class="photo-row">
               <label class="photo-up" id="photoUp">
                 <div class="ico">＋</div>
@@ -684,7 +699,7 @@
             </div>
             <div class="profile-stat">
               <div class="n" id="profStatSaved">$0</div>
-              <div class="lab">Ahorro como PRO</div>
+              <div class="lab">Ahorro como Plus</div>
             </div>
           </div>
 
@@ -697,6 +712,7 @@
             <div class="it"><span class="l">¿De dónde sos?</span><span class="v" id="profOrigin">—</span></div>
             <div class="it"><span class="l">Nos conociste por</span><span class="v" id="profHow">—</span></div>
             <div class="it"><span class="l">Contacto emergencia</span><span class="v" id="profEmerg">—</span></div>
+            <div class="it"><span class="l">Apto físico</span><span class="v" id="profMedCert">—</span></div>
           </div>
 
           <div class="profile-action-row">
@@ -706,7 +722,7 @@
           </div>
           <!-- Admin panel — visible solo para is_admin = true -->
           <div id="adminPanel" style="display:none;margin-top:24px;padding:18px 0;border-top:1px solid var(--line)">
-            <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
+            <div style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
             <div class="admin-btn-grid">
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar usuarios <span class="a">→</span></button>
@@ -717,7 +733,7 @@
 
           <!-- Danger zone -->
           <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--line)">
-            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
+            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
               Eliminar mi cuenta
             </button>
           </div>
@@ -760,6 +776,62 @@
             </div>
           </div>
 
+          <div class="grid" style="gap:16px;margin-bottom:24px">
+            <div class="field">
+              <label class="field-label" for="ep-phone">Teléfono</label>
+              <div class="field-wrap">
+                <input class="field-input" type="tel" id="ep-phone" placeholder="+54 9 261 555 5555" maxlength="30" />
+                <span class="field-icon serif">☏</span>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="ep-birth">Fecha de nacimiento</label>
+              <div class="field-wrap">
+                <input class="field-input" type="date" id="ep-birth" />
+              </div>
+              <div id="epAgeHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:24px">
+            <label class="field-label" for="ep-emerg">Contacto de emergencia</label>
+            <div class="field-wrap">
+              <input class="field-input" type="tel" id="ep-emerg" placeholder="Nombre · +54 11 5555 5555" maxlength="120" />
+              <span class="field-icon serif">☏</span>
+            </div>
+            <div style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:7px">A quién llamamos si te pasa algo en una corrida. Mantenelo al día.</div>
+          </div>
+
+          <div class="field" style="margin-bottom:24px">
+            <label class="field-label">Sexo</label>
+            <div class="pill-grid cols-3" id="epSexGrid">
+              <label class="pill-opt"><input type="radio" name="epSexo" value="M" /><span>Masculino</span></label>
+              <label class="pill-opt"><input type="radio" name="epSexo" value="F" /><span>Femenino</span></label>
+              <label class="pill-opt"><input type="radio" name="epSexo" value="O" /><span>Otro</span></label>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:24px">
+            <label class="field-label" for="ep-origin">¿De dónde sos?</label>
+            <div class="field-wrap">
+              <input class="field-input" type="text" id="ep-origin" placeholder="Godoy Cruz, Capital, Maipú…" maxlength="80" />
+              <span class="field-icon">=</span>
+            </div>
+          </div>
+
+          <!-- Apto físico · opcional por ahora (2026-08-04).
+               El bucket 'medical-certs' es privado: el archivo nunca queda
+               accesible por URL pública y solo lo ve la persona o un admin. -->
+          <div class="field" style="margin-bottom:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <label class="field-label">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
+            <div id="medCertStatus" style="font-family:'Inter',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
+            <label for="medCertInput" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:10px">
+              Subir apto físico
+            </label>
+            <input type="file" id="medCertInput" accept="image/*,application/pdf" style="display:none" />
+            <div style="font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
+          </div>
+
           <div class="profile-action-row" style="margin-top:8px">
             <button type="submit" class="btn-primary" id="saveProfileBtn">Guardar cambios <span class="a">→</span></button>
             <button type="button" class="btn-primary" onclick="cancelEdit()" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Cancelar</button>
@@ -773,7 +845,7 @@
   <!-- Confirm delete dialog -->
   <div id="deleteConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:24px">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.18)">
-      <h3 style="font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
+      <h3 style="font-family:'Inter',sans-serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
       <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Inter',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
       <div style="display:flex;gap:10px">
         <button type="button" class="btn-primary" onclick="executeDeleteAccount()" style="background:var(--error);flex:1;justify-content:center">Sí, eliminar</button>
@@ -787,14 +859,16 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ===== Mapeo de planes → página de checkout =====
-  // Running (Core/Pro) vive en Suscripcion Running.html, Social (Day/Pass/Founder's) en Suscripcion Social.html.
-  // Antes el redirect post-signup asumía siempre Running, así que un plan Social rompía en silencio.
+  // Running (Core/Plus) vive en Suscripcion Running.html. Los planes Social
+  // están ocultos hasta que el pilar salga, pero el mapeo queda por si llega
+  // un link viejo con ?plan=social-day.
+  // 'pro' se mantiene como alias de 'plus' (links y mails anteriores a 2026-08-04).
   const PLAN_PAGE = {
-    core: 'Suscripcion Running.html', pro: 'Suscripcion Running.html',
+    core: 'Suscripcion Running.html', plus: 'Suscripcion Running.html', pro: 'Suscripcion Running.html',
     'social-day': 'Suscripcion Social.html', 'social-pass': 'Suscripcion Social.html', 'founders-circle': 'Suscripcion Social.html'
   };
   const PLAN_LABEL = {
-    core: 'Training Core', pro: 'Training Pro',
+    core: 'Training Core', plus: 'Training Plus', pro: 'Training Plus',
     'social-day': 'Social Day', 'social-pass': 'Social Pass', 'founders-circle': "Founder's Circle"
   };
   function planTargetUrl(slug){
@@ -822,7 +896,7 @@
     if (m) m.classList.add('is-on');
   }, 700);
 
-  // ===== Pre-select tab via ?tab=signup|login|profile / ?plan=core|pro|social-day|social-pass|founders-circle =====
+  // ===== Pre-select tab via ?tab=signup|login|profile / ?plan=core|plus =====
   (function(){
     const p = new URLSearchParams(location.search);
     const tab = p.get('tab');
@@ -838,7 +912,8 @@
       // Pre-marcamos el plan elegido en el selector para que quede reflejado en el form
       if (plan && PLAN_PAGE[plan]) {
         const group = PLAN_PAGE[plan] === 'Suscripcion Running.html' ? 'planRunning' : 'planSocial';
-        const radio = document.querySelector(`input[name="${group}"][value="${plan}"]`);
+        const planValue = plan === 'pro' ? 'plus' : plan;   // alias viejo
+        const radio = document.querySelector(`input[name="${group}"][value="${planValue}"]`);
         if (radio) radio.checked = true;
       }
       showToast(event ? 'Creá tu cuenta gratis para reservar tu lugar' : 'Plan ' + (PLAN_LABEL[plan] || plan) + ' · completá tu cuenta');
@@ -917,12 +992,48 @@
   function applyParticipated(){
     const ageF = document.getElementById('ageField');
     const howF = document.getElementById('howField');
-    // Edad: siempre requerida (independientemente de si es primera vez o no)
+    // Fecha de nacimiento: siempre requerida (sea o no primera vez)
     if (ageF) ageF.style.display = '';
     // ¿Cómo nos conociste?: solo para primera vez
     if (howF) howF.style.display = participated === 'no' ? '' : 'none';
   }
   applyParticipated();
+
+  // ===== Fecha de nacimiento → edad calculada =====
+  //   Ya no se pide la edad: se deriva de la fecha y se muestra para que la
+  //   persona confirme que puso bien el año. La base hace el mismo cálculo.
+  function ageFromBirth(value){
+    if (!value) return null;
+    const [y, m, d] = String(value).slice(0, 10).split('-').map(Number);
+    if (!y || !m || !d) return null;
+    const today = new Date();
+    let a = today.getFullYear() - y;
+    const beforeBirthday = (today.getMonth() + 1) < m || ((today.getMonth() + 1) === m && today.getDate() < d);
+    if (beforeBirthday) a--;
+    return (a >= 0 && a < 130) ? a : null;
+  }
+
+  const birthInput = document.getElementById('f-birth');
+  if (birthInput){
+    // Rango razonable: nadie menor de 14 ni mayor de 99.
+    const today = new Date();
+    const iso = (dt) => dt.toISOString().slice(0, 10);
+    birthInput.max = iso(new Date(today.getFullYear() - 14, today.getMonth(), today.getDate()));
+    birthInput.min = iso(new Date(today.getFullYear() - 99, today.getMonth(), today.getDate()));
+
+    birthInput.addEventListener('change', () => {
+      const hint = document.getElementById('ageHint');
+      const a = ageFromBirth(birthInput.value);
+      if (a == null){
+        hint.style.display = 'none';
+        birthInput.setCustomValidity('');
+        return;
+      }
+      hint.style.display = '';
+      hint.textContent = a + ' años';
+      birthInput.setCustomValidity(a < 14 ? 'Tenés que tener al menos 14 años para sumarte.' : '');
+    });
+  }
 
   // ===== Origin → ¿De cuál? conditional =====
   document.getElementById('originGrid').addEventListener('change', () => {
@@ -1006,6 +1117,10 @@
     if(el('profFullName')) el('profFullName').textContent = name || '—';
     if(el('profPhone'))    el('profPhone').textContent   = p?.phone || '—';
     if(el('profAge'))      el('profAge').textContent     = p?.age ? p.age + ' años' : '—';
+    if(el('profMedCert')){
+      const MC = { none: 'Sin cargar', pending: 'En revisión', approved: 'Aprobado', rejected: 'Rechazado' };
+      el('profMedCert').textContent = MC[p?.med_cert_status || 'none'] || 'Sin cargar';
+    }
     if(el('profSex'))      el('profSex').textContent     = SEX_MAP[p?.sex] || '—';
     if(el('profOrigin'))   el('profOrigin').textContent  = ORIGIN_MAP[p?.origin] || p?.origin || '—';
     if(el('profHow'))      el('profHow').textContent     = HOW_MAP[p?.how_heard] || p?.how_heard || '—';
@@ -1021,16 +1136,24 @@
     if(el('profStatSaved'))  el('profStatSaved').textContent = p?.total_money_saved ? '$' + Number(p.total_money_saved).toLocaleString('es-AR') : '$0';
 
     // Plan badge & admin panel
+    // El plan se consulta siempre: un admin que además paga Plus también
+    // quiere verlo (antes el badge de Admin lo tapaba).
     const badge = el('profPlanBadge');
+    const { data: subs } = await supa.from('subscriptions')
+      .select('status, membership_plans(name)')
+      .eq('user_id', user.id).eq('status', 'active')
+      .order('created_at', { ascending: false }).limit(1);
+    const planName = subs && subs.length ? subs[0].membership_plans?.name : null;
+
     if(p?.is_admin){
-      if(badge){ badge.textContent = '★ Admin'; badge.style.cssText += ';background:var(--rust);color:#fff'; }
+      if(badge){
+        badge.textContent = planName ? '★ Admin · ' + planName : '★ Admin';
+        badge.style.cssText += ';background:var(--rust);color:#fff';
+      }
       const ap = el('adminPanel');
       if(ap) ap.style.display = '';
     } else {
-      const { data: sub } = await supa.from('subscriptions')
-        .select('status, membership_plans(name)')
-        .eq('user_id', user.id).eq('status','active').maybeSingle();
-      if(badge) badge.textContent = sub?.membership_plans?.name ? '✦ ' + sub.membership_plans.name : 'Plan Free';
+      if(badge) badge.textContent = planName ? '✦ ' + planName : 'Plan Free';
     }
   }
 
@@ -1038,7 +1161,7 @@
   function clearProfile(){
     _currentUser = null;
     _currentProfile = null;
-    const ids = ['profName','profEmail','profFullName','profPhone','profAge','profSex','profOrigin','profHow','profEmerg'];
+    const ids = ['profName','profEmail','profFullName','profPhone','profAge','profSex','profOrigin','profHow','profEmerg','profMedCert'];
     const el = (id) => document.getElementById(id);
     ids.forEach(id => { const e = el(id); if(e) e.textContent = '—'; });
     if(el('profSince')) el('profSince').textContent = 'Miembro desde · —';
@@ -1099,11 +1222,49 @@
   }
 
   // ===== Edit profile =====
+  const MED_CERT_LABEL = {
+    none:     'Todavía no cargaste tu apto.',
+    pending:  '⏳ Apto cargado — lo estamos revisando.',
+    approved: '✓ Apto aprobado.',
+    rejected: '⚠ No pudimos validar tu apto. Subí uno nuevo.'
+  };
+
+  function renderMedCertStatus(p){
+    const box = document.getElementById('medCertStatus');
+    if (!box) return;
+    const st = p?.med_cert_status || 'none';
+    let txt = MED_CERT_LABEL[st] || MED_CERT_LABEL.none;
+    if (st === 'approved' && p?.med_cert_expires_at){
+      const [y, m, d] = String(p.med_cert_expires_at).slice(0, 10).split('-');
+      const vencido = new Date(p.med_cert_expires_at) < new Date();
+      txt = vencido
+        ? `⚠ Tu apto venció el ${d}/${m}/${y}. Subí uno nuevo.`
+        : `✓ Apto aprobado · vence el ${d}/${m}/${y}.`;
+    }
+    box.textContent = txt;
+  }
+
   function showEditMode(){
     const el = (id) => document.getElementById(id);
     // Pre-fill from stored profile data (not parsed display text)
     if(el('ep-name')) el('ep-name').value = _currentProfile?.first_name || '';
     if(el('ep-last')) el('ep-last').value = _currentProfile?.last_name || '';
+    if(el('ep-phone')) el('ep-phone').value = _currentProfile?.phone || '';
+    if(el('ep-emerg')) el('ep-emerg').value = _currentProfile?.emergency_contact || '';
+    if(el('ep-origin')) el('ep-origin').value = _currentProfile?.origin || '';
+    if(el('ep-birth')){
+      el('ep-birth').value = _currentProfile?.birth_date ? String(_currentProfile.birth_date).slice(0, 10) : '';
+      const a = ageFromBirth(el('ep-birth').value);
+      const hint = el('epAgeHint');
+      if (hint){
+        hint.style.display = a == null ? 'none' : '';
+        hint.textContent = a == null ? '' : a + ' años';
+      }
+    }
+    const sexRadio = document.querySelector(`input[name="epSexo"][value="${_currentProfile?.sex || ''}"]`);
+    document.querySelectorAll('input[name="epSexo"]').forEach(r => { r.checked = false; });
+    if (sexRadio) sexRadio.checked = true;
+    renderMedCertStatus(_currentProfile);
     // Mirror current avatar into edit preview
     const pic = el('profilePic');
     const preview = el('editAvatarPreview');
@@ -1126,6 +1287,82 @@
     const preview = el('editAvatarPreview');
     if(preview) preview.dataset.newFile = '';
   }
+
+  // Edad calculada también en el perfil
+  document.getElementById('ep-birth')?.addEventListener('change', function(){
+    const hint = document.getElementById('epAgeHint');
+    const a = ageFromBirth(this.value);
+    if (!hint) return;
+    hint.style.display = a == null ? 'none' : '';
+    hint.textContent = a == null ? '' : a + ' años';
+  });
+
+  // Nombre del apto elegido durante el signup
+  document.getElementById('signupMedCert')?.addEventListener('change', function(){
+    const box = document.getElementById('signupMedCertName');
+    const f = this.files?.[0];
+    if (!box) return;
+    if (!f){ box.textContent = 'Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.'; return; }
+    if (f.size > 5 * 1024 * 1024){
+      showToast('El apto debe pesar menos de 5 MB');
+      this.value = '';
+      return;
+    }
+    box.textContent = f.name;
+  });
+
+  // Sube el apto adjuntado en el signup, una vez que ya hay sesión.
+  // Devuelve true/false solo para poder avisar; nunca corta el registro.
+  async function uploadSignupMedCert(userId){
+    const input = document.getElementById('signupMedCert');
+    const file = input?.files?.[0];
+    if (!file || !userId) return false;
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${userId}/apto-${Date.now()}.${ext}`;
+    const { error: upErr } = await supa.storage
+      .from('medical-certs').upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr){ console.error('[signup] apto:', upErr.message); return false; }
+    const { error: rpcErr } = await supa.rpc('submit_med_cert', { p_url: path });
+    if (rpcErr){ console.error('[signup] submit_med_cert:', rpcErr.message); return false; }
+    return true;
+  }
+
+  // ===== Apto físico (opcional) =====
+  //   Sube al bucket privado 'medical-certs' bajo <uid>/ — la policy exige que
+  //   la primera carpeta sea el uid, así que nadie puede leer el de otro.
+  //   submit_med_cert() deja el estado en 'pending' para que lo revise un admin.
+  document.getElementById('medCertInput')?.addEventListener('change', async function(){
+    const file = this.files?.[0];
+    if (!file) return;
+    const box = document.getElementById('medCertStatus');
+    if (file.size > 5 * 1024 * 1024){
+      showToast('El apto debe pesar menos de 5 MB');
+      this.value = '';
+      return;
+    }
+    if (!_currentUser){ showToast('Se cerró tu sesión. Volvé a entrar.'); return; }
+
+    box.textContent = 'Subiendo…';
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${_currentUser.id}/apto-${Date.now()}.${ext}`;
+    const { error: upErr } = await supa.storage
+      .from('medical-certs').upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr){
+      box.textContent = 'No pudimos subirlo: ' + upErr.message;
+      this.value = '';
+      return;
+    }
+    const { error: rpcErr } = await supa.rpc('submit_med_cert', { p_url: path });
+    if (rpcErr){
+      box.textContent = 'Subimos el archivo pero no pudimos registrarlo: ' + rpcErr.message;
+      this.value = '';
+      return;
+    }
+    if (_currentProfile) _currentProfile.med_cert_status = 'pending';
+    renderMedCertStatus(_currentProfile);
+    showToast('Apto físico cargado');
+    this.value = '';
+  });
 
   function previewAvatar(input){
     const file = input.files?.[0];
@@ -1171,8 +1408,20 @@
       avatarUrl = urlData.publicUrl + '?t=' + Date.now();
     }
 
-    const updates = { first_name: firstName, last_name: lastName, updated_at: new Date().toISOString() };
+    // OJO: no mandar updated_at. El GRANT sobre public.users es por columna y
+    // no lo incluye a propósito, así que mandarlo hacía fallar todo el UPDATE
+    // con "permission denied". El trigger trg_users_updated_at ya lo pone solo.
+    const updates = { first_name: firstName, last_name: lastName };
     if(avatarUrl) updates.avatar_url = avatarUrl;
+
+    // Campos editables desde el perfil. Se mandan como null cuando quedan
+    // vacíos para que se puedan borrar, no solo cambiar.
+    const val = (id) => (document.getElementById(id)?.value || '').trim() || null;
+    updates.phone             = val('ep-phone');
+    updates.emergency_contact = val('ep-emerg');
+    updates.origin            = val('ep-origin');
+    updates.birth_date        = val('ep-birth');   // el trigger recalcula age
+    updates.sex               = document.querySelector('input[name="epSexo"]:checked')?.value || null;
 
     const { error: upErr } = await supa.from('users').update(updates).eq('id', _currentUser.id);
     if(upErr){
@@ -1203,7 +1452,7 @@
     showToast('Eliminando cuenta…');
     // Soft delete: set deleted_at timestamp (audit trail preserved)
     const { error } = await supa.from('users')
-      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .update({ deleted_at: new Date().toISOString() })   // updated_at lo pone el trigger
       .eq('id', _currentUser.id);
     if(error){
       console.error('[delete] error:', error.message);
@@ -1241,7 +1490,8 @@
 
     const firstName = (document.getElementById('f-name')?.value || '').trim();
     const lastName  = (document.getElementById('f-last')?.value || '').trim();
-    const age       = parseInt(document.getElementById('f-age')?.value) || null;
+    const birthDate = (document.getElementById('f-birth')?.value || '').slice(0, 10) || null;
+    const age       = ageFromBirth(birthDate);
     // DB sex column is CHAR(1) CHECK IN ('M','F','O') — map from form values
     const SEX_TO_DB = { masculino:'M', femenino:'F', otro:'O' };
     const sexRaw    = document.querySelector('input[name="sexo"]:checked')?.value || null;
@@ -1267,7 +1517,7 @@
       // handle_new_auth_user() los guarde en public.users incluso cuando
       // email confirmation está activo (data.session == null).
       options: { data: { first_name: firstName, last_name: lastName,
-        age, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard } }
+        birth_date: birthDate, age, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard } }
     });
 
     if(error){
@@ -1289,7 +1539,9 @@
       if (runningSlug || socialSlug){
         sessionStorage.setItem('sprinters_signup_plan_choice', JSON.stringify({ runningSlug, socialSlug }));
       }
-      showToast('¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
+      showToast(document.getElementById('signupMedCert')?.files?.[0]
+        ? '¡Cuenta creada! Confirmá tu mail y cargá el apto desde tu perfil.'
+        : '¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
       setTimeout(() => switchTab('login'), 2000);
       return;
     }
@@ -1298,9 +1550,12 @@
     // (trigger creates base row; upsert adds the rest — error logged, not thrown)
     const { error: upsertErr } = await supa.from('users').upsert({
       id: data.user.id, first_name: firstName, last_name: lastName,
-      age, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard
+      birth_date: birthDate, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard
     });
     if(upsertErr) console.error('[signup] upsert error:', upsertErr.message);
+
+    // Apto físico opcional: recién acá hay sesión, que es lo que exige el bucket
+    await uploadSignupMedCert(data.user.id);
 
     setAuthUI(true);
     switchTab('profile');
