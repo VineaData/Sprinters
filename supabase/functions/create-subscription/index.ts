@@ -23,7 +23,7 @@ const json = (body: unknown, status = 200) =>
 // Nombre de plan → datos de cobro
 const PLANS: Record<string, { name: string; amount: number }> = {
   "Training Core": { name: "Training Core", amount: 35000 },
-  "Training Pro":  { name: "Training Pro",  amount: 50000 },
+  "Training Plus": { name: "Training Plus", amount: 50000 },
 };
 
 Deno.serve(async (req) => {
