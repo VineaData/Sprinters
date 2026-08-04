@@ -11,23 +11,12 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="images/hero-fountain.jpg" fetchpriority="high">
-<script>
-  // Auto-redirect to mobile version on small / touch devices (override with ?force=desktop)
-  (function(){
-    try{
-      var p = new URLSearchParams(location.search);
-      var force = p.get('force');
-      if (force === 'desktop') return;
-      try { if (window.self !== window.top) return; } catch(e){ return; }
-      var isMobile = window.matchMedia('(max-width: 760px)').matches;
-      if (force === 'mobile' || isMobile){
-        location.replace('Landing-mobile.html' + (force ? '?force=mobile' : ''));
-      }
-    }catch(e){}
-  })();
-</script>
+<!-- 2026-08-04: se eliminó el redirect a Landing-mobile.html.
+     Esa página nunca tuvo Supabase — su login/signup escribía en localStorage,
+     así que todo el tráfico mobile creaba cuentas que no existían en la base.
+     Ahora mobile usa esta misma página, con los breakpoints de abajo. -->
 <style>
   :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -40,25 +29,53 @@
   @keyframes skelPulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
   /* ====== Responsive breakpoints ======
-     Los viewports angostos (<760px) se van a Landing-mobile.html (ver script
-     de redirect arriba), pero estos breakpoints evitan que la grilla se rompa
-     en tablets, ventanas achicadas, ?force=desktop en celular, o mientras el
-     redirect todavía no corrió (ej: el trace inicial de un test de performance). */
+     Desde 2026-08-04 esta página también atiende mobile (antes redirigía a
+     Landing-mobile.html, que no tenía Supabase). Todo el rango 375px→∞ se
+     resuelve acá. */
   @media (max-width:980px){
     #pilares > div > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
     #galeria > div{grid-template-columns:1fr !important}
     #lideres > div{grid-template-columns:1fr !important}
+    /* El índice lateral se pisa con el contenido en pantallas angostas */
+    #sideIndex{display:none !important}
   }
   @media (max-width:820px){
-    #como > div > div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important}
     #agendaGrid{grid-template-columns:repeat(2,1fr) !important}
+    /* Footer: de 4 columnas a 2 */
+    footer > div:first-child{grid-template-columns:1fr 1fr !important}
+  }
+  @media (max-width:640px){
+    /* Los links de sección no entran en el nav: quedan marca + sesión.
+       La navegación en mobile es scrollear, que es lo que se hace igual. */
+    nav#nav > div:nth-child(2){display:none !important}
+    nav#nav{gap:12px;padding:16px 20px !important}
+    #authNav{gap:10px !important}
+    /* El hero ocupa toda la altura real del visor, sin la barra del browser */
+    #hero{min-height:100svh !important}
+    /* Los CTA del hero pasan a ancho completo, uno debajo del otro */
+    #hero a[href="#agenda"], #hero a[href="#pilares"]{flex:1 1 100% !important;justify-content:center}
   }
   @media (max-width:560px){
-    #como > div > div[style*="repeat(4,1fr)"]{grid-template-columns:1fr !important}
     #agendaGrid{grid-template-columns:1fr !important}
     #galeria div[style*="repeat(6,1fr)"]{grid-template-columns:repeat(2,1fr) !important}
     #galeria figure[style*="span 4"]{grid-column:span 2 !important}
-    nav#nav > div:nth-child(2){display:none}
+    /* Las cards de agenda apiladas quedan desproporcionadas en 3/4.4
+       (aplica al skeleton de carga y a las cards ya renderizadas) */
+    #agendaGrid [style*="aspect-ratio:3/4.4"]{aspect-ratio:4/3 !important}
+    /* Las cards de pilares también */
+    #pilares [style*="aspect-ratio:16/11"]{aspect-ratio:4/3 !important}
+    /* Líderes: sacar la columna del número para ganar ancho */
+    #lideres div[style*="grid-template-columns:32px 1fr auto"]{grid-template-columns:1fr auto !important;gap:12px !important}
+    #lideres div[style*="grid-template-columns:32px 1fr auto"] > :first-child{display:none}
+    /* Form de leads: input y botón apilados, sin pill comprimida */
+    #leadForm{flex-direction:column;border-radius:16px;gap:8px}
+    #leadForm button{width:100%}
+    footer > div:first-child{grid-template-columns:1fr !important;gap:32px !important}
+    footer > div:last-child{flex-direction:column;align-items:flex-start !important}
+  }
+  @media (max-width:400px){
+    /* iPhone SE y similares: el letter-spacing ancho rompe palabras */
+    nav#nav a[href="#hero"]{letter-spacing:.16em !important;font-size:13px !important}
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
@@ -70,28 +87,28 @@
 
 <!-- ===== NAV ===== -->
 <nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px clamp(20px,5vw,64px);color:#ffffff;transition:background .4s ease,color .4s ease,border-color .4s ease,padding .4s ease;border-bottom:1px solid rgba(255,255,255,.16)">
-  <a href="#hero" style="font-family:'Jost';font-weight:500;letter-spacing:.28em;font-size:14px;text-transform:uppercase">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup></a>
-  <div style="display:flex;gap:clamp(18px,2.4vw,40px);font-family:'Jost';font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:400">
-    <a href="#pilares" style="opacity:.82;transition:opacity .2s">Pilares</a>
+  <a href="#hero" style="font-family:'Inter';font-weight:500;letter-spacing:.28em;font-size:14px;text-transform:uppercase">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup></a>
+  <div style="display:flex;gap:clamp(18px,2.4vw,40px);font-family:'Inter';font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:400">
     <a href="#agenda" style="opacity:.82;transition:opacity .2s">Agenda</a>
+    <a href="#pilares" style="opacity:.82;transition:opacity .2s">Pilares</a>
     <a href="#galeria" style="opacity:.82;transition:opacity .2s">Galería</a>
     <a href="#lideres" style="opacity:.82;transition:opacity .2s">Líderes</a>
     <a href="#join" style="opacity:.82;transition:opacity .2s">Contacto</a>
   </div>
-  <div style="display:flex;align-items:center;gap:16px">
-    <a href="Cuenta.html" style="font-family:'Jost';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.9;transition:opacity .2s">Mi cuenta</a>
-    <a href="#join" style="font-family:'Jost';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border:1px solid currentColor;padding:10px 18px;border-radius:999px;transition:background .25s,color .25s">Sumate</a>
-  </div>
+  <!-- authNav: lo rellena el bloque de Supabase de abajo según haya sesión o no.
+       Arranca vacío para no mostrar "Iniciar sesión" a alguien que ya está logueado
+       durante el parpadeo inicial. -->
+  <div id="authNav" style="display:flex;align-items:center;gap:16px;min-height:38px"></div>
 </nav>
 
 <!-- ===== SIDE INDEX ===== -->
 <div id="sideIndex" style="position:fixed;right:clamp(14px,2.2vw,30px);top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:18px;align-items:flex-end;mix-blend-mode:difference">
-  <a href="#hero" data-idx="0" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">01</span></a>
-  <a href="#pilares" data-idx="1" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">02</span></a>
-  <a href="#agenda" data-idx="2" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">03</span></a>
-  <a href="#galeria" data-idx="3" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">04</span></a>
-  <a href="#lideres" data-idx="4" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">05</span></a>
-  <a href="#join" data-idx="5" style="display:flex;align-items:center;gap:11px;font-family:'Jost';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">06</span></a>
+  <a href="#hero" data-idx="0" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">01</span></a>
+  <a href="#agenda" data-idx="1" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">02</span></a>
+  <a href="#pilares" data-idx="2" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">03</span></a>
+  <a href="#galeria" data-idx="3" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">04</span></a>
+  <a href="#lideres" data-idx="4" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">05</span></a>
+  <a href="#join" data-idx="5" style="display:flex;align-items:center;gap:11px;font-family:'Inter';font-size:13px;letter-spacing:.12em;color:#ffffff;opacity:.55;transition:opacity .35s"><span class="ix-line" style="display:block;height:1px;width:0;background:#ffffff;transition:width .4s ease"></span><span class="ix-n">06</span></a>
 </div>
 
 <!-- ===== HERO ===== -->
@@ -106,95 +123,28 @@
     <div data-reveal style="opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px">
         <span style="display:block;width:34px;height:1px;background:var(--teal-lt)"></span>
-        <span style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:#bfeaf0">Mendoza · Argentina — Est. 2025</span>
+        <span style="font-family:'Inter';font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:#bfeaf0">Mendoza · Argentina — Est. 2025</span>
       </div>
-      <h1 style="font-family:'Jost';font-weight:300;text-transform:uppercase;line-height:.9;letter-spacing:.005em;font-size:clamp(52px,10vw,150px);text-shadow:0 2px 40px rgba(0,0,0,.35)">
+      <h1 style="font-family:'Inter';font-weight:300;text-transform:uppercase;line-height:.9;letter-spacing:.005em;font-size:clamp(52px,10vw,150px);text-shadow:0 2px 40px rgba(0,0,0,.35)">
         <span style="display:block">Let's Run</span>
         <span style="display:block;color:var(--teal-lt)">Together</span>
       </h1>
       <p style="margin-top:28px;max-width:440px;font-size:15px;line-height:1.7;color:rgba(255,255,255,.86);font-weight:300">El primer Social Run Club de Mendoza. Sábados 10 AM — y un after-run que suele ser la mejor parte.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:34px">
-        <a href="#agenda" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;background:var(--teal);color:#fff;font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .25s,filter .25s">Próxima corrida →</a>
-        <a href="#pilares" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.4);font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:background .25s">Conocer el club</a>
+        <a href="#agenda" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;background:var(--teal);color:#fff;font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .25s,filter .25s">Próxima corrida →</a>
+        <a href="#pilares" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.4);font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:background .25s">Conocer el club</a>
       </div>
     </div>
   </div>
 
-</section>
-
-<!-- ===== PILARES ===== -->
-<section id="pilares" data-screen-label="02 Pilares" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#ffffff">
-  <div style="max-width:1320px;margin:0 auto">
-    <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-bottom:56px;opacity:0;transform:translateY(28px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <div>
-        <div style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:20px">Dos pilares</div>
-        <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(38px,5.6vw,78px);line-height:.94;letter-spacing:.01em">Una misma<br>corrida</h2>
-      </div>
-      <p style="font-size:14px;line-height:1.7;color:#6b6b6b;max-width:300px;font-weight:300">Elegí por dónde empezar. O hacé las dos, como casi todos terminan haciendo.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-      <a href="Suscripcion Running.html" data-reveal style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:16/11;color:#fff;display:block;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div class="pill-ph" style="position:absolute;inset:0;background:url('images/group-running.jpg') center/cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.15) 0%,rgba(9,22,24,0) 30%,rgba(9,22,24,.82) 100%)"></div>
-        <div style="position:absolute;left:clamp(24px,3vw,40px);right:clamp(24px,3vw,40px);bottom:clamp(24px,3vw,40px);z-index:2">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px">Pilar 01 · Running</div>
-          <h3 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,52px);line-height:.96;margin-bottom:12px">Running Team</h3>
-          <p style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);max-width:360px;font-weight:300">Sábados 10:00. Tres distancias, dos coaches, un calentamiento sin vergüenza.</p>
-          <span style="display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:'Jost';font-size:11px;letter-spacing:.2em;text-transform:uppercase">Sumarme al run →</span>
-        </div>
-      </a>
-      <a href="Suscripcion Social.html" data-reveal data-rd="150" style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:16/11;color:#fff;display:block;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-        <div class="pill-ph" style="position:absolute;inset:0;background:url('images/cafe-talk.jpg') center/cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.15) 0%,rgba(9,22,24,0) 30%,rgba(9,22,24,.82) 100%)"></div>
-        <div style="position:absolute;left:clamp(24px,3vw,40px);right:clamp(24px,3vw,40px);bottom:clamp(24px,3vw,40px);z-index:2">
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px">Pilar 02 · Social</div>
-          <h3 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,52px);line-height:.96;margin-bottom:12px">Social Club</h3>
-          <p style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);max-width:360px;font-weight:300">After-runs curados. Un café que abre solo para nosotros, una bodega que descorcha algo distinto.</p>
-          <span style="display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:'Jost';font-size:11px;letter-spacing:.2em;text-transform:uppercase">Sumarme al plan →</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ===== COMO ===== -->
-<section id="como" style="padding:clamp(90px,13vh,150px) clamp(20px,5vw,64px);background:#ffffff">
-  <div style="max-width:1320px;margin:0 auto">
-    <div data-reveal style="margin-bottom:72px;opacity:0;transform:translateY(28px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <div style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:20px">Cómo funciona</div>
-      <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(36px,5.2vw,72px);line-height:.96;letter-spacing:.01em;max-width:900px">Sumarse son cuatro pasos.<br>Ninguno difícil.</h2>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:28px">
-      <div data-reveal style="border-top:1px solid #141412;padding-top:22px;opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.22,.7,.2,1),transform 1s cubic-bezier(.22,.7,.2,1)">
-        <div style="font-family:'Jost';font-size:13px;color:var(--teal);letter-spacing:.18em;margin-bottom:14px">01 — Agenda</div>
-        <h4 style="font-family:'Jost';font-weight:400;font-size:21px;letter-spacing:.01em;margin-bottom:12px">Mirá la agenda</h4>
-        <p style="font-size:13.5px;line-height:1.65;color:#6b6b6b;font-weight:300">Elegí la corrida o el after-run que más te tiente. Hay opciones todos los fines de semana.</p>
-      </div>
-      <div data-reveal data-rd="120" style="border-top:1px solid #141412;padding-top:22px;opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.22,.7,.2,1),transform 1s cubic-bezier(.22,.7,.2,1)">
-        <div style="font-family:'Jost';font-size:13px;color:var(--teal);letter-spacing:.18em;margin-bottom:14px">02 — Reserva</div>
-        <h4 style="font-family:'Jost';font-weight:400;font-size:21px;letter-spacing:.01em;margin-bottom:12px">Reservá tu lugar</h4>
-        <p style="font-size:13.5px;line-height:1.65;color:#6b6b6b;font-weight:300">Creás tu cuenta gratis en un minuto y reservás directo desde la agenda. Confirmás cupo y recibís el punto exacto.</p>
-      </div>
-      <div data-reveal data-rd="240" style="border-top:1px solid #141412;padding-top:22px;opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.22,.7,.2,1),transform 1s cubic-bezier(.22,.7,.2,1)">
-        <div style="font-family:'Jost';font-size:13px;color:var(--teal);letter-spacing:.18em;margin-bottom:14px">03 — Corrida</div>
-        <h4 style="font-family:'Jost';font-weight:400;font-size:21px;letter-spacing:.01em;margin-bottom:12px">Vení a correr</h4>
-        <p style="font-size:13.5px;line-height:1.65;color:#6b6b6b;font-weight:300">Warm-up suave, tres distancias, dos coaches que abren y cierran el grupo. Nadie corre solo.</p>
-      </div>
-      <div data-reveal data-rd="360" style="border-top:1px solid #141412;padding-top:22px;opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.22,.7,.2,1),transform 1s cubic-bezier(.22,.7,.2,1)">
-        <div style="font-family:'Jost';font-size:13px;color:var(--teal);letter-spacing:.18em;margin-bottom:14px">04 — After</div>
-        <h4 style="font-family:'Jost';font-weight:400;font-size:21px;letter-spacing:.01em;margin-bottom:12px">Quedate</h4>
-        <p style="font-size:13.5px;line-height:1.65;color:#6b6b6b;font-weight:300">El after-run es lo mejor. Bajamos un cambio, comemos rico, conocés gente nueva.</p>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- ===== AGENDA ===== -->
-<section id="agenda" data-screen-label="03 Agenda" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#f6f3ee">
+<section id="agenda" data-screen-label="02 Agenda" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#f6f3ee">
   <div style="max-width:1320px;margin:0 auto">
     <div data-reveal style="text-align:center;margin-bottom:64px;opacity:0;transform:translateY(28px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <div style="font-family:'Jost';font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:20px">Próximas fechas</div>
-      <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(38px,5.6vw,76px);line-height:.96;letter-spacing:.01em">La agenda del club</h2>
+      <div style="font-family:'Inter';font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:20px">Próximas fechas</div>
+      <h2 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(38px,5.6vw,76px);line-height:.96;letter-spacing:.01em">La agenda del club</h2>
       <p style="margin:22px auto 0;max-width:520px;font-size:14px;line-height:1.7;color:#6b6b6b;font-weight:300">Abierta a todos. Para reservar tu lugar solo necesitás tu cuenta gratis — los after-runs se llenan rápido.</p>
     </div>
     <div id="agendaGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:start">
@@ -208,14 +158,50 @@
   </div>
 </section>
 
+<!-- ===== PILARES ===== -->
+<section id="pilares" data-screen-label="03 Pilares" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#ffffff">
+  <div style="max-width:1320px;margin:0 auto">
+    <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-bottom:56px;opacity:0;transform:translateY(28px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
+      <div>
+        <div style="font-family:'Inter';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:20px">Dos pilares</div>
+        <h2 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(38px,5.6vw,78px);line-height:.94;letter-spacing:.01em">Una misma<br>corrida</h2>
+      </div>
+      <p style="font-size:14px;line-height:1.7;color:#6b6b6b;max-width:300px;font-weight:300">Elegí por dónde empezar. O hacé las dos, como casi todos terminan haciendo.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <a href="Suscripcion Running.html" data-reveal style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:16/11;color:#fff;display:block;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
+        <div class="pill-ph" style="position:absolute;inset:0;background:url('images/group-running.jpg') center/cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.15) 0%,rgba(9,22,24,0) 30%,rgba(9,22,24,.82) 100%)"></div>
+        <div style="position:absolute;left:clamp(24px,3vw,40px);right:clamp(24px,3vw,40px);bottom:clamp(24px,3vw,40px);z-index:2">
+          <div style="font-family:'Inter';font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px">Pilar 01 · Running</div>
+          <h3 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,52px);line-height:.96;margin-bottom:12px">Running Team</h3>
+          <p style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);max-width:360px;font-weight:300">Sábados 10:00. Tres distancias, dos coaches, un calentamiento sin vergüenza.</p>
+          <span style="display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase">Sumarme al run →</span>
+        </div>
+      </a>
+      <div data-reveal data-rd="150" aria-disabled="true" style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:16/11;color:#fff;display:block;cursor:default;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
+        <div class="pill-ph" style="position:absolute;inset:0;background:url('images/cafe-talk.jpg') center/cover;filter:grayscale(1);transition:transform 1.4s cubic-bezier(.22,.7,.2,1)"></div>
+        <div style="position:absolute;top:clamp(20px,2.6vw,32px);left:clamp(24px,3vw,40px);z-index:3;font-family:'Inter';font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;background:rgba(255,255,255,.92);color:#141412;padding:8px 15px;border-radius:999px">Próximamente</div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.15) 0%,rgba(9,22,24,0) 30%,rgba(9,22,24,.82) 100%)"></div>
+        <div style="position:absolute;left:clamp(24px,3vw,40px);right:clamp(24px,3vw,40px);bottom:clamp(24px,3vw,40px);z-index:2">
+          <div style="font-family:'Inter';font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px">Pilar 02 · Social</div>
+          <h3 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,52px);line-height:.96;margin-bottom:12px">Social Club</h3>
+          <p style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);max-width:360px;font-weight:300">After-runs curados. Un café que abre solo para nosotros, una bodega que descorcha algo distinto.</p>
+          <span style="display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.7">Estamos armándolo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== GALERIA ===== -->
 <section id="galeria" data-screen-label="04 Galería" style="padding:clamp(90px,13vh,160px) clamp(20px,5vw,64px);background:#0d1a1c;color:#fff;position:relative;overflow:hidden">
   <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(40px,6vw,88px);align-items:center">
     <div data-reveal style="opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <div style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal-lt);font-weight:500;margin-bottom:24px">Una corrida · Mil postales</div>
-      <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(40px,5.8vw,88px);line-height:.9;letter-spacing:.01em;color:var(--teal-lt)">Descubrí<br>Mendoza de<br>otra forma</h2>
+      <div style="font-family:'Inter';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal-lt);font-weight:500;margin-bottom:24px">Una corrida · Mil postales</div>
+      <h2 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(40px,5.8vw,88px);line-height:.9;letter-spacing:.01em;color:var(--teal-lt)">Descubrí<br>Mendoza de<br>otra forma</h2>
       <p style="margin-top:32px;max-width:400px;font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.72);font-weight:300">«Nunca corrí en mi vida y llegué sola. A los diez minutos ya tenía con quién terminar el kilómetro.» Lo que se ve cada sábado entre los plátanos, las mesas largas y los amaneceres.</p>
-      <a href="#agenda" style="display:inline-flex;align-items:center;gap:12px;margin-top:34px;font-family:'Jost';font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:8px;transition:border-color .3s">Ver la próxima fecha →</a>
+      <a href="#agenda" style="display:inline-flex;align-items:center;gap:12px;margin-top:34px;font-family:'Inter';font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:8px;transition:border-color .3s">Ver la próxima fecha →</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:110px;gap:12px">
       <figure data-reveal class="g-fig" style="position:relative;overflow:hidden;border-radius:4px;grid-column:span 4;grid-row:span 2;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
@@ -244,24 +230,24 @@
       <img class="lead-img" src="images/leaders-trio.jpg" alt="Run leaders" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;transition:transform 1.6s cubic-bezier(.22,.7,.2,1)" />
     </div>
     <div data-reveal data-rd="150" style="opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-      <div style="font-family:'Jost';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:22px">Los líderes</div>
-      <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.6vw,64px);line-height:.98;letter-spacing:.01em;margin-bottom:20px">Los que abren y<br>cierran el grupo</h2>
+      <div style="font-family:'Inter';font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:22px">Los líderes</div>
+      <h2 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.6vw,64px);line-height:.98;letter-spacing:.01em;margin-bottom:20px">Los que abren y<br>cierran el grupo</h2>
       <p style="font-size:15px;line-height:1.7;color:#6b6b6b;max-width:460px;font-weight:300;margin-bottom:40px">Tres referentes que entienden el ritmo del que recién empieza y el del que ya vino a sumar kilómetros. Nadie corre solo.</p>
       <div style="border-top:1px solid rgba(20,20,18,.14)">
         <div style="display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:20px;padding:20px 0;border-bottom:1px solid rgba(20,20,18,.14)">
-          <div style="font-family:'Jost';font-size:13px;color:#a3a3a3">01</div>
-          <div style="font-family:'Jost';font-weight:400;font-size:24px;letter-spacing:.01em">Inés</div>
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Founder &amp; Run Coach</div>
+          <div style="font-family:'Inter';font-size:13px;color:#a3a3a3">01</div>
+          <div style="font-family:'Inter';font-weight:400;font-size:24px;letter-spacing:.01em">Inés</div>
+          <div style="font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Founder &amp; Run Coach</div>
         </div>
         <div style="display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:20px;padding:20px 0;border-bottom:1px solid rgba(20,20,18,.14)">
-          <div style="font-family:'Jost';font-size:13px;color:#a3a3a3">02</div>
-          <div style="font-family:'Jost';font-weight:400;font-size:24px;letter-spacing:.01em">Alan</div>
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Co-founder · Estrategia</div>
+          <div style="font-family:'Inter';font-size:13px;color:#a3a3a3">02</div>
+          <div style="font-family:'Inter';font-weight:400;font-size:24px;letter-spacing:.01em">Alan</div>
+          <div style="font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Co-founder · Estrategia</div>
         </div>
         <div style="display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:20px;padding:20px 0;border-bottom:1px solid rgba(20,20,18,.14)">
-          <div style="font-family:'Jost';font-size:13px;color:#a3a3a3">03</div>
-          <div style="font-family:'Jost';font-weight:400;font-size:24px;letter-spacing:.01em">Nico</div>
-          <div style="font-family:'Jost';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Run Coach &amp; Comunidad</div>
+          <div style="font-family:'Inter';font-size:13px;color:#a3a3a3">03</div>
+          <div style="font-family:'Inter';font-weight:400;font-size:24px;letter-spacing:.01em">Nico</div>
+          <div style="font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right">Run Coach &amp; Comunidad</div>
         </div>
       </div>
     </div>
@@ -271,12 +257,12 @@
 <!-- ===== CTA ===== -->
 <section id="join" data-screen-label="06 Sumate" style="padding:clamp(110px,15vh,180px) clamp(20px,5vw,64px);background:#ffffff;text-align:center">
   <div data-reveal style="max-width:820px;margin:0 auto;opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.22,.7,.2,1),transform 1.1s cubic-bezier(.22,.7,.2,1)">
-    <div style="font-family:'Jost';font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:28px">Listos · Ya</div>
-    <h2 style="font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(46px,8vw,120px);line-height:.9;letter-spacing:.01em;margin-bottom:34px">¿Listo para este<br><span style="color:var(--teal)">run juntos?</span></h2>
+    <div style="font-family:'Inter';font-size:12px;letter-spacing:.36em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:28px">Listos · Ya</div>
+    <h2 style="font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(46px,8vw,120px);line-height:.9;letter-spacing:.01em;margin-bottom:34px">¿Listo para este<br><span style="color:var(--teal)">run juntos?</span></h2>
     <p style="font-size:15px;line-height:1.7;max-width:500px;margin:0 auto 44px;color:#6b6b6b;font-weight:300">Dejá tu mail y te avisamos del próximo encuentro antes que a nadie. Sin spam — solo el plan que no te querés perder.</p>
     <form id="leadForm" style="display:flex;gap:6px;max-width:480px;margin:0 auto;border:1px solid #141412;border-radius:999px;padding:6px;background:#fff">
       <input type="email" placeholder="tu@mail.com" required style="flex:1;border:none;background:transparent;padding:14px 20px;font-family:inherit;font-size:14px;color:#141412;outline:none" />
-      <button type="submit" style="background:var(--teal);color:#fff;border:none;border-radius:999px;padding:14px 26px;font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:filter .25s">Sumarme</button>
+      <button type="submit" style="background:var(--teal);color:#fff;border:none;border-radius:999px;padding:14px 26px;font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:filter .25s">Sumarme</button>
     </form>
   </div>
 </section>
@@ -285,8 +271,8 @@
 <footer style="background:#0d1a1c;color:#fff;padding:clamp(64px,9vh,96px) clamp(20px,5vw,64px) 36px">
   <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:clamp(32px,4vw,64px);padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.14)">
     <div>
-      <div style="font-family:'Jost';font-weight:500;letter-spacing:.24em;font-size:24px;text-transform:uppercase">Sprinters<sup style="font-size:.5em;opacity:.5">®</sup></div>
-      <div style="font-family:'Jost';font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal-lt);margin-top:14px">Social · Run · Club</div>
+      <div style="font-family:'Inter';font-weight:500;letter-spacing:.24em;font-size:24px;text-transform:uppercase">Sprinters<sup style="font-size:.5em;opacity:.5">®</sup></div>
+      <div style="font-family:'Inter';font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal-lt);margin-top:14px">Social · Run · Club</div>
       <p style="font-size:13px;margin-top:18px;color:rgba(255,255,255,.6);line-height:1.7;max-width:320px;font-weight:300">El primer Social Run Club de Mendoza. Creado en mayo 2025 por Inés y Alan. Una experiencia que va mucho más allá de salir a correr.</p>
       <div style="display:flex;gap:10px;margin-top:26px">
         <a href="https://instagram.com/sprintersmza" aria-label="Instagram" style="width:40px;height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
@@ -296,16 +282,16 @@
       </div>
     </div>
     <div>
-      <h5 style="font-family:'Jost';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Club</h5>
+      <h5 style="font-family:'Inter';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Club</h5>
       <ul style="list-style:none;display:flex;flex-direction:column;gap:11px">
-        <li><a href="#pilares" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Pilares</a></li>
         <li><a href="#agenda" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Agenda</a></li>
+        <li><a href="#pilares" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Pilares</a></li>
         <li><a href="#galeria" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Galería</a></li>
         <li><a href="Cuenta.html" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Mi cuenta</a></li>
       </ul>
     </div>
     <div>
-      <h5 style="font-family:'Jost';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Encuentros</h5>
+      <h5 style="font-family:'Inter';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Encuentros</h5>
       <ul style="list-style:none;display:flex;flex-direction:column;gap:11px">
         <li><a href="#" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Fuente de los Continentes</a></li>
         <li><a href="#" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">Prado Español</a></li>
@@ -314,7 +300,7 @@
       </ul>
     </div>
     <div>
-      <h5 style="font-family:'Jost';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Seguinos</h5>
+      <h5 style="font-family:'Inter';font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;margin-bottom:18px;color:rgba(255,255,255,.55)">Seguinos</h5>
       <ul style="list-style:none;display:flex;flex-direction:column;gap:11px">
         <li><a href="https://instagram.com/sprintersmza" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">@sprintersmza</a></li>
         <li><a href="https://beacons.ai/sprintersmza" style="font-size:14px;color:rgba(255,255,255,.82);font-weight:300;transition:color .2s">beacons.ai/sprintersmza</a></li>
@@ -323,9 +309,9 @@
       </ul>
     </div>
   </div>
-  <div style="max-width:1320px;margin:32px auto 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)">
+  <div style="max-width:1320px;margin:32px auto 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)">
     <div>© 2026 Sprinters · First Social Run Club of Mendoza, AR</div>
-    <div><a href="Landing-mobile.html?force=mobile" style="opacity:.85;border-bottom:1px solid currentColor;padding-bottom:1px">Ver versión móvil ↗</a> &nbsp;·&nbsp; Let's run together</div>
+    <div>Let's run together</div>
   </div>
 </footer>
 
@@ -507,15 +493,15 @@ document.addEventListener('DOMContentLoaded', function(){
           <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:3/4.4;background:#1a1a1a">
             <img class="tour-img" src="${esc(img)}" alt="${esc(ev.title)}" loading="lazy" decoding="async" onerror="this.src='${EV_IMG_DEFAULT.social}'" style="width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.22,.7,.2,1)" />
             <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,22,24,.1) 40%,rgba(9,22,24,.55) 100%)"></div>
-            <span style="position:absolute;top:16px;left:16px;font-family:'Jost';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">${esc(EV_TAG[ev.branch] || ev.branch)}</span>
+            <span style="position:absolute;top:16px;left:16px;font-family:'Inter';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);padding:6px 11px;border-radius:999px">${esc(EV_TAG[ev.branch] || ev.branch)}</span>
           </div>
           <div style="text-align:center;padding:22px 8px 0">
-            <div style="font-family:'Jost';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">${esc(fmtEvDate(ev.event_date))}</div>
-            <h4 style="font-family:'Jost';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">${esc(ev.title)}</h4>
+            <div style="font-family:'Inter';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">${esc(fmtEvDate(ev.event_date))}</div>
+            <h4 style="font-family:'Inter';font-weight:400;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-bottom:6px">${esc(ev.title)}</h4>
             <p style="font-size:12px;color:#8a8a8a;font-weight:300;margin-bottom:14px">${esc(ev.location_text || 'Mendoza')} · ${esc(fmtEvTime(ev.event_date))} H · ${price}</p>
             ${closed
-              ? '<span style="font-family:\'Jost\';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a3a3a3">Inscripción cerrada</span>'
-              : '<span style="font-family:\'Jost\';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)">Ver evento →</span>'}
+              ? '<span style="font-family:\'Inter\';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a3a3a3">Inscripción cerrada</span>'
+              : '<span style="font-family:\'Inter\';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)">Ver evento →</span>'}
           </div>
         </a>`;
     };
@@ -536,14 +522,14 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       if (q.error) {
         console.error('[agenda] error cargando eventos:', q.error.message);
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;font-family:'Jost';font-size:13px;color:#a3a3a3">No pudimos cargar la agenda ahora mismo.</div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;font-family:'Inter';font-size:13px;color:#a3a3a3">No pudimos cargar la agenda ahora mismo.</div>`;
         return;
       }
       if (!q.data || !q.data.length) {
         // Ninguna fila con is_published=true, deleted_at NULL y event_date en el futuro.
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0">
-          <p style="font-family:'Jost';font-size:14px;letter-spacing:.05em;color:#8a8a8a;margin-bottom:14px">Estamos por anunciar la próxima fecha.</p>
-          <a href="https://instagram.com/sprintersmza" style="font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal);padding-bottom:4px">Seguinos en @sprintersmza →</a>
+          <p style="font-family:'Inter';font-size:14px;letter-spacing:.05em;color:#8a8a8a;margin-bottom:14px">Estamos por anunciar la próxima fecha.</p>
+          <a href="https://instagram.com/sprintersmza" style="font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal);padding-bottom:4px">Seguinos en @sprintersmza →</a>
         </div>`;
         return;
       }
@@ -557,6 +543,44 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     };
     loadAgenda();
+
+    // ── Nav según sesión ────────────────────────────────────────────
+    //   Logueado  → "Hola, {nombre}" (link a la cuenta) + Cerrar sesión
+    //   Anónimo   → Iniciar sesión + Registrarse
+    const NAV_LINK = "font-family:'Inter';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.9;transition:opacity .2s";
+    const NAV_BTN  = "font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border:1px solid currentColor;padding:10px 18px;border-radius:999px;transition:background .25s,color .25s";
+
+    const renderAuthNav = async (session) => {
+      const box = document.getElementById('authNav');
+      if (!box) return;
+
+      if (!session) {
+        box.innerHTML =
+          `<a href="Cuenta.html?tab=login" style="${NAV_LINK}">Iniciar sesión</a>` +
+          `<a href="Cuenta.html?tab=signup" style="${NAV_BTN}">Registrarse</a>`;
+        return;
+      }
+
+      // Nombre: primero el perfil, y si todavía no cargó, lo que haya en el metadata.
+      const meta = session.user.user_metadata || {};
+      let name = (meta.first_name || '').trim();
+      const { data: prof } = await supa
+        .from('users').select('first_name').eq('id', session.user.id).maybeSingle();
+      if (prof && prof.first_name) name = prof.first_name.trim();
+      if (!name) name = (session.user.email || '').split('@')[0];
+
+      box.innerHTML =
+        `<a href="Cuenta.html?tab=profile" style="${NAV_LINK}">Hola, ${esc(name)}</a>` +
+        `<button type="button" id="navLogout" style="${NAV_BTN};background:none;color:inherit;cursor:pointer">Cerrar sesión</button>`;
+
+      document.getElementById('navLogout').addEventListener('click', async () => {
+        await supa.auth.signOut();
+        location.reload();
+      });
+    };
+
+    supa.auth.getSession().then(({ data }) => renderAuthNav(data.session));
+    supa.auth.onAuthStateChange((_evt, session) => renderAuthNav(session));
 
     // Nota: la inscripción a un evento (con o sin pago por transferencia) vive
     // ahora en Evento.html — esta landing solo linkea a las cards, no reserva
