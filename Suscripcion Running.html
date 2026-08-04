@@ -6,31 +6,32 @@
 <title>Sprinters · Running Team — Planes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,700;0,900;1,900&family=Allura&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="subs.css">
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   .transfer-wrap{max-width:560px;margin:0 auto;padding:0 20px 80px}
   .transfer-card{background:var(--cream,#f6f3ee);border-radius:8px;padding:clamp(22px,3vw,34px)}
-  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:16px;font-weight:700}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:16px;font-weight:700}
   .status-pill.ok{background:#dcefe0;color:#1e5e34}
   .status-pill.pending{background:#fdf0d5;color:#8a5a12}
   .status-pill.rejected{background:#fbe2e0;color:#a02418}
   .transfer-box{margin-top:6px;padding:18px;background:#fff;border:1px solid rgba(20,20,18,.14);border-radius:8px}
   .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0}
-  .transfer-box .k{font-family:'Montserrat',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
+  .transfer-box .k{font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
   .transfer-box .v{font-size:13.5px;font-weight:700}
-  .copy-btn{font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal,#1f7f8c);background:none;border:1px solid var(--teal,#1f7f8c);border-radius:999px;padding:6px 11px;cursor:pointer}
+  .copy-btn{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal,#1f7f8c);background:none;border:1px solid var(--teal,#1f7f8c);border-radius:999px;padding:6px 11px;cursor:pointer}
   .copy-btn:hover{background:var(--teal,#1f7f8c);color:#fff}
   .upload-row{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .file-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#fff;border:1.5px dashed #141412;font-family:'Montserrat',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+  .file-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#fff;border:1.5px dashed #141412;font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
   .file-name{font-size:12px;color:#6b6b6b}
   .terms-row{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:12.5px;line-height:1.5}
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
   .terms-row a{color:var(--teal,#1f7f8c);text-decoration:underline;font-weight:600}
-  .transfer-card .btn-confirm{margin-top:18px;width:100%;padding:15px;border-radius:999px;background:var(--teal,#1f7f8c);color:#fff;border:none;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer}
+  .transfer-card .btn-confirm{margin-top:18px;width:100%;padding:15px;border-radius:999px;background:var(--teal,#1f7f8c);color:#fff;border:none;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer}
   .transfer-card .btn-confirm:disabled{opacity:.5;cursor:not-allowed}
-  .transfer-back{display:inline-block;margin-bottom:16px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b;cursor:pointer;background:none;border:none}
+  .transfer-back{display:inline-block;margin-bottom:16px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b;cursor:pointer;background:none;border:none}
 </style>
 </head>
 <body>
@@ -42,7 +43,7 @@
 </nav>
 
 <!-- Aviso de plan pendiente: se completó Running pero eligió también un plan Social al registrarse -->
-<div id="pendingPlanBanner" style="display:none;background:var(--teal,#1f7f8c);color:#fff;text-align:center;padding:14px 20px;font-family:'Montserrat',sans-serif;font-size:12.5px;letter-spacing:.02em">
+<div id="pendingPlanBanner" style="display:none;background:var(--teal,#1f7f8c);color:#fff;text-align:center;padding:14px 20px;font-family:'Inter',sans-serif;font-size:12.5px;letter-spacing:.02em">
   Todavía te falta tu plan <strong id="pendingPlanLabel"></strong> — <a href="#" id="pendingPlanLink" style="color:#fff;text-decoration:underline;font-weight:600">completar ahora →</a>
 </div>
 
@@ -86,10 +87,10 @@
     </div>
   </article>
 
-  <!-- ===== Plan 02 — Training Pro · POPULAR ===== -->
-  <article class="plan popular" data-plan="Training Pro">
+  <!-- ===== Plan 02 — Training Plus · POPULAR ===== -->
+  <article class="plan popular" data-plan="Training Plus">
     <div class="plan-top">
-      <h2 class="plan-name">Training <em>Pro.</em></h2>
+      <h2 class="plan-name">Training <em>Plus.</em></h2>
       <span class="popular-badge">El favorito</span>
     </div>
     <p class="plan-desc">Todo el entrenamiento más la vida social del club. La experiencia Sprinters completa.</p>
@@ -101,7 +102,7 @@
     </div>
     <div class="price-note">Renovación mensual automática · cancelás cuando quieras</div>
 
-    <button class="plan-cta" data-subscribe="Training Pro">Suscribirme a Pro <span class="a">→</span></button>
+    <button class="plan-cta" data-subscribe="Training Plus">Suscribirme a Plus <span class="a">→</span></button>
 
     <ul class="plan-features">
       <li class="plan-feature"><span class="feature-icon">↗</span><span>Todo lo del Training Core</span></li>
@@ -124,7 +125,7 @@
 <section class="transfer-wrap" id="transferSection" style="display:none">
   <button type="button" class="transfer-back" id="transferBackBtn">← Ver los dos planes</button>
   <div class="transfer-card" id="transferCard"><!-- llenado por JS --></div>
-  <p style="font-size:11.5px;color:#6b6b6b;line-height:1.6;margin-top:16px">Las suscripciones Running se confirman por transferencia bancaria. Subís tu comprobante acá mismo y un admin del club lo revisa en menos de 24 hs.</p>
+  <p style="font-size:11.5px;color:#6b6b6b;line-height:1.6;margin-top:16px">Las suscripciones Running se pagan por transferencia bancaria. Subís tu comprobante acá mismo y tu plan queda activo al instante.</p>
 </section>
 
 <section class="foot-block">
@@ -154,16 +155,15 @@
     'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'
   );
 
-  const planSlug = (name) => name === 'Training Pro' ? 'pro' : 'core';
-  const PLAN_BY_SLUG = { core: 'Training Core', pro: 'Training Pro' };
-  const PLAN_PRICE = { 'Training Core': 35000, 'Training Pro': 50000 };
-  const TERMS_URL = 'https://drive.google.com/file/d/1-mHoaNZmDMo-vwQluwJfKZpmYVRUz6RE/view';
+  const planSlug = (name) => name === 'Training Plus' ? 'plus' : 'core';
+  // 'pro' sigue mapeando a Plus: hay links viejos (?pay=pro / ?plan=pro) dando vueltas.
+  const PLAN_BY_SLUG = { core: 'Training Core', plus: 'Training Plus', pro: 'Training Plus' };
+  const PLAN_PRICE = { 'Training Core': 35000, 'Training Plus': 50000 };
+  const TERMS_URL = window.SPRINTERS.TERMS_URL;
 
   // Datos de transferencia del club — EDITAR ACÁ con los reales (mismos que en Evento.html).
-  const BANK = {
-    alias: 'sprintersine',
-    titular: 'Inés Bahamondes - NaranjaX'
-  };
+  // Datos compartidos — ver config.js (se editan en un solo lugar)
+  const BANK = window.SPRINTERS.BANK;
 
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -197,19 +197,30 @@
     if (!_session) return;
 
     // ¿Ya tiene una suscripción activa o pendiente? → dejamos el grid de planes
-    // visible igual (esta página siempre arranca mostrando Core y Pro) y solo
+    // visible igual (esta página siempre arranca mostrando Core y Plus) y solo
     // marcamos con una etiqueta cuál de los dos ya eligió.
+    // Incluimos 'cancelled' a propósito: cuando un admin rechaza un comprobante,
+    // review_subscription_payment() deja la suscripción en cancelled+rejected.
+    // Si la filtráramos, la persona vería la grilla limpia y nunca se enteraría
+    // de que le rechazaron el pago.
     const { data: subs } = await supa.from('subscriptions')
       .select('id, status, payment_status, plan_id, membership_plans(name)')
-      .in('status', ['active', 'pending'])
+      .in('status', ['active', 'pending', 'cancelled'])
       .order('created_at', { ascending: false })
       .limit(1);
     if (subs && subs.length){
-      _mySub = subs[0];
-      markExistingPlanOnGrid();
+      const sub = subs[0];
+      // Una cancelación por rechazo se muestra para poder explicarla y permitir
+      // resubir. Una baja voluntaria ya cerrada, no: ahí la grilla queda libre.
+      const esRechazo = sub.status === 'cancelled' && sub.payment_status === 'rejected';
+      if (sub.status !== 'cancelled' || esRechazo){
+        _mySub = sub;
+        markExistingPlanOnGrid();
+        if (esRechazo) renderTransferCard(sub.membership_plans?.name || 'Training Core');
+      }
     }
 
-    // Volvió de crear cuenta / loguearse con ?pay=core|pro → arranca el flujo de transferencia
+    // Volvió de crear cuenta / loguearse con ?pay=core|plus → arranca el flujo de transferencia
     const planName = PLAN_BY_SLUG[new URLSearchParams(location.search).get('pay')];
     const btn = planName && document.querySelector(`[data-subscribe="${planName}"]`);
     if (btn) subscribe(planName, btn);
@@ -217,8 +228,10 @@
 
   const ORIGINAL_BTN_LABEL = {
     'Training Core': 'Suscribirme a Core <span class="a">→</span>',
-    'Training Pro':  'Suscribirme a Pro <span class="a">→</span>'
+    'Training Plus': 'Suscribirme a Plus <span class="a">→</span>'
   };
+  // Desde 2026-08-04 el comprobante activa el plan al instante: 'pending_review'
+  // solo puede venir de filas viejas creadas con el flujo anterior.
   const STATUS_BADGE_LABEL = {
     not_required:   'Pendiente comprobante',
     pending_review: 'En revisión',
@@ -321,11 +334,11 @@
     const sub = _mySub;
     const status = sub?.payment_status || 'not_required';
 
-    const changePlanLink = `<div style="margin-top:14px;text-align:center"><button type="button" id="changePlanBtn" style="background:none;border:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6b6b6b;text-decoration:underline;cursor:pointer">Elegí otro plan</button></div>`;
+    const changePlanLink = `<div style="margin-top:14px;text-align:center"><button type="button" id="changePlanBtn" style="background:none;border:none;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6b6b6b;text-decoration:underline;cursor:pointer">Elegí otro plan</button></div>`;
 
     let statusHtml = '';
     if (status === 'verified'){
-      statusHtml = `<div class="status-pill ok">✓ Pago confirmado</div><p style="font-size:13.5px;color:#6b6b6b">Tu suscripción a ${esc(planName)} está activa. ¡Nos vemos en la pista!</p>`;
+      statusHtml = `<div class="status-pill ok">✓ Plan activo</div><p style="font-size:13.5px;color:#6b6b6b">Tu suscripción a ${esc(planName)} ya está activa. ¡Nos vemos en la pista!</p>`;
       card.innerHTML = statusHtml;
       return;
     }
@@ -336,12 +349,12 @@
       return;
     }
     if (status === 'rejected'){
-      statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:#6b6b6b;margin-bottom:14px">Revisá el monto y subí uno nuevo.</p>`;
+      statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:#6b6b6b;margin-bottom:14px">Tu plan ${esc(planName)} quedó sin activar. Revisá que el monto y el alias coincidan, y subí el comprobante de nuevo. Si creés que es un error, escribinos.</p>`;
     }
 
     // not_required (recién creada) o rejected (re-subir) → mostramos datos + carga de comprobante
     card.innerHTML = statusHtml + `
-      <h3 class="jost" style="font-family:'Montserrat',sans-serif;font-weight:900;text-transform:uppercase;font-size:22px;margin-bottom:4px">${esc(planName)}</h3>
+      <h3 style="font-family:'Inter',sans-serif;font-weight:900;text-transform:uppercase;font-size:22px;margin-bottom:4px">${esc(planName)}</h3>
       <div style="font-size:14px;color:#6b6b6b;margin-bottom:16px">Valor $${price.toLocaleString('es-AR')} / mes</div>
       <div class="transfer-box">
         <div class="row"><span class="k">Alias</span><span class="v">${esc(BANK.alias)}</span><button type="button" class="copy-btn" data-copy="${esc(BANK.alias)}">Copiar</button></div>
@@ -355,7 +368,8 @@
         <input type="checkbox" id="subTermsCheck" />
         <span>He leído y acepto los <a href="${esc(TERMS_URL)}" target="_blank" rel="noopener">Términos y Condiciones de Participación</a>.</span>
       </label>
-      <button type="button" class="btn-confirm" id="subConfirmBtn" disabled>Confirmar suscripción →</button>
+      <button type="button" class="btn-confirm" id="subConfirmBtn" disabled>Activar mi plan →</button>
+      <p style="font-size:11.5px;color:#6b6b6b;text-align:center;margin-top:10px">Tu plan se activa apenas subís el comprobante — no hay espera.</p>
       ` + changePlanLink;
     wireChangePlan(card);
 
@@ -384,22 +398,23 @@
       const file = fileInput.files && fileInput.files[0];
       if (!file) return;
       if (file.size > 5 * 1024 * 1024){ alert('El archivo debe pesar menos de 5 MB'); return; }
-      confirmBtn.disabled = true; confirmBtn.textContent = 'Subiendo…';
+      confirmBtn.disabled = true; confirmBtn.textContent = 'Activando…';
       const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
       const path = `${_session.user.id}/sub-${sub.id}-${Date.now()}.${ext}`;
       const { error: upErr } = await supa.storage.from('payment-receipts').upload(path, file, { upsert: true, contentType: file.type });
       if (upErr){
         alert('No pudimos subir el comprobante: ' + upErr.message);
-        confirmBtn.disabled = false; confirmBtn.textContent = 'Confirmar suscripción →';
+        confirmBtn.disabled = false; confirmBtn.textContent = 'Activar mi plan →';
         return;
       }
       const { error: rpcErr } = await supa.rpc('submit_subscription_receipt', { sub_id: sub.id, receipt_path: path });
       if (rpcErr){
-        alert('Subimos el archivo pero no pudimos confirmarlo: ' + rpcErr.message);
-        confirmBtn.disabled = false; confirmBtn.textContent = 'Confirmar suscripción →';
+        alert('Subimos el archivo pero no pudimos activarlo: ' + rpcErr.message);
+        confirmBtn.disabled = false; confirmBtn.textContent = 'Activar mi plan →';
         return;
       }
-      _mySub.payment_status = 'pending_review';
+      _mySub.payment_status = 'verified';
+      _mySub.status = 'active';
       renderTransferCard(planName);
     });
   }
