@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex,nofollow" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <style>
   :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; --ink:#141412; --muted:#6b6b6b; --line:rgba(20,20,18,.14); --cream:#f6f3ee; --error:#b91c1c; }
@@ -16,28 +16,28 @@
   a{color:inherit;text-decoration:none}
   button,input,select,textarea{font-family:inherit}
   button{cursor:pointer}
-  .jost{font-family:'Jost',sans-serif}
-  .eyebrow{font-family:'Jost';font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+  .display{font-family:'Inter',sans-serif}
+  .eyebrow{font-family:'Inter';font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--teal)}
 
   .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,4vw,48px);background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar a{font-family:'Jost';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.8}
+  .topbar a{font-family:'Inter';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.8}
   .topbar a:hover{opacity:1}
   .topbar .brand{font-weight:500;letter-spacing:.24em;font-size:14px}
 
   .wrap{max-width:1200px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,4vw,48px) 100px}
 
-  h1{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,44px);margin-bottom:6px}
+  h1{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,44px);margin-bottom:6px}
   .sub{color:var(--muted);font-size:13.5px;margin-bottom:28px}
 
   .tabs{display:inline-flex;background:var(--cream);border-radius:999px;padding:4px;gap:2px;margin-bottom:28px}
-  .tab-btn{padding:11px 22px;border:none;background:none;border-radius:999px;font-family:'Jost';font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--muted);transition:all .2s}
+  .tab-btn{padding:11px 22px;border:none;background:none;border-radius:999px;font-family:'Inter';font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--muted);transition:all .2s}
   .tab-btn.active{background:var(--ink);color:#fff}
 
   .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
   .search-input{flex:1;min-width:200px;height:42px;border:1px solid var(--line);border-radius:8px;padding:0 14px;font-size:13.5px;outline:none;background:var(--cream)}
   .search-input:focus{border-color:var(--ink)}
   .chk-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:'Jost';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;border:none;transition:filter .2s,background .2s}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:'Inter';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;border:none;transition:filter .2s,background .2s}
   .btn-primary{background:var(--teal);color:#fff}
   .btn-primary:hover{filter:brightness(1.08)}
   .btn-ghost{background:#fff;border:1px solid var(--ink);color:var(--ink)}
@@ -45,27 +45,39 @@
   .btn-danger{background:none;color:var(--error);border:1px solid var(--error)}
 
   table{width:100%;border-collapse:collapse;font-size:13.5px}
-  thead th{text-align:left;font-family:'Jost';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line)}
+  thead th{text-align:left;font-family:'Inter';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line)}
   tbody td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
   tbody tr.inactive{opacity:.5}
-  .badge{display:inline-flex;align-items:center;gap:5px;font-family:'Jost';font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-family:'Inter';font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
   .badge.admin{background:#fde2d2;color:#9a3d12}
   .badge.pub{background:#dcefe0;color:#1e5e34}
   .badge.unpub{background:#eee;color:#888}
   .badge.inactive{background:#f4d9d7;color:#8a1f16}
   .row-actions{display:flex;gap:8px}
+
+  /* ===== Constructor de itinerario ===== */
+  .itin-builder{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--cream)}
+  .itin-row{display:grid;grid-template-columns:118px 1fr 34px;gap:8px;align-items:center;margin-bottom:8px}
+  .itin-row:last-of-type{margin-bottom:0}
+  .itin-row input{height:40px;border:1px solid var(--line);border-radius:8px;padding:0 11px;font-family:'Inter',sans-serif;font-size:13.5px;background:#fff;outline:none;width:100%}
+  .itin-row input:focus{border-color:var(--ink)}
+  .itin-row input[type=time]{font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .itin-del{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;transition:color .15s,border-color .15s}
+  .itin-del:hover{color:var(--error);border-color:var(--error)}
+  .itin-empty{font-size:12.5px;color:var(--muted);padding:6px 2px}
+  .itin-hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.5}
   .empty-row td{text-align:center;color:var(--muted);padding:36px 0}
 
   /* ===== Modal ===== */
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,10,.5);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
   .modal-bg.show{display:flex}
   .modal{background:#fff;border-radius:12px;padding:32px;max-width:640px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2)}
-  .modal h3{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:24px;margin-bottom:20px}
+  .modal h3{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:24px;margin-bottom:20px}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .f-grid .full{grid-column:1/-1}
   @media (max-width:560px){.f-grid{grid-template-columns:1fr}}
   .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-  .field label{font-family:'Jost';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .field label{font-family:'Inter';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .field input, .field select, .field textarea{height:42px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font-size:13.5px;outline:none;background:var(--cream)}
   .field textarea{height:auto;padding:10px 12px;resize:vertical;min-height:70px}
   .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--ink)}
@@ -77,14 +89,14 @@
   .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
   .modal-err{background:#fbe2e0;color:#a02418;padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
 
-  .gate-msg{padding:120px 20px;text-align:center;font-family:'Jost';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .gate-msg{padding:120px 20px;text-align:center;font-family:'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 </style>
 </head>
 <body>
 
 <nav class="topbar">
   <a href="Cuenta.html">← Mi cuenta</a>
-  <span class="brand jost">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup> · Admin</span>
+  <span class="brand display">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup> · Admin</span>
   <a href="#" id="logoutLink">Cerrar sesión</a>
 </nav>
 
@@ -109,8 +121,8 @@
     </div>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Rol</th><th>Desde</th><th>Estado</th><th></th></tr></thead>
-        <tbody id="usersTbody"><tr class="empty-row"><td colspan="7">Cargando…</td></tr></tbody>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Nacimiento</th><th>Emergencia</th><th>Cómo nos conoció</th><th>Rol</th><th>Desde</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="usersTbody"><tr class="empty-row"><td colspan="10">Cargando…</td></tr></tbody>
       </table>
     </div>
   </section>
@@ -149,7 +161,8 @@
         <div class="field"><label>Nombre</label><input type="text" id="u-first" /></div>
         <div class="field"><label>Apellido</label><input type="text" id="u-last" /></div>
         <div class="field"><label>Teléfono</label><input type="text" id="u-phone" /></div>
-        <div class="field"><label>Edad</label><input type="number" id="u-age" min="14" max="99" /></div>
+        <div class="field"><label>Fecha de nacimiento</label><input type="date" id="u-birth" min="1926-01-01" /></div>
+        <div class="field"><label>Edad <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(se calcula sola)</span></label><input type="number" id="u-age" min="14" max="99" readonly style="background:var(--cream);cursor:not-allowed" /></div>
         <div class="field">
           <label>Sexo</label>
           <select id="u-sex"><option value="">—</option><option value="M">Masculino</option><option value="F">Femenino</option><option value="O">Otro</option></select>
@@ -159,7 +172,7 @@
         <div class="field full"><label>Cómo nos conoció</label><input type="text" id="u-how" /></div>
         <div class="field"><label>Eventos sociales</label><input type="number" id="u-events" min="0" /></div>
         <div class="field"><label>Km totales</label><input type="number" id="u-km" min="0" step="0.1" /></div>
-        <div class="field full"><label>Ahorro como PRO ($)</label><input type="number" id="u-saved" min="0" /></div>
+        <div class="field full"><label>Ahorro como Plus ($)</label><input type="number" id="u-saved" min="0" /></div>
       </div>
       <div class="field-toggle">
         <div><strong style="font-size:13px">Es administrador</strong><div style="font-size:11.5px;color:var(--muted)">Acceso total a este panel</div></div>
@@ -194,16 +207,29 @@
         <div class="field full"><label>Cierre de inscripción (opcional)</label><input type="datetime-local" id="e-cutoff" /></div>
         <div class="field full"><label>Descripción</label><textarea id="e-desc"></textarea></div>
         <div class="field full">
-          <label>Itinerario — una línea por paso: "09:30 - Salida Prado Español"</label>
-          <textarea id="e-itinerary" placeholder="09:30 - Salida&#10;10:15 - Vuelta al punto&#10;10:30 - After run"></textarea>
+          <label>Itinerario</label>
+          <div class="itin-builder">
+            <div id="e-itin-rows"></div>
+            <button type="button" class="btn btn-ghost btn-sm" id="e-itin-add" style="margin-top:10px">+ Agregar paso</button>
+            <div class="itin-hint">El primer paso suele ser la salida. Poné la hora en el reloj y a la derecha qué pasa (ej. “Salida desde Prado Español”).</div>
+          </div>
         </div>
       </div>
       <div class="field-toggle"><div><strong style="font-size:13px">After-run</strong><div style="font-size:11.5px;color:var(--muted)">El evento tiene reserva de after-run</div></div><button type="button" class="switch" id="e-afterrun-switch"></button></div>
-      <div class="field full" id="e-afterrun-price-field" style="display:none;margin:-6px 0 14px">
-        <label>Precio after-run ($)</label>
-        <input type="number" id="e-afterrun-price" min="0" placeholder="Ej. 3000" />
+      <div id="e-afterrun-block" style="display:none">
+        <div class="field-toggle" style="margin-top:-4px">
+          <div>
+            <strong style="font-size:13px">Lo cobramos nosotros</strong>
+            <div style="font-size:11.5px;color:var(--muted)" id="e-afterrun-pay-hint">Apagado: cada uno paga en el lugar. Encendido: se suma al total que nos transfieren.</div>
+          </div>
+          <button type="button" class="switch" id="e-afterrun-pay-switch"></button>
+        </div>
+        <div class="field full" style="margin:-6px 0 14px">
+          <label id="e-afterrun-price-label">Precio after-run ($) — referencia</label>
+          <input type="number" id="e-afterrun-price" min="0" placeholder="Ej. 3000" />
+        </div>
       </div>
-      <div class="field-toggle"><div><strong style="font-size:13px">Incluido en Training Pro</strong><div style="font-size:11.5px;color:var(--muted)">Los Pro entran sin costo</div></div><button type="button" class="switch" id="e-pro-switch"></button></div>
+      <div class="field-toggle"><div><strong style="font-size:13px">Incluido en Training Plus</strong><div style="font-size:11.5px;color:var(--muted)">Los Plus entran sin costo</div></div><button type="button" class="switch" id="e-pro-switch"></button></div>
       <div class="field-toggle"><div><strong style="font-size:13px">Publicado</strong><div style="font-size:11.5px;color:var(--muted)">Visible en la agenda del sitio</div></div><button type="button" class="switch on" id="e-published-switch"></button></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" id="eventModalCancel">Cancelar</button>
@@ -230,6 +256,23 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const fmtDate = (iso) => iso ? new Intl.DateTimeFormat('es-AR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(iso)) : '—';
+    // birth_date llega como 'YYYY-MM-DD' (DATE, sin hora). Parsearlo con new Date()
+    // lo interpreta como UTC medianoche y en AR (UTC-3) se corre un día para atrás.
+    const fmtBirth = (d) => {
+      if (!d) return '—';
+      const [y, m, day] = String(d).slice(0, 10).split('-');
+      return `${day}/${m}/${y}`;
+    };
+    const ageFromBirth = (d) => {
+      if (!d) return '';
+      const [y, m, day] = String(d).slice(0, 10).split('-').map(Number);
+      if (!y || !m || !day) return '';
+      const today = new Date();
+      let a = today.getFullYear() - y;
+      const beforeBirthday = (today.getMonth() + 1) < m || ((today.getMonth() + 1) === m && today.getDate() < day);
+      if (beforeBirthday) a--;
+      return (a >= 0 && a < 130) ? a : '';
+    };
     const toDatetimeLocal = (iso) => {
       if (!iso) return '';
       const d = new Date(iso);
@@ -282,14 +325,14 @@ document.addEventListener('DOMContentLoaded', function(){
       const tbody = document.getElementById('usersTbody');
       const search = document.getElementById('userSearch').value.trim();
       const includeInactive = document.getElementById('userShowInactive').checked;
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Cargando…</td></tr>`;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="10">Cargando…</td></tr>`;
       const { data, error } = await supa.rpc('admin_list_users', { p_search: search || null, p_include_inactive: includeInactive });
       if (error){
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${esc(error.message)}</td></tr>`;
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="10">Error: ${esc(error.message)}</td></tr>`;
         return;
       }
       if (!data || !data.length){
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No hay usuarios para mostrar.</td></tr>`;
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="10">No hay usuarios para mostrar.</td></tr>`;
         return;
       }
       tbody.innerHTML = data.map(u => `
@@ -297,6 +340,9 @@ document.addEventListener('DOMContentLoaded', function(){
           <td>${esc(u.first_name)} ${esc(u.last_name)}</td>
           <td>${esc(u.email)}</td>
           <td>${esc(u.phone || '—')}</td>
+          <td>${u.birth_date ? esc(fmtBirth(u.birth_date)) + (u.age ? ` <span style="color:var(--muted)">(${u.age})</span>` : '') : (u.age ? esc(u.age) + ' años' : '—')}</td>
+          <td>${esc(u.emergency_contact || '—')}</td>
+          <td>${esc(u.how_heard || '—')}</td>
           <td>${u.is_admin ? '<span class="badge admin">Admin</span>' : '—'}</td>
           <td>${fmtDate(u.created_at)}</td>
           <td>${u.deleted_at ? '<span class="badge inactive">Inactivo</span>' : '<span class="badge pub">Activo</span>'}</td>
@@ -341,7 +387,8 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('u-first').value = user?.first_name || '';
       document.getElementById('u-last').value = user?.last_name || '';
       document.getElementById('u-phone').value = user?.phone || '';
-      document.getElementById('u-age').value = user?.age ?? '';
+      document.getElementById('u-birth').value = user?.birth_date ? String(user.birth_date).slice(0, 10) : '';
+      document.getElementById('u-age').value = user?.birth_date ? ageFromBirth(user.birth_date) : (user?.age ?? '');
       document.getElementById('u-sex').value = user?.sex || '';
       document.getElementById('u-origin').value = user?.origin || '';
       document.getElementById('u-emerg').value = user?.emergency_contact || '';
@@ -355,6 +402,11 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('newUserBtn').addEventListener('click', () => openUserModal(null));
     document.getElementById('userModalCancel').addEventListener('click', () => document.getElementById('userModalBg').classList.remove('show'));
     document.getElementById('u-admin-switch').addEventListener('click', function(){ this.classList.toggle('on'); });
+    // La edad es derivada: se recalcula al tocar la fecha de nacimiento (el trigger
+    // sync_age_from_birth_date hace lo mismo del lado de la base).
+    document.getElementById('u-birth').addEventListener('change', function(){
+      document.getElementById('u-age').value = ageFromBirth(this.value);
+    });
 
     document.getElementById('userForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -388,6 +440,7 @@ document.addEventListener('DOMContentLoaded', function(){
             p_first_name: document.getElementById('u-first').value.trim() || null,
             p_last_name: document.getElementById('u-last').value.trim() || null,
             p_phone: document.getElementById('u-phone').value.trim() || null,
+            p_birth_date: document.getElementById('u-birth').value || null,
             p_age: document.getElementById('u-age').value ? parseInt(document.getElementById('u-age').value) : null,
             p_sex: document.getElementById('u-sex').value || null,
             p_origin: document.getElementById('u-origin').value.trim() || null,
@@ -465,17 +518,69 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('eventSearch').addEventListener('input', () => { clearTimeout(eventSearchTimer); eventSearchTimer = setTimeout(loadEvents, 350); });
     document.getElementById('eventShowInactive').addEventListener('change', loadEvents);
 
-    function itineraryToText(itin){
-      if (!Array.isArray(itin)) return '';
-      return itin.map(it => `${it.time || ''} - ${it.label || ''}`).join('\n');
+    // ================================================================
+    // ITINERARIO — constructor de filas (reloj + texto)
+    //   Antes era un textarea "HH:MM - texto" por línea: fácil de romper con
+    //   un guion de más o una hora mal tipeada. Ahora cada paso es un
+    //   <input type="time"> (abre el reloj nativo) + un input de texto.
+    //   El formato guardado en events.itinerary (JSONB) no cambia:
+    //   [{ time: "09:30", label: "Salida Prado Español" }, ...]
+    // ================================================================
+    const itinRows = () => document.getElementById('e-itin-rows');
+
+    function normalizeTime(t){
+      // Acepta "9:30", "09.30", "0930" y lo lleva a "HH:MM" (lo que espera <input type=time>)
+      const s = String(t || '').trim();
+      if (!s) return '';
+      const m = s.match(/^(\d{1,2})\s*[:.\-]?\s*(\d{2})/);
+      if (!m) return '';
+      const h = Math.min(23, parseInt(m[1], 10));
+      const min = Math.min(59, parseInt(m[2], 10));
+      return String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
     }
-    function textToItinerary(text){
-      return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
-        const idx = line.indexOf(' - ');
-        if (idx === -1) return { time: '', label: line };
-        return { time: line.slice(0, idx).trim(), label: line.slice(idx + 3).trim() };
+
+    function addItinRow(time, label, focus){
+      const empty = itinRows().querySelector('.itin-empty');
+      if (empty) empty.remove();
+      const row = document.createElement('div');
+      row.className = 'itin-row';
+      row.innerHTML =
+        `<input type="time" class="itin-time" step="300" />` +
+        `<input type="text" class="itin-label" placeholder="Qué pasa a esa hora (ej. Salida desde Prado Español)" />` +
+        `<button type="button" class="itin-del" title="Quitar paso">×</button>`;
+      row.querySelector('.itin-time').value = normalizeTime(time);
+      row.querySelector('.itin-label').value = label || '';
+      row.querySelector('.itin-del').addEventListener('click', () => {
+        row.remove();
+        if (!itinRows().querySelector('.itin-row')) renderItinerary([]);
       });
+      itinRows().appendChild(row);
+      if (focus) row.querySelector('.itin-time').focus();
     }
+
+    function renderItinerary(itin){
+      itinRows().innerHTML = '';
+      const list = Array.isArray(itin) ? itin : [];
+      if (!list.length){
+        itinRows().innerHTML = '<div class="itin-empty">Sin pasos todavía — agregá la hora de salida.</div>';
+        return;
+      }
+      list.forEach(it => addItinRow(it.time, it.label, false));
+    }
+
+    function readItinerary(){
+      // Se descartan las filas vacías; se ordena por hora para que la vista
+      // del evento no dependa del orden en que el admin las cargó.
+      return Array.from(itinRows().querySelectorAll('.itin-row'))
+        .map(r => ({
+          time: normalizeTime(r.querySelector('.itin-time').value),
+          label: r.querySelector('.itin-label').value.trim(),
+        }))
+        .filter(it => it.time || it.label)
+        .sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99'));
+    }
+
+    document.getElementById('e-itin-add').addEventListener('click', () => addItinRow('', '', true));
 
     let editingEventId = null;
     let pendingImageFile = null;
@@ -483,7 +588,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function toggleAfterRunPriceField(){
       const on = document.getElementById('e-afterrun-switch').classList.contains('on');
-      document.getElementById('e-afterrun-price-field').style.display = on ? '' : 'none';
+      document.getElementById('e-afterrun-block').style.display = on ? '' : 'none';
+
+      // Quién cobra cambia lo que significa el precio: si lo cobramos nosotros
+      // se suma al total a transferir; si no, es solo referencia informativa.
+      const byUs = document.getElementById('e-afterrun-pay-switch').classList.contains('on');
+      document.getElementById('e-afterrun-price-label').textContent = byUs
+        ? 'Precio after-run ($) — se suma al total'
+        : 'Precio after-run ($) — referencia';
+      document.getElementById('e-afterrun-pay-hint').textContent = byUs
+        ? 'Lo cobramos nosotros: el monto se suma al total que nos transfieren.'
+        : 'Cada uno paga en el lugar: el monto se muestra como referencia, no se cobra acá.';
     }
 
     function openEventModal(ev){
@@ -508,8 +623,9 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('e-capacity').value = ev?.total_capacity ?? '';
       document.getElementById('e-cutoff').value = toDatetimeLocal(ev?.sales_cutoff);
       document.getElementById('e-desc').value = ev?.description || '';
-      document.getElementById('e-itinerary').value = itineraryToText(ev?.itinerary);
+      renderItinerary(ev?.itinerary);
       document.getElementById('e-afterrun-switch').classList.toggle('on', !!ev?.has_after_run);
+      document.getElementById('e-afterrun-pay-switch').classList.toggle('on', ev?.after_run_payment === 'organizer');
       document.getElementById('e-afterrun-price').value = ev?.after_run_price ?? '';
       toggleAfterRunPriceField();
       document.getElementById('e-pro-switch').classList.toggle('on', !!ev?.included_in_running_pro);
@@ -519,6 +635,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('newEventBtn').addEventListener('click', () => openEventModal(null));
     document.getElementById('eventModalCancel').addEventListener('click', () => document.getElementById('eventModalBg').classList.remove('show'));
     document.getElementById('e-afterrun-switch').addEventListener('click', function(){ this.classList.toggle('on'); toggleAfterRunPriceField(); });
+    document.getElementById('e-afterrun-pay-switch').addEventListener('click', function(){ this.classList.toggle('on'); toggleAfterRunPriceField(); });
     ['e-pro-switch', 'e-published-switch'].forEach(id => {
       document.getElementById(id).addEventListener('click', function(){ this.classList.toggle('on'); });
     });
@@ -569,8 +686,10 @@ document.addEventListener('DOMContentLoaded', function(){
           p_total_capacity: document.getElementById('e-capacity').value ? parseInt(document.getElementById('e-capacity').value) : null,
           p_sales_cutoff: document.getElementById('e-cutoff').value ? new Date(document.getElementById('e-cutoff').value).toISOString() : null,
           p_description: document.getElementById('e-desc').value.trim() || null,
-          p_itinerary: textToItinerary(document.getElementById('e-itinerary').value),
+          p_itinerary: readItinerary(),
           p_has_after_run: afterRunOn,
+          p_after_run_payment: afterRunOn && document.getElementById('e-afterrun-pay-switch').classList.contains('on')
+            ? 'organizer' : 'on_site',
           p_included_in_running_pro: document.getElementById('e-pro-switch').classList.contains('on'),
           p_is_published: document.getElementById('e-published-switch').classList.contains('on'),
           p_after_run_price: afterRunOn && afterRunPriceVal ? parseFloat(afterRunPriceVal) : null,
