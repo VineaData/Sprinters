@@ -17,8 +17,10 @@ node_modules/
 .claude/
 .gstack/
 
-# Base de datos local (si contiene datos locales o reportes)
-db/
+# Base de datos: db/ SÍ se versiona desde 2026-08-04.
+# Son migraciones DDL y scripts que leen las credenciales del .env (que sigue
+# ignorado más arriba) — no hay secretos hardcodeados. Antes estaba ignorada
+# entera y el historial completo del schema vivía en una sola máquina.
 
 # Archivos del sistema operativo o editores
 .DS_Store
@@ -29,3 +31,6 @@ Thumbs.db
 # Evitar subir planes, metodologías y estados de trabajo
 Sprinters Web - *.md
 Sprinters Web - *
+
+# Versiones archivadas (Landing-mobile viejo, etc.) — no se publican
+.archive/
