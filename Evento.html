@@ -6,7 +6,8 @@
 <title>Sprinters · Evento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <style>
   :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; --ink:#141412; --muted:#6b6b6b; --line:rgba(20,20,18,.14); --cream:#f6f3ee; }
@@ -15,14 +16,14 @@
   img{display:block;max-width:100%}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer}
-  .jost{font-family:'Jost',sans-serif}
-  .eyebrow{font-family:'Jost';font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+  .display{font-family:'Inter',sans-serif}
+  .eyebrow{font-family:'Inter';font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:var(--teal)}
 
   /* ===== Top bar ===== */
   .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,48px);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar .back{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
+  .topbar .back{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
   .topbar .back:hover{opacity:1}
-  .topbar .brand{font-family:'Jost';font-weight:500;letter-spacing:.24em;font-size:14px;text-transform:uppercase}
+  .topbar .brand{font-family:'Inter';font-weight:500;letter-spacing:.24em;font-size:14px;text-transform:uppercase}
 
   /* ===== Hero split ===== */
   .hero{display:grid;grid-template-columns:1fr 1fr;min-height:640px}
@@ -37,47 +38,47 @@
   .hero-info-content{position:relative;z-index:2}
 
   .hero-info-content .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 22px}
-  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
+  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
 
-  .hero-info-content h1{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
+  .hero-info-content h1{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
   .hero-info-content .desc{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.85);font-weight:300;max-width:52ch;margin-bottom:26px}
 
   .itinerary{display:flex;flex-direction:column;gap:0;margin-bottom:26px;max-width:420px}
   .itinerary-item{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:12px 0;border-top:1px solid rgba(255,255,255,.16)}
   .itinerary-item:last-child{border-bottom:1px solid rgba(255,255,255,.16)}
-  .itinerary-item .t{font-family:'Jost';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
+  .itinerary-item .t{font-family:'Inter';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
   .itinerary-item .l{font-size:13px;color:rgba(255,255,255,.85);font-weight:300}
 
   .price-row{margin-bottom:22px}
-  .price-row .amount{font-family:'Jost';font-size:38px;font-weight:400}
+  .price-row .amount{font-family:'Inter';font-size:38px;font-weight:400}
   .price-row .note{font-size:12px;color:rgba(255,255,255,.6)}
   .price-breakdown{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
   .price-item{display:flex;flex-direction:column;gap:3px}
-  .price-item .num{font-family:'Jost';font-size:38px;font-weight:400;line-height:1;white-space:nowrap}
-  .price-item .lab{font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-  .price-plus{font-family:'Jost';font-size:26px;font-weight:300;color:rgba(255,255,255,.4);padding-bottom:5px}
-  .price-total-big{margin-top:12px;font-family:'Jost';font-size:23px;font-weight:600;color:var(--teal-lt);letter-spacing:.01em}
-  .price-total-big .lab{font-family:'Jost';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-right:8px}
-  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--teal-lt);color:#0b2a2e;padding:8px 14px;border-radius:999px;margin-bottom:22px}
+  .price-item .num{font-family:'Inter';font-size:38px;font-weight:400;line-height:1;white-space:nowrap}
+  .price-item .lab{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+  .price-plus{font-family:'Inter';font-size:26px;font-weight:300;color:rgba(255,255,255,.4);padding-bottom:5px}
+  .price-total-big{margin-top:12px;font-family:'Inter';font-size:23px;font-weight:600;color:var(--teal-lt);letter-spacing:.01em}
+  .price-total-big .lab{font-family:'Inter';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-right:8px}
+  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--teal-lt);color:#0b2a2e;padding:8px 14px;border-radius:999px;margin-bottom:22px}
 
   .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Jost';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
   .btn-primary{background:var(--teal);color:#fff}
   .btn-primary:hover{filter:brightness(1.08)}
   .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.4)}
   .btn-ghost:hover{background:rgba(255,255,255,.18)}
   .btn:disabled{opacity:.5;cursor:not-allowed}
 
-  .urgency{font-family:'Jost';font-size:11.5px;letter-spacing:.08em;color:var(--teal-lt);margin-bottom:8px}
+  .urgency{font-family:'Inter';font-size:11.5px;letter-spacing:.08em;color:var(--teal-lt);margin-bottom:8px}
   .urgency.warn{color:#f3b98a}
 
   /* ===== Inscripción section ===== */
   .insc{max-width:760px;margin:0 auto;padding:clamp(60px,8vh,96px) clamp(20px,5vw,0) clamp(80px,10vh,120px)}
   .insc .eyebrow{margin-bottom:14px;display:block}
-  .insc h2{font-family:'Jost';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
+  .insc h2{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
 
   .card{background:var(--cream);border-radius:8px;padding:clamp(24px,3vw,36px)}
-  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
   .status-pill.ok{background:#dcefe0;color:#1e5e34}
   .status-pill.pending{background:#fdf0d5;color:#8a5a12}
   .status-pill.rejected{background:#fbe2e0;color:#a02418}
@@ -93,13 +94,13 @@
 
   .transfer-box{margin-top:22px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:8px}
   .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
-  .transfer-box .k{font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .transfer-box .k{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .transfer-box .v{font-size:14px;font-weight:600}
-  .copy-btn{font-family:'Jost';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
+  .copy-btn{font-family:'Inter';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
   .copy-btn:hover{background:var(--teal);color:#fff}
 
   .upload-row{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--ink);font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--ink);font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
   .file-name{font-size:12.5px;color:var(--muted)}
 
   .legal-note{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:16px}
@@ -111,7 +112,7 @@
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
   .terms-row a{color:var(--teal);text-decoration:underline;font-weight:600}
 
-  .footer-mini{text-align:center;padding:40px 20px;font-family:'Jost';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .footer-mini{text-align:center;padding:40px 20px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -122,11 +123,11 @@
   <a href="Cuenta.html" class="back" id="navAccount">Mi cuenta</a>
 </nav>
 
-<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Jost';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
+<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Inter';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
 
 <div id="notFoundState" style="display:none;padding:120px 20px;text-align:center">
   <div class="eyebrow" style="margin-bottom:14px">Ups</div>
-  <h2 class="jost" style="font-weight:300;text-transform:uppercase;font-size:32px;margin-bottom:16px">No encontramos este evento</h2>
+  <h2 class="display" style="font-weight:300;text-transform:uppercase;font-size:32px;margin-bottom:16px">No encontramos este evento</h2>
   <p style="color:var(--muted);margin-bottom:24px">Puede que ya haya pasado o el link esté mal. Volvé a la agenda para ver las próximas fechas.</p>
   <a href="Landing v2.html#agenda" class="btn btn-primary" style="display:inline-flex">Ver agenda →</a>
 </div>
@@ -149,7 +150,7 @@
         <div id="evItinerary" class="itinerary" style="display:none"></div>
 
         <div id="evUrgency" class="urgency" style="display:none"></div>
-        <div id="evProBadge" class="pro-badge" style="display:none">✦ Incluido en tu Training Pro</div>
+        <div id="evProBadge" class="pro-badge" style="display:none">✦ Incluido en tu Training Plus</div>
         <div id="evPriceRow" class="price-row"></div>
 
         <div class="cta-row">
@@ -182,13 +183,11 @@ document.addEventListener('DOMContentLoaded', function(){
   // Datos de transferencia del club — EDITAR ACÁ con los reales.
   // (mismo criterio que los planes Social: placeholder editable)
   // ───────────────────────────────────────────────────────────────
-  const BANK = {
-    alias: 'sprintersine',
-    titular: 'Inés Bahamondes - NaranjaX'
-  };
+  // Datos compartidos — ver config.js (se editan en un solo lugar)
+  const BANK = window.SPRINTERS.BANK;
   // EDITAR ACÁ si cambia el link o el número de contacto para pago en efectivo (internacionales)
-  const TERMS_URL = 'https://drive.google.com/file/d/1-mHoaNZmDMo-vwQluwJfKZpmYVRUz6RE/view';
-  const CASH_CONTACT_PHONE = '+54 9 2615517128';
+  const TERMS_URL = window.SPRINTERS.TERMS_URL;
+  const CASH_CONTACT_PHONE = window.SPRINTERS.CONTACT_PHONE;
 
   const EV_IMG_DEFAULT = { running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg' };
   const EV_TAG = { running: 'Running', social: 'Social' };
@@ -220,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function(){
       const { data: sub } = await supa.from('subscriptions')
         .select('status, membership_plans(name)')
         .eq('user_id', session.user.id).eq('status', 'active').maybeSingle();
-      userIsPro = sub?.membership_plans?.name === 'Training Pro';
+      userIsPro = sub?.membership_plans?.name === 'Training Plus';
 
       const { data: reg } = await supa.from('event_registrations')
         .select('*').eq('event_id', evId).eq('user_id', session.user.id).maybeSingle();
@@ -299,12 +298,18 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     const priceRow = document.getElementById('evPriceRow');
     const afterRunPrice = Number(event_.after_run_price || 0);
-    const hasAfterRunPrice = event_.has_after_run && afterRunPrice > 0;
+    // 'organizer' = lo cobramos nosotros y va al total. 'on_site' (default) =
+    // paga cada uno en el bar, así que el monto es solo referencia.
+    const afterRunByUs = event_.after_run_payment === 'organizer';
+    const hasAfterRunPrice = event_.has_after_run && afterRunPrice > 0 && afterRunByUs;
+    const afterRunOnSite = event_.has_after_run && afterRunPrice > 0 && !afterRunByUs;
 
     if (price === 0 && !hasAfterRunPrice){
-      priceRow.innerHTML = `<span class="amount">Gratis</span>`;
+      priceRow.innerHTML = `<span class="amount">Gratis</span>`
+        + (afterRunOnSite ? `<span class="note">After run $${afterRunPrice.toLocaleString('es-AR')} — se paga en el lugar</span>` : '');
     } else if (!hasAfterRunPrice){
-      priceRow.innerHTML = `<span class="amount">$${price.toLocaleString('es-AR')}</span><span class="note">Run · transferencia + comprobante</span>`;
+      priceRow.innerHTML = `<span class="amount">$${price.toLocaleString('es-AR')}</span><span class="note">Run · transferencia + comprobante</span>`
+        + (afterRunOnSite ? `<span class="note">After run $${afterRunPrice.toLocaleString('es-AR')} — se paga en el lugar</span>` : '');
     } else {
       const total = price + afterRunPrice;
       priceRow.innerHTML = `
@@ -361,14 +366,25 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     // Sin inscripción todavía → formulario único (precio, transferencia, after-run, términos)
-    const afterRunPrice = Number(event_.after_run_price || 0);
+    const rawAfterRunPrice = Number(event_.after_run_price || 0);
+    const afterRunByUs = event_.after_run_payment === 'organizer';
+    // Solo se cobra acá si lo cobramos nosotros; si se paga en el lugar el
+    // precio queda como dato y el total de la transferencia no cambia.
+    const afterRunPrice = afterRunByUs ? rawAfterRunPrice : 0;
+    const afterRunSub = event_.has_after_run
+      ? (afterRunByUs
+          ? 'Bajamos un cambio y comemos algo todos juntos.'
+          : (rawAfterRunPrice
+              ? `Bajamos un cambio y comemos algo todos juntos. Se paga en el lugar (aprox. $${rawAfterRunPrice.toLocaleString('es-AR')}).`
+              : 'Bajamos un cambio y comemos algo todos juntos. Se paga en el lugar.'))
+      : '';
     let html = '';
 
     if (needsPayment){
       html += `
         <div class="price-line"><span>Run</span><span>$${price.toLocaleString('es-AR')}</span></div>
-        ${event_.has_after_run && afterRunPrice ? `<div class="price-line" id="afterRunPriceLine" style="display:none"><span>After run</span><span>$${afterRunPrice.toLocaleString('es-AR')}</span></div>` : ''}
-        <div class="price-line total" id="totalPriceLine" style="display:${event_.has_after_run && afterRunPrice ? '' : 'none'}"><span>Total</span><span id="totalPriceAmount">$${price.toLocaleString('es-AR')}</span></div>`;
+        ${afterRunPrice ? `<div class="price-line" id="afterRunPriceLine" style="display:none"><span>After run</span><span>$${afterRunPrice.toLocaleString('es-AR')}</span></div>` : ''}
+        <div class="price-line total" id="totalPriceLine" style="display:${afterRunPrice ? '' : 'none'}"><span>Total</span><span id="totalPriceAmount">$${price.toLocaleString('es-AR')}</span></div>`;
     }
 
     if (event_.has_after_run){
@@ -376,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <div class="toggle-row">
           <div>
             <div class="lab">¿Te quedás al after-run?</div>
-            <div class="sub">Bajamos un cambio y comemos algo todos juntos.</div>
+            <div class="sub">${esc(afterRunSub)}</div>
           </div>
           <button type="button" class="switch" id="afterRunSwitch"></button>
         </div>`;
@@ -412,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function(){
       const afterLine = document.getElementById('afterRunPriceLine');
       if (totalLine && afterRunPrice){
         afterLine && (afterLine.style.display = afterRunOn ? '' : 'none');
-        totalLine.style.display = afterRunOn ? '' : (event_.has_after_run && afterRunPrice ? '' : 'none');
+        totalLine.style.display = afterRunOn ? '' : (afterRunPrice ? '' : 'none');
         document.getElementById('totalPriceAmount').textContent = '$' + (price + (afterRunOn ? afterRunPrice : 0)).toLocaleString('es-AR');
       }
     });
@@ -441,39 +457,63 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
 
+    // Traduce los errores de register_for_event() a algo que se entienda.
+    // La función los emite con prefijo CODIGO: para poder distinguirlos.
+    function reserveErrorMessage(raw){
+      const msg = String(raw || '');
+      if (msg.includes('EVENTO_AGOTADO'))       return 'Se agotaron los lugares mientras completabas el formulario. Escribinos y vemos si podemos hacerte un lugar.';
+      if (msg.includes('INSCRIPCION_CERRADA'))  return 'Las inscripciones para este evento ya cerraron.';
+      if (msg.includes('EVENTO_NO_PUBLICADO'))  return 'Este evento todavía no está abierto a inscripciones.';
+      if (msg.includes('EVENTO_NO_ENCONTRADO')) return 'No encontramos este evento. Puede que lo hayan dado de baja.';
+      if (msg.includes('NO_AUTENTICADO'))       return 'Se cerró tu sesión. Volvé a iniciar sesión y probá de nuevo.';
+      return 'No pudimos reservar tu lugar: ' + msg;
+    }
+
     reserveBtn.addEventListener('click', async () => {
-      reserveBtn.disabled = true; reserveBtn.textContent = 'Reservando…';
+      const labelDefault = needsPayment ? 'Confirmar y reservar mi lugar →' : 'Confirmar mi lugar →';
+      const restore = () => { reserveBtn.disabled = false; reserveBtn.textContent = labelDefault; };
+
       const file = receiptInput && receiptInput.files && receiptInput.files[0];
       if (needsPayment && file && file.size > 5 * 1024 * 1024){
         alert('El comprobante debe pesar menos de 5 MB');
-        reserveBtn.disabled = false; reserveBtn.textContent = 'Confirmar y reservar mi lugar →';
         return;
       }
 
-      const { data, error } = await supa.from('event_registrations')
-        .insert({ event_id: evId, user_id: session.user.id, after_run: afterRunOn })
-        .select().single();
-      if (error){
-        if (error.code === '23505'){
-          const { data: reg } = await supa.from('event_registrations')
-            .select('*').eq('event_id', evId).eq('user_id', session.user.id).maybeSingle();
-          existingReg = reg;
-        } else {
-          alert('No pudimos reservar tu lugar: ' + error.message);
-          reserveBtn.disabled = false; reserveBtn.textContent = needsPayment ? 'Confirmar y reservar mi lugar →' : 'Confirmar mi lugar →';
-          return;
-        }
-      } else {
-        existingReg = data;
-      }
+      reserveBtn.disabled = true; reserveBtn.textContent = 'Reservando…';
 
+      // register_for_event() valida cierre, cupo y publicación con la fila del
+      // evento bloqueada, e incrementa sold_tickets en la misma transacción.
+      // Si ya estabas inscripta devuelve tu fila en vez de fallar.
+      const { data, error } = await supa.rpc('register_for_event', {
+        p_event_id: evId, p_after_run: afterRunOn
+      });
+      if (error){
+        alert(reserveErrorMessage(error.message));
+        restore();
+        // Si fue cupo o cierre, recargamos para que la vista refleje el estado real
+        if (/EVENTO_AGOTADO|INSCRIPCION_CERRADA/.test(error.message || '')) location.reload();
+        return;
+      }
+      existingReg = Array.isArray(data) ? data[0] : data;
+
+      // Comprobante: confirma el lugar al instante (submit_event_receipt).
+      // A diferencia de antes, cualquier falla se avisa — la inscripción ya
+      // existe, así que dejarla sin comprobante en silencio hacía que para el
+      // admin fuera indistinguible de un evento gratis.
       if (needsPayment && file && existingReg){
+        reserveBtn.textContent = 'Subiendo comprobante…';
         const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
         const path = `${session.user.id}/${existingReg.id}-${Date.now()}.${ext}`;
         const { error: upErr } = await supa.storage.from('payment-receipts').upload(path, file, { upsert: true, contentType: file.type });
-        if (!upErr){
+        if (upErr){
+          alert('Tu lugar quedó reservado, pero no pudimos subir el comprobante: ' + upErr.message + '\nProbá de nuevo desde esta misma pantalla.');
+        } else {
           const { error: rpcErr } = await supa.rpc('submit_event_receipt', { reg_id: existingReg.id, receipt_path: path });
-          if (!rpcErr) existingReg.payment_status = 'pending_review';
+          if (rpcErr){
+            alert('Subimos el comprobante pero no pudimos confirmarlo: ' + rpcErr.message + '\nEscribinos y lo resolvemos.');
+          } else {
+            existingReg.payment_status = 'verified';
+          }
         }
       }
       renderInscripcion();
@@ -486,9 +526,11 @@ document.addEventListener('DOMContentLoaded', function(){
     if (!needsPayment || reg.payment_status === 'not_required'){
       statusHtml = `<div class="status-pill ok">✓ Ya estás anotado</div><p style="font-size:13.5px;color:var(--muted)">Te esperamos — cualquier cambio te avisamos por mail.</p>`;
     } else if (reg.payment_status === 'verified'){
-      statusHtml = `<div class="status-pill ok">✓ Pago confirmado</div><p style="font-size:13.5px;color:var(--muted)">¡Nos vemos ahí!</p>`;
+      statusHtml = `<div class="status-pill ok">✓ Lugar confirmado</div><p style="font-size:13.5px;color:var(--muted)">Recibimos tu comprobante. ¡Nos vemos ahí!</p>`;
     } else if (reg.payment_status === 'pending_review'){
-      statusHtml = `<div class="status-pill pending">⏳ Comprobante en revisión</div><p style="font-size:13.5px;color:var(--muted)">Lo revisamos en menos de 24 hs y te confirmamos.</p>`;
+      // 'pending_review' solo puede venir de filas anteriores a 2026-08-04:
+      // desde entonces el comprobante confirma el lugar al instante.
+      statusHtml = `<div class="status-pill pending">⏳ Comprobante en revisión</div><p style="font-size:13.5px;color:var(--muted)">Tu lugar está tomado. Si tenés dudas, escribinos.</p>`;
     } else if (reg.payment_status === 'rejected'){
       statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">Revisá el monto y subí uno nuevo.</p>`;
     }
@@ -561,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function(){
         nameEl.textContent = 'Subimos el archivo pero no pudimos confirmarlo: ' + rpcErr.message;
         return;
       }
-      existingReg.payment_status = 'pending_review';
+      existingReg.payment_status = 'verified';
       renderInscripcion();
     });
   }
