@@ -32,6 +32,10 @@
      Desde 2026-08-04 esta página también atiende mobile (antes redirigía a
      Landing-mobile.html, que no tenía Supabase). Todo el rango 375px→∞ se
      resuelve acá. */
+  /* El nav nunca parte una palabra en dos líneas */
+  #authNav a, #authNav button, nav#nav a{white-space:nowrap}
+  #authNav .lbl-short{display:none}
+
   @media (max-width:980px){
     #pilares > div > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
     #galeria > div{grid-template-columns:1fr !important}
@@ -48,8 +52,14 @@
     /* Los links de sección no entran en el nav: quedan marca + sesión.
        La navegación en mobile es scrollear, que es lo que se hace igual. */
     nav#nav > div:nth-child(2){display:none !important}
-    nav#nav{gap:12px;padding:16px 20px !important}
-    #authNav{gap:10px !important}
+    nav#nav{gap:10px !important;padding:14px 18px !important}
+    #authNav{gap:8px !important;flex-shrink:0}
+    /* "Hola," y "Cerrar sesión" no entran: dejamos el nombre y "Salir" */
+    #authNav .greet-hi{display:none}
+    #authNav .lbl-long{display:none}
+    #authNav .lbl-short{display:inline}
+    #authNav a, #authNav button{font-size:10px !important;letter-spacing:.12em !important;padding:9px 14px !important}
+    #authNav .nav-greet{max-width:34vw;overflow:hidden;text-overflow:ellipsis}
     /* El hero ocupa toda la altura real del visor, sin la barra del browser */
     #hero{min-height:100svh !important}
     /* Los CTA del hero pasan a ancho completo, uno debajo del otro */
@@ -67,8 +77,13 @@
     /* Líderes: sacar la columna del número para ganar ancho */
     #lideres div[style*="grid-template-columns:32px 1fr auto"]{grid-template-columns:1fr auto !important;gap:12px !important}
     #lideres div[style*="grid-template-columns:32px 1fr auto"] > :first-child{display:none}
-    /* Form de leads: input y botón apilados, sin pill comprimida */
-    #leadForm{flex-direction:column;border-radius:16px;gap:8px}
+    /* Form de leads: input y botón apilados.
+       OJO con el !important: el <form> tiene border-radius:999px y gap:6px
+       en el atributo style, y un estilo inline le gana a cualquier selector
+       de la hoja. Sin !important quedaba apilado pero con radio de píldora,
+       o sea una elipse gigante con el botón desbordando. */
+    #leadForm{flex-direction:column;border-radius:20px !important;gap:8px !important;padding:10px !important}
+    #leadForm input{padding:12px 14px !important;text-align:center}
     #leadForm button{width:100%}
     footer > div:first-child{grid-template-columns:1fr !important;gap:32px !important}
     footer > div:last-child{flex-direction:column;align-items:flex-start !important}
@@ -556,8 +571,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
       if (!session) {
         box.innerHTML =
-          `<a href="Cuenta.html?tab=login" style="${NAV_LINK}">Iniciar sesión</a>` +
-          `<a href="Cuenta.html?tab=signup" style="${NAV_BTN}">Registrarse</a>`;
+          `<a href="Cuenta.html?tab=login" style="${NAV_LINK}"><span class="lbl-long">Iniciar sesión</span><span class="lbl-short">Entrar</span></a>` +
+          `<a href="Cuenta.html?tab=signup" style="${NAV_BTN}"><span class="lbl-long">Registrarse</span><span class="lbl-short">Crear cuenta</span></a>`;
         return;
       }
 
@@ -569,9 +584,13 @@ document.addEventListener('DOMContentLoaded', function(){
       if (prof && prof.first_name) name = prof.first_name.trim();
       if (!name) name = (session.user.email || '').split('@')[0];
 
+      // En mobile el CSS esconde "Hola," y cambia "Cerrar sesión" por "Salir":
+      // con los textos largos el nav se partía en dos líneas.
       box.innerHTML =
-        `<a href="Cuenta.html?tab=profile" style="${NAV_LINK}">Hola, ${esc(name)}</a>` +
-        `<button type="button" id="navLogout" style="${NAV_BTN};background:none;color:inherit;cursor:pointer">Cerrar sesión</button>`;
+        `<a href="Cuenta.html?tab=profile" class="nav-greet" style="${NAV_LINK}"><span class="greet-hi">Hola, </span>${esc(name)}</a>` +
+        `<button type="button" id="navLogout" style="${NAV_BTN};background:none;color:inherit;cursor:pointer">` +
+          `<span class="lbl-long">Cerrar sesión</span><span class="lbl-short">Salir</span>` +
+        `</button>`;
 
       document.getElementById('navLogout').addEventListener('click', async () => {
         await supa.auth.signOut();
