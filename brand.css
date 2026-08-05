@@ -1,0 +1,143 @@
+/* ============================================================
+   SPRINTERS® — Tokens de marca
+   Única fuente de verdad para color y assets de identidad.
+   Basado en: Brand_book_Sprinters_EDITABLE_JUL25 (jul. 2025)
+
+   Cargar SIEMPRE antes que cualquier otra hoja de estilo,
+   así el resto puede sobrescribir sin pelearse con la cascada.
+   ============================================================ */
+
+:root{
+  /* ---- Paleta oficial (pág. 03 del brand book) ---- */
+  --bosque:        #024939;  /* Bosque — color principal de la marca */
+  --terracota:     #fd521b;  /* Sprint Terracota — acento de energía */
+  --asfaltico:     #1B1B1B;  /* Asfáltico — texto y fondos oscuros */
+  --tierras:       #e5e5cc;  /* Tierras — arena, fondos suaves */
+  --sky:           #d7e5ff;  /* Sky — acento frío, estados informativos */
+
+  /* Nota: el brand book imprime "#024939" bajo el swatch Tierras.
+     Es una errata del PDF — el swatch real es #e5e5cc, muestreado
+     del propio archivo. Si el estudio confirma otro valor, se cambia acá. */
+
+  /* ---- Derivados (no son marca, son utilidades) ---- */
+  --bosque-900:    #012e24;  /* Bosque oscurecido: hovers, sombras, degradés */
+  --bosque-700:    #023c2f;
+  --bosque-300:    #4e8577;  /* Bosque desaturado sobre claro: texto secundario */
+  --terracota-700: #d63f0d;  /* Hover del CTA principal */
+  --crema:         #faf8ec;  /* Fondo de página del brand book */
+  --crema-2:       #f2efdf;  /* Crema un paso más oscuro: bandas, skeletons */
+
+  /* ---- Roles semánticos ----
+     Usar estos en los componentes, no los colores crudos.
+     Así un cambio de marca se hace en un solo lugar. */
+  --ink:           var(--asfaltico);
+  --ink-soft:      #55554f;
+  --ink-muted:     #767670;  /* subido desde #86867e: sobre blanco no llegaba a 4.5:1 */
+  --surface:       #ffffff;
+  --surface-alt:   var(--crema);
+  --surface-sand:  var(--tierras);
+  --surface-dark:  var(--bosque);
+  --line:          rgba(2,73,57,.14);
+  --line-soft:     rgba(2,73,57,.08);
+
+  --brand:         var(--bosque);      /* estructura, links, eyebrows */
+  --brand-on-dark: var(--tierras);     /* texto de marca sobre Bosque */
+  --accent:        var(--terracota);   /* CTA de conversión, badges */
+  /* Texto sobre Terracota: Asfáltico, no blanco.
+     Blanco sobre #fd521b da 3.28:1 — no pasa AA para texto chico, y los CTA
+     son 11-12px. Asfáltico da 5.25:1 y ambos son colores de la paleta, así que
+     no hace falta tocar el naranja de marca. */
+  --on-accent:     var(--asfaltico);
+
+  /* ---- Estados ----
+     No son colores de marca: son señales. Pero se afinan hacia la paleta
+     para que un "aprobado" no parezca de otro sitio.
+     Éxito = familia Bosque. Pendiente = ámbar (no compite con Terracota).
+     Error = rojo, deliberadamente lejos de Terracota para que no se confunda
+     un CTA con un mensaje de fallo. */
+  --ok-bg:      #dfeee4;
+  --ok-fg:      #0d5b3c;
+  --pending-bg: #fdf0d5;
+  --pending-fg: #8a5a12;
+  --error-bg:   #fbe2e0;
+  --error-fg:   #a02418;
+  --neutral-bg: var(--crema-2);
+  --neutral-fg: var(--ink-muted);
+
+  /* Velo del hero: Bosque translúcido en vez del gris azulado viejo */
+  --veil-0:        rgba(2,42,33,0);
+  --veil-30:       rgba(2,42,33,.30);
+  --veil-60:       rgba(2,42,33,.60);
+  --veil-90:       rgba(2,42,33,.92);
+}
+
+/* ============================================================
+   Logo
+   Los archivos viven en images/brand/ :
+     wordmark-*.png    solo "SPRINTERS®"  → navbars, espacios chicos
+     sprinters-*.png   lockup con "SOCIAL RUN CLUB" → footer, hero, share
+     rt-*.png          lockup "RUNNING TEAM" → páginas del pilar Running
+     icon-*.png        isotipo cuadrado → favicon, app icon, avatares
+   Sufijos: -color (Bosque), -white (sobre oscuro), -black (mono)
+
+   El brand book pide 0,5 cm de aire alrededor del logo (pág. 01).
+   A escala web eso es ~0.5em; lo resolvemos con el padding del nav.
+   ============================================================ */
+
+/* El logo es un <svg> inline que apunta al sprite del principio del <body>:
+
+     <svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters">
+       <use href="#sl-wordmark"></use>
+     </svg>
+
+   Por qué así y no de otra forma:
+   · <img src="logo.svg"> no hereda currentColor — el navbar necesita que el
+     logo pase de blanco (sobre el hero) a Bosque (nav crema) sin cambiar de
+     archivo.
+   · mask-image sobre un PNG externo sí hereda el color, pero Chrome le aplica
+     chequeos de origen y con file:// no carga: el logo desaparecía al abrir
+     el HTML con doble clic, sin servidor.
+   · El sprite inline no pide ningún recurso externo, así que anda igual con
+     file://, con Live Server y en producción.
+
+   Los paths salen de los vectores del brand book (no de un trazado sobre PNG),
+   así que el logo es nítido a cualquier tamaño.
+   En images/brand/ quedan además los .svg y .png sueltos para mails, redes y
+   cualquier lugar donde haga falta un archivo de verdad. */
+
+.brand-mark{                      /* wrapper del <a> */
+  display:inline-flex;
+  align-items:center;
+  flex-shrink:0;
+  line-height:0;                  /* mata el descender fantasma del inline */
+  color:inherit;
+}
+
+.brand-logo{
+  display:block;
+  fill:currentColor;              /* de acá sale el color: lo hereda del nav */
+  height:auto;
+  transition:opacity .25s ease;
+}
+a:hover .brand-logo{opacity:.72}
+
+/* El ancho sale del alto vía aspect-ratio, con los valores exactos del viewBox.
+   Nunca fijar alto y ancho a mano: el logo se deforma. */
+.brand-logo--wordmark{height:22px;aspect-ratio:1105.3/146.98}   /* SPRINTERS® solo */
+.brand-logo--lockup  {height:64px;aspect-ratio:1106.89/378.36}  /* iso + SOCIAL RUN CLUB */
+.brand-logo--running {height:44px;aspect-ratio:815.84/151.34}   /* bajada RUNNING TEAM */
+
+@media (max-width:640px){
+  .brand-logo--wordmark{height:18px}
+  .brand-logo--lockup{height:48px}
+  .brand-logo--running{height:34px}
+}
+@media (max-width:400px){
+  .brand-logo--wordmark{height:16px}
+}
+
+/* ============================================================
+   Selección de texto y foco: en Bosque, no en el teal viejo
+   ============================================================ */
+::selection{background:var(--bosque);color:var(--tierras)}
+:focus-visible{outline:2px solid var(--terracota);outline-offset:3px}

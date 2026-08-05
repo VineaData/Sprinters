@@ -6,27 +6,33 @@
 <title>Sprinters · Tu cuenta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
+<link rel="stylesheet" href="brand.css">
+<link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
+<link rel="icon" href="images/brand/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="images/brand/icon-180.png">
+<meta name="theme-color" content="#024939">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --bg:#ffffff;
-    --ink:#0a0a0a;
-    --ink-2:#1a1a1a;
-    --muted:#6b6b6b;
-    --muted-2:#a3a3a3;
+    --ink:var(--asfaltico);
+    --ink-2:var(--asfaltico);
+    --muted:var(--ink-soft);
+    --muted-2:var(--ink-muted);
     --line:rgba(10,10,10,.10);
     --line-2:rgba(10,10,10,.06);
-    --rust:#C24A1F;
+    --rust:var(--terracota);
     --marker:#024939;
     --marker-fg:#e5e5cc;
-    --field-bg:#fafaf7;
+    --field-bg:var(--crema);
     --field-border:rgba(10,10,10,.10);
     --field-border-hover:rgba(10,10,10,.22);
-    --error:#b91c1c;
+    --error:var(--error-fg);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
   body{min-height:100vh;overflow-x:clip}
   a{color:inherit;text-decoration:none}
   img{display:block;max-width:100%}
@@ -43,12 +49,12 @@
 
   /* ====== Top nav ====== */
   nav.top{position:sticky;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 36px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
-  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
+  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
   nav.top .back:hover{opacity:1}
-  nav.top .back .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1}
-  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Inter',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
-  nav.top .brand sup{font-family:'Inter',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
-  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
+  nav.top .back .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:16px;line-height:1}
+  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Poppins',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
+  nav.top .brand sup{font-family:'Poppins',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
+  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
   @media (max-width:720px){nav.top{padding:14px 18px}nav.top .help span{display:none}nav.top .back span:not(.a){display:none}}
 
   /* ====== Layout ====== */
@@ -57,18 +63,18 @@
 
   /* ===== Aside hero ===== */
   .aside{background:var(--ink);color:#fff;padding:80px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:100%}
-  .aside .lab{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
+  .aside .lab{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
   .aside .lab::before{content:"";width:30px;height:1px;background:currentColor;opacity:.6}
-  .aside h1{font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
+  .aside h1{font-family:'Poppins',sans-serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
   .aside h1 em{font-style:italic;color:var(--marker-fg)}
-  .aside .lede{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
+  .aside .lede{font-family:'Poppins',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
   .aside .perks{display:flex;flex-direction:column;gap:18px;margin-top:40px}
-  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
-  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
-  .aside .perk strong{display:block;font-family:'Inter',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
+  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Poppins',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
+  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
+  .aside .perk strong{display:block;font-family:'Poppins',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
   .aside .perk span{opacity:.7}
-  .aside .signature{font-family:'Inter',sans-serif;font-style:italic;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
-  .aside .footer-note{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
+  .aside .signature{font-family:'Poppins',sans-serif;font-style:italic;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
+  .aside .footer-note{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
   @media (max-width:980px){.aside{padding:64px 28px 48px;min-height:auto}.aside h1{font-size:48px}.aside .signature{font-size:38px;margin-top:24px}}
 
   /* ===== Form area ===== */
@@ -78,20 +84,20 @@
   /* Tabs */
   .tabs{position:relative;display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px;gap:0;align-self:flex-start;margin-bottom:36px}
   .tabs-pill{position:absolute;top:5px;left:5px;height:calc(100% - 10px);background:var(--ink);border-radius:999px;transition:transform .45s cubic-bezier(.32,.72,.18,1),width .45s cubic-bezier(.32,.72,.18,1);z-index:0}
-  .tab{position:relative;z-index:1;background:transparent;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
+  .tab{position:relative;z-index:1;background:transparent;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
   .tab.active{color:#fff}
 
   /* Form titles */
   .step-head{margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .step-head h2{font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
+  .step-head h2{font-family:'Poppins',sans-serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
   .step-head h2 em{font-style:italic}
-  .step-head .hint{font-family:'Inter',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
+  .step-head .hint{font-family:'Poppins',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
   .step-head .hint a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
 
   /* Sections */
   .section-block{margin-top:36px}
   .section-block:first-of-type{margin-top:0}
-  .section-block .sec-title{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .section-block .sec-title{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
   .section-block .sec-title::before{content:"";width:18px;height:1px;background:var(--marker)}
 
   /* Photo uploader */
@@ -100,10 +106,10 @@
   .photo-up:hover{border-color:var(--ink)}
   .photo-up.has-img{border-style:solid;border-color:var(--ink)}
   .photo-up img{width:100%;height:100%;object-fit:cover}
-  .photo-up .ico{font-family:'Inter',sans-serif;font-style:italic;font-size:32px;color:var(--muted)}
+  .photo-up .ico{font-family:'Poppins',sans-serif;font-style:italic;font-size:32px;color:var(--muted)}
   .photo-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
-  .photo-info .lbl{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
-  .photo-info .desc{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
+  .photo-info .lbl{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
+  .photo-info .desc{font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
 
   /* Form grid */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
@@ -112,23 +118,23 @@
 
   /* Field */
   .field{display:flex;flex-direction:column;gap:8px;min-width:0}
-  .field-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
+  .field-label{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
   .field-label .req{color:var(--rust);font-size:10px;line-height:1}
-  .field-label .opt{font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
+  .field-label .opt{font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
   .field-wrap{position:relative}
-  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
+  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
   .field-input::placeholder{color:var(--muted-2);font-weight:400}
   .field-input:hover{border-color:var(--field-border-hover)}
   .field-input:focus{border-color:var(--ink);background:#fff}
   .field-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;pointer-events:none}
-  .field-icon.serif{font-family:'Inter',sans-serif;font-style:italic;font-size:17px;color:var(--muted)}
-  .field-error{font-family:'Inter',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
+  .field-icon.serif{font-family:'Poppins',sans-serif;font-style:italic;font-size:17px;color:var(--muted)}
+  .field-error{font-family:'Poppins',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
   .field.is-error .field-input{border-color:var(--error)}
   .field.is-error .field-error{display:block}
 
   /* Phone field (country + number) */
   .phone-row{display:grid;grid-template-columns:auto 1fr;gap:8px}
-  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
   .country-sel:hover{border-color:var(--field-border-hover)}
   .country-sel:focus{border-color:var(--ink);background-color:#fff}
 
@@ -138,7 +144,7 @@
   .pill-grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:780px){.pill-grid.cols-4{grid-template-columns:repeat(3,minmax(0,1fr))}}
   @media (max-width:580px){.pill-grid,.pill-grid.cols-3,.pill-grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
+  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
   .pill-opt::before{content:"";width:16px;height:16px;border-radius:50%;border:1.5px solid var(--field-border-hover);background:#fff;flex-shrink:0;transition:all .2s}
   .pill-opt:hover{border-color:var(--field-border-hover)}
   .pill-opt:hover::before{border-color:var(--ink)}
@@ -150,20 +156,20 @@
 
   /* Signup intro card */
   .signup-intro{display:flex;flex-direction:column;gap:20px;max-width:560px}
-  .signup-intro .intro-copy{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
+  .signup-intro .intro-copy{font-family:'Poppins',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
   .signup-intro .intro-perks{display:flex;flex-direction:column;gap:14px;margin:14px 0 8px}
   .signup-intro .intro-perk{display:grid;grid-template-columns:46px 1fr;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
   .signup-intro .intro-perk:last-child{border-bottom:1px solid var(--line)}
-  .signup-intro .intro-perk .k{font-family:'Inter',sans-serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
-  .signup-intro .intro-perk strong{display:block;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
-  .signup-intro .intro-perk span{font-family:'Inter',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
+  .signup-intro .intro-perk .k{font-family:'Poppins',sans-serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
+  .signup-intro .intro-perk strong{display:block;font-family:'Poppins',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .signup-intro .intro-perk span{font-family:'Poppins',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
 
   /* Switch participated */
   .participated-row{display:flex;gap:8px;margin-top:12px}
-  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
+  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
   .pp-pill:hover{border-color:var(--field-border-hover)}
   .pp-pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
-  .pp-pill .em{font-family:'Inter',sans-serif;font-style:italic;font-weight:400;font-size:14px}
+  .pp-pill .em{font-family:'Poppins',sans-serif;font-style:italic;font-weight:400;font-size:14px}
 
   /* Conditional reveal */
   .conditional{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.22,.7,.2,1),opacity .35s ease,margin-top .45s}
@@ -171,25 +177,25 @@
 
   /* Submit row */
   .submit-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .submit-row .legal{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
+  .submit-row .legal{font-family:'Poppins',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
   .submit-row .legal a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
   .btn-primary:hover{background:var(--marker)}
-  .btn-primary .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
+  .btn-primary .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
   .btn-primary:hover .a{transform:translateX(4px)}
 
   /* Login compact form */
   .login-form{display:flex;flex-direction:column;gap:20px;max-width:440px}
-  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;font-size:12px}
+  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Poppins',sans-serif;font-size:12px}
   .login-form .row-between label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);font-weight:500}
   .login-form .row-between label input{width:14px;height:14px;accent-color:var(--ink)}
   .login-form .row-between a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
+  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
   .login-form .or::before,.login-form .or::after{content:"";flex:1;height:1px;background:var(--line)}
-  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
+  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
   .social-btn:hover{border-color:var(--ink)}
   .social-btn .ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700}
-  .login-form .switch{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
+  .login-form .switch{font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
   .login-form .switch button{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px}
 
   /* Profile view */
@@ -199,23 +205,23 @@
   .profile-pic{width:160px;height:160px;border-radius:50%;background:var(--field-bg);background-size:cover;background-position:center;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
   .profile-pic::after{content:'';display:block;width:64%;height:64%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c0bfbb'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.7}
   .profile-pic.has-photo::after{display:none}
-  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
+  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
   .profile-card .role-pill::before{content:"✦"}
-  .profile-card h3{font-family:'Inter',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
-  .profile-card .since{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
+  .profile-card h3{font-family:'Poppins',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
+  .profile-card .since{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
   .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .profile-stat{background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-  .profile-stat .n{font-family:'Inter',sans-serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
-  .profile-stat .lab{font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
+  .profile-stat .n{font-family:'Poppins',sans-serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
+  .profile-stat .lab{font-family:'Poppins',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
   .profile-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
   .profile-info .it{display:flex;flex-direction:column;gap:4px;min-width:0}
-  .profile-info .l{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
-  .profile-info .v{font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+  .profile-info .l{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .profile-info .v{font-family:'Poppins',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
   .profile-action-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
 
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast .a{font-family:'Inter',sans-serif;font-style:italic;font-size:14px}
+  .toast .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:14px}
 
   /* Profile card meta wrapper (badge + name + since) */
   .profile-card-meta{display:flex;flex-direction:column;gap:8px}
@@ -317,11 +323,24 @@
 </style>
 </head>
 <body>
+<!-- Sprite del logo. Va inline y no como <img> ni mask porque así el SVG
+     hereda currentColor (el logo cambia de color con el nav) y porque
+     abriendo los archivos con file:// Chrome bloquea las máscaras externas.
+     Fuente: vectores del brand book, no un trazado sobre PNG. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="sl-wordmark" viewBox="0 0 1105.3 146.98"><path d="M63.66 38.92c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8C92.24.8 87.5 0 81.22 0 48.16 0 26.26 17.42 21.35 45.4c-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.96-73.79h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.34 73.59 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1C339.8 126.7 329.7 105.61 316 87.77c16.3-5.06 30.43-16.2 34.35-38.52C355.04 22.5 339 3.02 303.1 3.02H251c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15H281Zm134.93 5.06c2.45-14 5.79-30.62 7.25-36.7h-41.57c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6M669.84 3.02h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.16-35.1c-6.33.42-21.9 1.21-35.87 1.21H718.3c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81H740.4l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9H840c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.57 4.25c.92-5.27 5.36-8.52 12.44-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.33 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.12 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22Zm0 0"/></symbol></defs></svg>
 
 <nav class="top">
   <a href="Landing v2.html" class="back"><span class="a">←</span> <span>Volver</span></a>
-  <a href="Landing v2.html" class="brand">Sprinters<sup>®</sup></a>
-  <a href="/cdn-cgi/l/email-protection#274f484b46675457554e49534255544a5d460944484a" class="help">¿Ayuda? <span>· <span class="__cf_email__" data-cfemail="40282f2c2100333032292e342532332d3a216e232f2d">[email&#160;protected]</span></span></a>
+  <a href="Landing v2.html" class="brand" aria-label="Sprinters — Social Run Club, volver al inicio"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg></a>
+  <!-- Acá había un link de ayuda con el mail ofuscado por Cloudflare
+       (__cf_email__). Ese marcado solo se descifra si la página se sirve a
+       través de Cloudflare; como vamos por Vercel, al visitante le quedaba
+       el literal "[email protected]". Se quitó.
+       Si se quiere volver a poner, va directo y sin ofuscar:
+       <a href="mailto:hola@sprintersmza.com" class="help">¿Ayuda?</a>
+       El span vacío mantiene las tres columnas del nav para que el logo
+       siga centrado. -->
+  <span aria-hidden="true"></span>
 </nav>
 
 <main class="page">
@@ -474,7 +493,7 @@
                 </div>
                 <!-- La edad no se pide: se calcula sola y se muestra como confirmación.
                      En la base la deriva el trigger sync_age_from_birth_date. -->
-                <div id="ageHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
+                <div id="ageHint" style="display:none;font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
               </div>
               <div class="field">
                 <label class="field-label">Sexo <span class="req">*</span></label>
@@ -549,14 +568,14 @@
                 Adjuntar apto físico
               </label>
               <input type="file" id="signupMedCert" accept="image/*,application/pdf" style="display:none" />
-              <div id="signupMedCertName" style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
+              <div id="signupMedCertName" style="font-family:'Poppins',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
             </div>
           </div>
 
           <!-- Sec 4: Suscripción (opcional, elegís al crear la cuenta) -->
           <div class="section-block">
-            <div class="sec-title">Tu plan <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
-            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil.</p>
+            <div class="sec-title">Tu plan <span style="font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Poppins',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil.</p>
 
             <div class="field">
               <label class="field-label">Running Team</label>
@@ -579,7 +598,7 @@
 
           <!-- Sec 5: Foto (al final, opcional) -->
           <div class="section-block">
-            <div class="sec-title">Foto de perfil <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <div class="sec-title">Foto de perfil <span style="font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
             <div class="photo-row">
               <label class="photo-up" id="photoUp">
                 <div class="ico">＋</div>
@@ -694,7 +713,7 @@
               <div class="lab">Eventos sociales</div>
             </div>
             <div class="profile-stat">
-              <div class="n" id="profStatKm">0<span style="font-family:'Inter',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span></div>
+              <div class="n" id="profStatKm">0<span style="font-family:'Poppins',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span></div>
               <div class="lab">Total acumulado</div>
             </div>
             <div class="profile-stat">
@@ -722,7 +741,7 @@
           </div>
           <!-- Admin panel — visible solo para is_admin = true -->
           <div id="adminPanel" style="display:none;margin-top:24px;padding:18px 0;border-top:1px solid var(--line)">
-            <div style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
             <div class="admin-btn-grid">
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar usuarios <span class="a">→</span></button>
@@ -733,7 +752,7 @@
 
           <!-- Danger zone -->
           <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--line)">
-            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
+            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
               Eliminar mi cuenta
             </button>
           </div>
@@ -756,7 +775,7 @@
               Cambiar foto
             </label>
             <input type="file" id="editAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewAvatar(this)">
-            <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'Inter',sans-serif">JPG, PNG o WebP · máx. 2 MB</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'Poppins',sans-serif">JPG, PNG o WebP · máx. 2 MB</div>
           </div>
         </div>
 
@@ -789,7 +808,7 @@
               <div class="field-wrap">
                 <input class="field-input" type="date" id="ep-birth" />
               </div>
-              <div id="epAgeHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
+              <div id="epAgeHint" style="display:none;font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
             </div>
           </div>
 
@@ -799,7 +818,7 @@
               <input class="field-input" type="tel" id="ep-emerg" placeholder="Nombre · +54 11 5555 5555" maxlength="120" />
               <span class="field-icon serif">☏</span>
             </div>
-            <div style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:7px">A quién llamamos si te pasa algo en una corrida. Mantenelo al día.</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:11.5px;color:var(--muted);margin-top:7px">A quién llamamos si te pasa algo en una corrida. Mantenelo al día.</div>
           </div>
 
           <div class="field" style="margin-bottom:24px">
@@ -824,12 +843,12 @@
                accesible por URL pública y solo lo ve la persona o un admin. -->
           <div class="field" style="margin-bottom:24px;padding-top:20px;border-top:1px solid var(--line)">
             <label class="field-label">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
-            <div id="medCertStatus" style="font-family:'Inter',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
+            <div id="medCertStatus" style="font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
             <label for="medCertInput" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:10px">
               Subir apto físico
             </label>
             <input type="file" id="medCertInput" accept="image/*,application/pdf" style="display:none" />
-            <div style="font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
           </div>
 
           <div class="profile-action-row" style="margin-top:8px">
@@ -845,8 +864,8 @@
   <!-- Confirm delete dialog -->
   <div id="deleteConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:24px">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.18)">
-      <h3 style="font-family:'Inter',sans-serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Inter',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
+      <h3 style="font-family:'Poppins',sans-serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Poppins',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
       <div style="display:flex;gap:10px">
         <button type="button" class="btn-primary" onclick="executeDeleteAccount()" style="background:var(--error);flex:1;justify-content:center">Sí, eliminar</button>
         <button type="button" class="btn-primary" onclick="closeDeleteConfirm()" style="background:#fff;color:var(--ink);border:1px solid var(--ink);flex:1;justify-content:center">Cancelar</button>
@@ -1132,7 +1151,7 @@
 
     // Stats
     if(el('profStatEvents')) el('profStatEvents').textContent = p?.social_events_attended ?? 0;
-    if(el('profStatKm'))     el('profStatKm').innerHTML = (p?.total_km ?? 0) + '<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatKm'))     el('profStatKm').innerHTML = (p?.total_km ?? 0) + '<span style="font-family:\'Poppins\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
     if(el('profStatSaved'))  el('profStatSaved').textContent = p?.total_money_saved ? '$' + Number(p.total_money_saved).toLocaleString('es-AR') : '$0';
 
     // Plan badge & admin panel
@@ -1148,7 +1167,7 @@
     if(p?.is_admin){
       if(badge){
         badge.textContent = planName ? '★ Admin · ' + planName : '★ Admin';
-        badge.style.cssText += ';background:var(--rust);color:#fff';
+        badge.style.cssText += ';background:var(--rust);color:var(--on-accent)';
       }
       const ap = el('adminPanel');
       if(ap) ap.style.display = '';
@@ -1166,7 +1185,7 @@
     ids.forEach(id => { const e = el(id); if(e) e.textContent = '—'; });
     if(el('profSince')) el('profSince').textContent = 'Miembro desde · —';
     if(el('profStatEvents')) el('profStatEvents').textContent = '0';
-    if(el('profStatKm'))     el('profStatKm').innerHTML = '0<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatKm'))     el('profStatKm').innerHTML = '0<span style="font-family:\'Poppins\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
     if(el('profStatSaved'))  el('profStatSaved').textContent = '$0';
     if(el('profilePic')){ el('profilePic').style.backgroundImage = ''; el('profilePic').classList.remove('has-photo'); }
     if(el('profPlanBadge'))  el('profPlanBadge').textContent = 'Plan Free';

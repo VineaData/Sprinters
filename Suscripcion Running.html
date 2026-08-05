@@ -6,44 +6,55 @@
 <title>Sprinters · Running Team — Planes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
+<link rel="stylesheet" href="brand.css">
+<link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
+<link rel="icon" href="images/brand/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="images/brand/icon-180.png">
+<meta name="theme-color" content="#024939">
 <link rel="stylesheet" href="subs.css">
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   .transfer-wrap{max-width:560px;margin:0 auto;padding:0 20px 80px}
-  .transfer-card{background:var(--cream,#f6f3ee);border-radius:8px;padding:clamp(22px,3vw,34px)}
-  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:16px;font-weight:700}
-  .status-pill.ok{background:#dcefe0;color:#1e5e34}
-  .status-pill.pending{background:#fdf0d5;color:#8a5a12}
-  .status-pill.rejected{background:#fbe2e0;color:#a02418}
-  .transfer-box{margin-top:6px;padding:18px;background:#fff;border:1px solid rgba(20,20,18,.14);border-radius:8px}
+  .transfer-card{background:var(--crema);border-radius:8px;padding:clamp(22px,3vw,34px)}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:16px;font-weight:700}
+  .status-pill.ok{background:var(--ok-bg);color:var(--ok-fg)}
+  .status-pill.pending{background:var(--pending-bg);color:var(--pending-fg)}
+  .status-pill.rejected{background:var(--error-bg);color:var(--error-fg)}
+  .transfer-box{margin-top:6px;padding:18px;background:#fff;border:1px solid rgba(2,73,57,.14);border-radius:8px}
   .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0}
-  .transfer-box .k{font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
+  .transfer-box .k{font-family:'Poppins',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
   .transfer-box .v{font-size:13.5px;font-weight:700}
-  .copy-btn{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal,#1f7f8c);background:none;border:1px solid var(--teal,#1f7f8c);border-radius:999px;padding:6px 11px;cursor:pointer}
-  .copy-btn:hover{background:var(--teal,#1f7f8c);color:#fff}
+  .copy-btn{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--bosque);background:none;border:1px solid var(--bosque);border-radius:999px;padding:6px 11px;cursor:pointer}
+  .copy-btn:hover{background:var(--bosque);color:#fff}
   .upload-row{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .file-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#fff;border:1.5px dashed #141412;font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-  .file-name{font-size:12px;color:#6b6b6b}
+  .file-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#fff;border:1.5px dashed var(--asfaltico);font-family:'Poppins',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+  .file-name{font-size:12px;color:var(--ink-soft)}
   .terms-row{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:12.5px;line-height:1.5}
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
-  .terms-row a{color:var(--teal,#1f7f8c);text-decoration:underline;font-weight:600}
-  .transfer-card .btn-confirm{margin-top:18px;width:100%;padding:15px;border-radius:999px;background:var(--teal,#1f7f8c);color:#fff;border:none;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer}
+  .terms-row a{color:var(--bosque);text-decoration:underline;font-weight:600}
+  .transfer-card .btn-confirm{margin-top:18px;width:100%;padding:15px;border-radius:999px;background:var(--bosque);color:#fff;border:none;font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer}
   .transfer-card .btn-confirm:disabled{opacity:.5;cursor:not-allowed}
-  .transfer-back{display:inline-block;margin-bottom:16px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b;cursor:pointer;background:none;border:none}
+  .transfer-back{display:inline-block;margin-bottom:16px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;background:none;border:none}
 </style>
 </head>
 <body>
+<!-- Sprite del logo. Va inline y no como <img> ni mask porque así el SVG
+     hereda currentColor (el logo cambia de color con el nav) y porque
+     abriendo los archivos con file:// Chrome bloquea las máscaras externas.
+     Fuente: vectores del brand book, no un trazado sobre PNG. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="sl-wordmark" viewBox="0 0 1105.3 146.98"><path d="M63.66 38.92c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8C92.24.8 87.5 0 81.22 0 48.16 0 26.26 17.42 21.35 45.4c-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.96-73.79h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.34 73.59 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1C339.8 126.7 329.7 105.61 316 87.77c16.3-5.06 30.43-16.2 34.35-38.52C355.04 22.5 339 3.02 303.1 3.02H251c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15H281Zm134.93 5.06c2.45-14 5.79-30.62 7.25-36.7h-41.57c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6M669.84 3.02h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.16-35.1c-6.33.42-21.9 1.21-35.87 1.21H718.3c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81H740.4l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9H840c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.57 4.25c.92-5.27 5.36-8.52 12.44-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.33 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.12 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22Zm0 0"/></symbol></defs></svg>
 
 <nav class="top">
   <a href="Landing v2.html" class="back"><span class="a">←</span> <span>Volver</span></a>
-  <a href="Landing v2.html" class="brand">Sprinters<sup>®</sup></a>
+  <a href="Landing v2.html" class="brand" aria-label="Sprinters — Social Run Club, volver al inicio"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg></a>
   <a href="Cuenta.html" class="cta" id="navAccount">Mi cuenta →</a>
 </nav>
 
 <!-- Aviso de plan pendiente: se completó Running pero eligió también un plan Social al registrarse -->
-<div id="pendingPlanBanner" style="display:none;background:var(--teal,#1f7f8c);color:#fff;text-align:center;padding:14px 20px;font-family:'Inter',sans-serif;font-size:12.5px;letter-spacing:.02em">
+<div id="pendingPlanBanner" style="display:none;background:var(--bosque);color:#fff;text-align:center;padding:14px 20px;font-family:'Poppins',sans-serif;font-size:12.5px;letter-spacing:.02em">
   Todavía te falta tu plan <strong id="pendingPlanLabel"></strong> — <a href="#" id="pendingPlanLink" style="color:#fff;text-decoration:underline;font-weight:600">completar ahora →</a>
 </div>
 
@@ -125,7 +136,7 @@
 <section class="transfer-wrap" id="transferSection" style="display:none">
   <button type="button" class="transfer-back" id="transferBackBtn">← Ver los dos planes</button>
   <div class="transfer-card" id="transferCard"><!-- llenado por JS --></div>
-  <p style="font-size:11.5px;color:#6b6b6b;line-height:1.6;margin-top:16px">Las suscripciones Running se pagan por transferencia bancaria. Subís tu comprobante acá mismo y tu plan queda activo al instante.</p>
+  <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.6;margin-top:16px">Las suscripciones Running se pagan por transferencia bancaria. Subís tu comprobante acá mismo y tu plan queda activo al instante.</p>
 </section>
 
 <section class="foot-block">
@@ -334,28 +345,28 @@
     const sub = _mySub;
     const status = sub?.payment_status || 'not_required';
 
-    const changePlanLink = `<div style="margin-top:14px;text-align:center"><button type="button" id="changePlanBtn" style="background:none;border:none;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6b6b6b;text-decoration:underline;cursor:pointer">Elegí otro plan</button></div>`;
+    const changePlanLink = `<div style="margin-top:14px;text-align:center"><button type="button" id="changePlanBtn" style="background:none;border:none;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);text-decoration:underline;cursor:pointer">Elegí otro plan</button></div>`;
 
     let statusHtml = '';
     if (status === 'verified'){
-      statusHtml = `<div class="status-pill ok">✓ Plan activo</div><p style="font-size:13.5px;color:#6b6b6b">Tu suscripción a ${esc(planName)} ya está activa. ¡Nos vemos en la pista!</p>`;
+      statusHtml = `<div class="status-pill ok">✓ Plan activo</div><p style="font-size:13.5px;color:var(--ink-soft)">Tu suscripción a ${esc(planName)} ya está activa. ¡Nos vemos en la pista!</p>`;
       card.innerHTML = statusHtml;
       return;
     }
     if (status === 'pending_review'){
-      statusHtml = `<div class="status-pill pending">⏳ Comprobante en revisión</div><p style="font-size:13.5px;color:#6b6b6b">Lo revisamos en menos de 24 hs y activamos tu plan ${esc(planName)}.</p>`;
+      statusHtml = `<div class="status-pill pending">⏳ Comprobante en revisión</div><p style="font-size:13.5px;color:var(--ink-soft)">Lo revisamos en menos de 24 hs y activamos tu plan ${esc(planName)}.</p>`;
       card.innerHTML = statusHtml + changePlanLink;
       wireChangePlan(card);
       return;
     }
     if (status === 'rejected'){
-      statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:#6b6b6b;margin-bottom:14px">Tu plan ${esc(planName)} quedó sin activar. Revisá que el monto y el alias coincidan, y subí el comprobante de nuevo. Si creés que es un error, escribinos.</p>`;
+      statusHtml = `<div class="status-pill rejected">⚠ No pudimos validar tu comprobante</div><p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">Tu plan ${esc(planName)} quedó sin activar. Revisá que el monto y el alias coincidan, y subí el comprobante de nuevo. Si creés que es un error, escribinos.</p>`;
     }
 
     // not_required (recién creada) o rejected (re-subir) → mostramos datos + carga de comprobante
     card.innerHTML = statusHtml + `
-      <h3 style="font-family:'Inter',sans-serif;font-weight:900;text-transform:uppercase;font-size:22px;margin-bottom:4px">${esc(planName)}</h3>
-      <div style="font-size:14px;color:#6b6b6b;margin-bottom:16px">Valor $${price.toLocaleString('es-AR')} / mes</div>
+      <h3 style="font-family:'Poppins',sans-serif;font-weight:900;text-transform:uppercase;font-size:22px;margin-bottom:4px">${esc(planName)}</h3>
+      <div style="font-size:14px;color:var(--ink-soft);margin-bottom:16px">Valor $${price.toLocaleString('es-AR')} / mes</div>
       <div class="transfer-box">
         <div class="row"><span class="k">Alias</span><span class="v">${esc(BANK.alias)}</span><button type="button" class="copy-btn" data-copy="${esc(BANK.alias)}">Copiar</button></div>
         <div class="row"><span class="k">Nombre</span><span class="v">${esc(BANK.titular)}</span></div>
@@ -369,7 +380,7 @@
         <span>He leído y acepto los <a href="${esc(TERMS_URL)}" target="_blank" rel="noopener">Términos y Condiciones de Participación</a>.</span>
       </label>
       <button type="button" class="btn-confirm" id="subConfirmBtn" disabled>Activar mi plan →</button>
-      <p style="font-size:11.5px;color:#6b6b6b;text-align:center;margin-top:10px">Tu plan se activa apenas subís el comprobante — no hay espera.</p>
+      <p style="font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:10px">Tu plan se activa apenas subís el comprobante — no hay espera.</p>
       ` + changePlanLink;
     wireChangePlan(card);
 

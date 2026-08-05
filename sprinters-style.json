@@ -1,0 +1,617 @@
+{
+  "meta": {
+    "name": "Sprinters® — Social Run Club",
+    "version": "1.0.0",
+    "date": "2026-08-05",
+    "purpose": "Especificación de dirección de arte para reestilizar la web de Sprinters según el brand book. Pensado para que una IA o un desarrollador lo lea y transforme páginas ya existentes sin tener que interpretar el PDF.",
+    "source": {
+      "document": "Brand_book_Sprinters_EDITABLE_JUL25.pdf",
+      "pages": 20,
+      "canvas": "1866.7 × 1440 pt (relación 1.296, deck apaisado)",
+      "howValuesWereObtained": "Colores muestreados píxel a píxel del PDF. Tamaños tipográficos y radios extraídos de los vectores y de los objetos de texto embebidos, no estimados a ojo.",
+      "authority": "Ante cualquier conflicto entre este JSON y el PDF, gana el PDF. Ante conflicto entre este JSON y el CSS actual del sitio, gana este JSON."
+    },
+    "scope": "Sitio Sprinters Web (Landing v2, Suscripción Running, Suscripción Social, Evento, Cuenta, Admin).",
+    "relatedFiles": {
+      "brand.css": "Implementación viva de los tokens de color y logo. Debe quedar sincronizado con la sección color de este JSON.",
+      "subs.css": "Estilos compartidos de las páginas de suscripción y cuenta.",
+      "images/brand/": "Logos en SVG vectorial y PNG."
+    }
+  },
+
+  "artDirection": {
+    "essence": "Club de running de barrio con acabado de marca de moda. La energía es la de un sábado a la mañana en el parque, no la de un gimnasio ni la de una app de fitness. El diseño es cálido, analógico y editorial: verde bosque profundo, papel crema, tipografía grande, mucho aire y fotos reales de gente real.",
+    "oneLine": "Un club de corredores contado como una revista, no como un producto.",
+    "moodKeywords": [
+      "sábado a la mañana",
+      "parque de Mendoza en otoño",
+      "café después de correr",
+      "collegiate / varsity relajado",
+      "editorial impreso",
+      "riso y papel crema",
+      "vintage deportivo argentino",
+      "comunidad antes que rendimiento"
+    ],
+    "principles": [
+      {
+        "name": "El verde manda",
+        "rule": "Bosque #024939 es el color de la marca y debe dominar cualquier composición. Si una pantalla no tiene verde en un bloque grande (fondo, footer, card, banda), está mal.",
+        "why": "Es el único color que aparece en todas las aplicaciones del brand book: banderas, gorras, remeras, stories, emblemas."
+      },
+      {
+        "name": "El naranja es un chispazo",
+        "rule": "Sprint Terracota #fd521b aparece poco y siempre por algo: la acción que convierte, un dato urgente, un acento gráfico. Nunca como fondo de sección larga ni en más de un botón por pantalla.",
+        "why": "En el brand book el naranja aparece en una sola story de cada tres. Es el pulso, no el cuerpo."
+      },
+      {
+        "name": "Nada de blanco puro en las superficies grandes",
+        "rule": "El fondo de página es Crema #faf8ec. El blanco #ffffff se reserva para cards que necesitan despegarse del crema. Un fondo #ffffff a pantalla completa rompe la calidez de la marca.",
+        "why": "El brand book no usa blanco de papel en ninguna página; todo el deck está sobre crema."
+      },
+      {
+        "name": "Aire antes que información",
+        "rule": "Ante la duda, sacar elementos y agrandar los márgenes. Las páginas del brand book dejan el 30-40% del alto vacío arriba y abajo del contenido.",
+        "why": "La marca se lee cara porque respira, no porque tenga efectos."
+      },
+      {
+        "name": "Curvas generosas o ninguna",
+        "rule": "Dos vocabularios de forma, sin término medio: cards blandas con radio muy grande (~11% del ancho) o mosaicos a canto vivo con radio 0. Prohibido el radio tibio de 4-8px en superficies grandes.",
+        "why": "Las stories del brand book usan radio 59.5 sobre 510 de ancho; el mosaico de la página 19 no tiene radio."
+      },
+      {
+        "name": "Plano, sin efectos",
+        "rule": "Sin degradados decorativos, sin sombras marcadas, sin glow, sin glassmorphism. Una sombra solo para separar una card del fondo, y siempre teñida a Bosque, nunca a negro.",
+        "why": "Toda la identidad es color plano y vector. El único degradado admitido es el velo sobre foto."
+      },
+      {
+        "name": "La foto es documental",
+        "rule": "Gente real del club, luz natural, movimiento, caras. Nada de stock, nada de modelos posando en un gimnasio, nada de fondos de estudio.",
+        "why": "Las páginas 17-19 son todas fotos de corridas reales en Mendoza."
+      },
+      {
+        "name": "El texto grande hace de imagen",
+        "rule": "Los títulos son enormes (hasta el 10% del alto del viewport), en mayúsculas, y se los trata como elemento gráfico: pueden cortarse, superponerse a una foto o convivir con la ilustración.",
+        "why": "En la página 3 el corredor ilustrado pasa por encima de la palabra SPRINTERS."
+      }
+    ],
+    "do": [
+      "Bloques enteros de color plano: una sección completa en Bosque, otra en Crema.",
+      "Títulos en mayúsculas, grandes, con el script como contrapunto en minúscula cursiva.",
+      "Fotos a sangre o dentro de cards de radio grande.",
+      "Ilustración de línea de un solo trazo para íconos y adornos.",
+      "Sellos y emblemas circulares como acento coleccionable.",
+      "Espacio en blanco (crema) generoso arriba y abajo de cada sección."
+    ],
+    "dont": [
+      "No usar el teal #1f7f8c ni ningún azul verdoso: no existe en la marca.",
+      "No poner el naranja y el rojo de error cerca: se confunde un CTA con un fallo.",
+      "No usar iconografía de línea genérica tipo Font Awesome mezclada con la ilustración de marca.",
+      "No inclinar ni deformar el logotipo; la única rotación admitida es la del sello o el sticker.",
+      "No aplicar sombras negras: siempre teñidas a Bosque.",
+      "No usar más de un tipo de script por composición.",
+      "No usar mayúsculas en párrafos de más de una línea."
+    ]
+  },
+
+  "color": {
+    "palette": [
+      {
+        "token": "bosque",
+        "name": "Bosque",
+        "hex": "#024939",
+        "rgb": [2, 73, 57],
+        "role": "Color principal de la marca",
+        "usage": ["fondo de secciones oscuras", "footer", "logotipo sobre claro", "eyebrows y etiquetas", "links", "bordes de énfasis", "card premium"],
+        "share": "Debería ocupar entre el 30% y el 50% de la superficie de color de la página."
+      },
+      {
+        "token": "terracota",
+        "name": "Sprint Terracota",
+        "hex": "#fd521b",
+        "rgb": [253, 82, 27],
+        "role": "Acento de energía",
+        "usage": ["CTA de conversión (uno por pantalla)", "badge de plan destacado", "dato urgente o cuenta regresiva", "barra de foco"],
+        "share": "Nunca más del 5% de la superficie.",
+        "warning": "El PDF de mockups muestra #fe5d02 en una story. Es una deriva del mockup, no un color nuevo. El valor válido es #fd521b."
+      },
+      {
+        "token": "asfaltico",
+        "name": "Asfáltico",
+        "hex": "#1B1B1B",
+        "rgb": [27, 27, 27],
+        "role": "Tinta",
+        "usage": ["texto de cuerpo", "texto sobre Terracota", "fondos oscuros neutros", "logotipo monocromo"]
+      },
+      {
+        "token": "tierras",
+        "name": "Tierras",
+        "hex": "#e5e5cc",
+        "rgb": [229, 229, 204],
+        "role": "Arena",
+        "usage": ["texto y logotipo sobre Bosque", "fondos de bloque suave", "ilustración sobre verde"],
+        "warning": "El brand book imprime '#024939' bajo este swatch. Es una errata: repite el hex de Bosque. El color real muestreado del propio PDF es #e5e5cc. Confirmar con el estudio; si dan otro valor, se corrige acá y en brand.css."
+      },
+      {
+        "token": "sky",
+        "name": "Sky",
+        "hex": "#d7e5ff",
+        "rgb": [215, 229, 255],
+        "role": "Acento frío",
+        "usage": ["fondo de tile en mosaico", "fondo de story alternativa", "estado informativo"],
+        "note": "Es el color menos usado del brand book. Sirve para romper una sucesión de verdes; no forzarlo."
+      },
+      {
+        "token": "crema",
+        "name": "Crema",
+        "hex": "#faf8ec",
+        "rgb": [250, 248, 236],
+        "role": "Papel",
+        "usage": ["fondo de página por defecto", "navbar translúcido", "bandas claras"],
+        "note": "No figura como swatch numerado pero es el fondo de las 20 páginas del brand book. Es color de marca de hecho."
+      }
+    ],
+    "derived": {
+      "comment": "No son colores de marca. Son utilidades derivadas para hover, sombra y jerarquía. Si el estudio amplía la paleta, estos se reemplazan.",
+      "bosque900": { "hex": "#012e24", "use": "fondo más profundo que Bosque, hover de superficies oscuras, base de degradé" },
+      "bosque700": { "hex": "#023c2f", "use": "placeholder de imagen, superficie intermedia" },
+      "bosque300": { "hex": "#4e8577", "use": "texto secundario verde sobre claro" },
+      "terracota700": { "hex": "#d63f0d", "use": "hover del CTA naranja" },
+      "crema2": { "hex": "#f2efdf", "use": "skeleton de carga, banda alterna, chip neutro" },
+      "inkSoft": { "hex": "#55554f", "use": "párrafos secundarios (7.04:1 sobre crema)" },
+      "inkMuted": { "hex": "#767670", "use": "metadatos y captions (4.57:1 sobre blanco)" }
+    },
+    "semanticRoles": {
+      "comment": "Los componentes deben usar estos roles, no los colores crudos. Cambiar la marca debe ser cambiar la capa de arriba.",
+      "brand": "bosque",
+      "accent": "terracota",
+      "onAccent": "asfaltico",
+      "brandOnDark": "tierras",
+      "ink": "asfaltico",
+      "surface": "#ffffff",
+      "surfaceAlt": "crema",
+      "surfaceSand": "tierras",
+      "surfaceDark": "bosque",
+      "line": "rgba(2,73,57,.14)",
+      "lineSoft": "rgba(2,73,57,.08)"
+    },
+    "status": {
+      "comment": "Señales, no marca. El error se mantiene lejos de Terracota a propósito para que un CTA no se lea como un fallo.",
+      "ok": { "bg": "#dfeee4", "fg": "#0d5b3c" },
+      "pending": { "bg": "#fdf0d5", "fg": "#8a5a12" },
+      "error": { "bg": "#fbe2e0", "fg": "#a02418" },
+      "neutral": { "bg": "#f2efdf", "fg": "#767670" }
+    },
+    "veils": {
+      "comment": "Velo sobre foto. Siempre teñido a Bosque, nunca gris ni negro: es lo que hace que una foto cualquiera se vea de la marca.",
+      "base": "rgba(2,42,33,ALPHA)",
+      "heroVertical": "linear-gradient(180deg, rgba(2,42,33,.50) 0%, rgba(2,42,33,.24) 30%, rgba(2,42,33,.30) 58%, rgba(2,42,33,.92) 100%)",
+      "heroHorizontal": "linear-gradient(90deg, rgba(2,42,33,.74) 0%, rgba(2,42,33,.20) 52%, rgba(2,42,33,0) 82%)",
+      "cardOverlay": "linear-gradient(160deg, rgba(2,42,33,.72) 0%, rgba(2,42,33,.88) 100%)",
+      "minimumForWhiteText": "rgba(2,42,33,.55) sobre una foto de luminosidad media"
+    },
+    "approvedPairings": [
+      { "fg": "#024939", "bg": "#ffffff", "contrast": 10.42, "verdict": "AA", "use": "links, eyebrows, títulos verdes" },
+      { "fg": "#024939", "bg": "#faf8ec", "contrast": 9.78, "verdict": "AA", "use": "lo mismo sobre crema" },
+      { "fg": "#1b1b1b", "bg": "#ffffff", "contrast": 17.22, "verdict": "AA", "use": "cuerpo" },
+      { "fg": "#1b1b1b", "bg": "#faf8ec", "contrast": 16.16, "verdict": "AA", "use": "cuerpo sobre crema" },
+      { "fg": "#e5e5cc", "bg": "#024939", "contrast": 8.15, "verdict": "AA", "use": "texto y logo sobre verde" },
+      { "fg": "#e5e5cc", "bg": "#012e24", "contrast": 11.58, "verdict": "AA", "use": "sección galería" },
+      { "fg": "#1b1b1b", "bg": "#fd521b", "contrast": 5.25, "verdict": "AA", "use": "texto del CTA naranja" },
+      { "fg": "#55554f", "bg": "#faf8ec", "contrast": 7.04, "verdict": "AA", "use": "párrafos secundarios" }
+    ],
+    "forbiddenPairings": [
+      { "fg": "#ffffff", "bg": "#fd521b", "contrast": 3.28, "why": "No pasa AA para texto chico. Los CTA son de 11-12px. Usar Asfáltico sobre el naranja en vez de bajar el naranja." },
+      { "fg": "#024939", "bg": "#fd521b", "contrast": 3.18, "why": "Verde sobre naranja vibra y no se lee." },
+      { "fg": "#e5e5cc", "bg": "#ffffff", "contrast": 1.28, "why": "Tierras es un fondo, nunca un color de texto sobre claro." }
+    ],
+    "banned": {
+      "hexes": ["#1f7f8c", "#8bd3dc", "#bfeaf0", "#0d1a1c", "#C24A1F", "#f6f3ee", "#f5f1ea"],
+      "why": "Eran de la maqueta original del sitio y no existen en el brand book. #C24A1F era un terracota inventado; #f6f3ee y #f5f1ea eran cremas aproximadas."
+    }
+  },
+
+  "typography": {
+    "licensingNote": "Las cuatro tipografías del brand book están embebidas en el PDF como versiones Trial (HarperBold, TransformaSans_Trial, GWBantley-Regular-Trial, AstonScript). No tienen licencia de uso web. Este JSON define para cada una un sustituto libre elegido comparando las letras reales contra los candidatos, no de memoria.",
+    "families": [
+      {
+        "role": "display",
+        "brandFont": "Harper Bold",
+        "usedInBrandBookFor": "Únicamente el logotipo SPRINTERS y las letras del sello circular.",
+        "letterformNotes": "Geométrica muy pesada y algo condensada. 'a' de un solo piso, 'g' con bucle cerrado en el descendente, 'f' de gancho angosto, contraformas chicas, altura de x alta, sabor vintage de cartel.",
+        "freeSubstitute": {
+          "name": "Lilita One",
+          "googleFonts": "https://fonts.googleapis.com/css2?family=Lilita+One&display=swap",
+          "weights": [400],
+          "why": "De ocho candidatos comparados contra el espécimen real, es la que iguala mejor el peso, el ancho condensado y la 'a' de un solo piso.",
+          "caveat": "Viene en un solo peso. Si se necesita rango, usar Baloo 2 (400-800), que es algo más ancha y redonda."
+        },
+        "alternative": { "name": "Baloo 2", "weights": [600, 700, 800], "why": "Mismo espíritu cálido y chunky, con familia completa." },
+        "practicalNote": "En la web esta tipografía casi no hace falta: el logotipo ya está vectorizado en images/brand/wordmark.svg. Reservarla para algún título display suelto y nada más.",
+        "stack": "'Lilita One', 'Baloo 2', system-ui, sans-serif"
+      },
+      {
+        "role": "sans",
+        "brandFont": "Transforma Sans",
+        "usedInBrandBookFor": "Todo el trabajo tipográfico real: títulos de sección, títulos de story, cuerpo, etiquetas, folios, micro-texto de sellos.",
+        "weightsUsedInBrandBook": ["Light", "Regular", "Medium", "SemiBold", "Bold"],
+        "letterformNotes": "Geométrica humanista, monolineal, muy abierta. 'a' de un solo piso, 'G' sin barra transversal, 'g' de un piso con descendente curvo abierto, 'e' de terminal inclinada, altura de x generosa, proporción ancha.",
+        "freeSubstitute": {
+          "name": "Poppins",
+          "googleFonts": "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap",
+          "weights": [300, 400, 500, 600, 700, 800],
+          "why": "Comparando párrafos completos, es la que reproduce el ritmo, el ancho y el color de texto de Transforma. Comparte la 'a' de un solo piso y la construcción geométrica, que es lo que da el aire de la marca.",
+          "difference": "La 'G' de Poppins tiene barra transversal y la 'g' no hace la curva abierta de Transforma. Se nota en display grande, no en cuerpo."
+        },
+        "alternative": { "name": "Urbanist", "why": "Un poco más angosta y contemporánea. Elegirla si el texto queda demasiado ancho con Poppins." },
+        "rejected": [
+          { "name": "Figtree, Hanken Grotesk, DM Sans, Plus Jakarta, Lexend, Sora, Onest", "why": "Todas tienen 'a' de dos pisos: estructuralmente distintas a Transforma." },
+          { "name": "Jost", "why": "Correcta de estructura pero demasiado angosta y Futura; el texto pierde la calidez." }
+        ],
+        "stack": "'Poppins', 'Urbanist', system-ui, -apple-system, sans-serif"
+      },
+      {
+        "role": "script",
+        "brandFont": "GW Bantley (y Aston Script como variante)",
+        "usedInBrandBookFor": "Palabras sueltas de acento: 'Colores', 'Social', 'Run Club', 'Global'. Nunca frases enteras.",
+        "letterformNotes": "Caligráfica inglesa (copperplate): mucho contraste entre trazo grueso y fino, mayúsculas con lazos y florituras, inclinación pronunciada.",
+        "freeSubstitute": {
+          "name": "Pinyon Script",
+          "googleFonts": "https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap",
+          "weights": [400],
+          "why": "Es la única libre comparada que reproduce la estructura copperplate con el mismo contraste y las mayúsculas con lazo cruzado.",
+          "caveat": "Los trazos finos se rompen por debajo de 28px. Nunca usarla para texto chico."
+        },
+        "alternative": { "name": "Petit Formal Script", "why": "Menos contraste, aguanta mejor tamaños medianos." },
+        "rejected": [
+          { "name": "Parisienne", "why": "Es monolineal, no tiene contraste: pierde el carácter caligráfico." },
+          { "name": "Italianno", "why": "Más casual e inclinada, se aleja de la formalidad del original." }
+        ],
+        "stack": "'Pinyon Script', 'Petit Formal Script', cursive"
+      }
+    ],
+    "measuredSpecimens": {
+      "comment": "Medidos sobre las páginas reales del brand book (alto de página 1080pt). Sirven para derivar proporciones, no para copiar píxeles.",
+      "page03_manifesto": {
+        "wordmark": { "font": "Harper Bold", "size": "100pt", "shareOfPageHeight": "9.3%" },
+        "subLockup": { "font": "Transforma Medium", "size": "23.5pt", "text": "SOCIAL RUN CLUB", "case": "uppercase" },
+        "body": { "font": "Transforma Regular", "size": "19.2pt", "align": "center" },
+        "pullquote": { "font": "Transforma SemiBold", "size": "19.2pt", "treatment": "entre dos filetes horizontales, color Bosque" },
+        "ratioDisplayToBody": 5.21
+      },
+      "page10_sectionTitle": {
+        "sans": { "font": "Transforma Bold", "size": "84.9pt", "text": "PALETA DE", "case": "uppercase" },
+        "script": { "font": "GW Bantley", "size": "131.1pt", "text": "Colores", "case": "capitalize" },
+        "rule": "El script se pone 1.54× más grande que el sans y se apoya debajo, desbordando ópticamente hacia la izquierda."
+      },
+      "page17_storyCard": {
+        "cardWidth": "510.5pt",
+        "title": { "font": "Transforma SemiBold", "size": "39.3pt", "shareOfCardWidth": "7.7%", "case": "uppercase" },
+        "body": { "font": "Transforma Regular", "size": "21pt", "shareOfCardWidth": "4.1%" },
+        "date": { "font": "Transforma Light", "size": "27.5pt", "detail": "La barra '/' va en Bold mientras los dígitos van en Light. Es un detalle de marca, no un descuido." },
+        "scriptOverline": { "font": "Aston Script", "size": "39.3pt", "text": "Global" },
+        "emblemMicro": { "font": "Transforma Bold", "size": "14.8pt", "text": "EST. D · 2025", "tracking": "muy abierto" }
+      },
+      "runningFooter": { "font": "Transforma Bold", "size": "19.2pt", "case": "uppercase", "pattern": "ETIQUETA DE SECCIÓN  ▪ 05", "detail": "Cuadradito de color + número de capítulo, alineado a la derecha." }
+    },
+    "webScale": {
+      "comment": "Escala derivada de las proporciones del brand book, ya traducida a CSS. Base 16px.",
+      "display": { "size": "clamp(52px, 10vw, 150px)", "weight": 400, "lineHeight": 0.9, "letterSpacing": "0.005em", "case": "uppercase", "family": "display" },
+      "h1": { "size": "clamp(46px, 8vw, 120px)", "weight": 300, "lineHeight": 0.9, "letterSpacing": "0.01em", "case": "uppercase", "family": "sans" },
+      "h2": { "size": "clamp(38px, 5.6vw, 78px)", "weight": 300, "lineHeight": 0.94, "letterSpacing": "0.01em", "case": "uppercase", "family": "sans" },
+      "h3": { "size": "clamp(26px, 3vw, 40px)", "weight": 500, "lineHeight": 1.05, "letterSpacing": "0", "case": "none", "family": "sans" },
+      "cardTitle": { "size": "clamp(20px, 2vw, 32px)", "weight": 600, "lineHeight": 1.1, "case": "uppercase", "family": "sans" },
+      "lede": { "size": "15px", "weight": 300, "lineHeight": 1.7, "maxWidth": "44ch" },
+      "body": { "size": "14px", "weight": 400, "lineHeight": 1.7, "maxWidth": "62ch" },
+      "eyebrow": { "size": "12px", "weight": 500, "lineHeight": 1, "letterSpacing": "0.34em", "case": "uppercase", "color": "brand" },
+      "label": { "size": "11px", "weight": 500, "letterSpacing": "0.22em", "case": "uppercase" },
+      "micro": { "size": "10px", "weight": 500, "letterSpacing": "0.24em", "case": "uppercase" },
+      "scriptAccent": { "size": "1.5em relativo al sans que acompaña", "family": "script", "case": "capitalize", "minSize": "28px" }
+    },
+    "rules": [
+      "El tracking crece cuando el texto se achica: display 0.005em, h2 0.01em, eyebrow 0.34em. Es la firma tipográfica de la marca.",
+      "Mayúsculas solo en títulos, etiquetas y botones. Nunca en párrafos.",
+      "El script se usa en una palabra por composición, nunca en dos.",
+      "El interlineado de los títulos grandes baja de 1: 0.9 en display, 0.94 en h2. Los títulos se compactan verticalmente.",
+      "El cuerpo nunca pasa de 62 caracteres por línea; la bajada, de 44.",
+      "Los números de precio y fecha van con font-variant-numeric: tabular-nums.",
+      "Si hay una fecha del tipo 07/08, la barra se pone en un peso más alto que los dígitos."
+    ]
+  },
+
+  "logo": {
+    "variants": [
+      { "id": "wordmark", "file": "images/brand/wordmark.svg", "content": "SPRINTERS®", "aspectRatio": "1105.3 / 146.98 (7.52:1)", "use": "navbars y cualquier lugar de poco alto" },
+      { "id": "lockup", "file": "images/brand/sprinters-lockup.svg", "content": "isotipo + SPRINTERS® + SOCIAL RUN CLUB", "aspectRatio": "1106.89 / 378.36 (2.93:1)", "use": "footer, hero, compartir. Es la aplicación primaria." },
+      { "id": "running", "file": "images/brand/running-team.svg", "content": "SPRINTERS® + RUNNING TEAM", "aspectRatio": "815.84 / 151.34 (5.39:1)", "use": "páginas del pilar Running" },
+      { "id": "icon", "file": "images/brand/icon-512.png", "content": "isotipo S sobre cuadrado Bosque", "use": "favicon, app icon, avatar" }
+    ],
+    "implementation": {
+      "technique": "SVG inline como sprite al principio del <body>, referenciado con <use href=\"#sl-…\">, y pintado con fill: currentColor.",
+      "why": "Un <img> no hereda el color, y una máscara CSS sobre PNG externo la bloquea Chrome cuando la página se abre con file://. El sprite inline anda en los tres escenarios y además hereda el color del contenedor.",
+      "sizing": "Fijar solo la altura y dejar que aspect-ratio calcule el ancho. Nunca fijar alto y ancho a mano."
+    },
+    "sizes": { "navDesktop": "22px de alto", "navMobile": "18px", "navSmall": "16px", "footerLockup": "64px", "footerLockupMobile": "48px" },
+    "clearSpace": {
+      "brandBookRule": "0,5 cm alrededor del logo en impresión.",
+      "webEquivalent": "0.5× la altura del logo por cada lado. Con un logo de 22px, 11px de aire mínimo."
+    },
+    "colorRules": [
+      "Sobre Crema o blanco: Bosque.",
+      "Sobre Bosque, Asfáltico o foto oscura: Tierras o blanco.",
+      "Sobre Terracota: Asfáltico.",
+      "Monocromo Asfáltico solo cuando la pieza es de un solo color."
+    ],
+    "forbidden": [
+      "Rotarlo, inclinarlo o deformarlo.",
+      "Aplicarle sombra, contorno o degradé.",
+      "Rehacerlo con una tipografía parecida: se usa el vector.",
+      "Ponerlo sobre una zona de foto con mucho detalle sin velo detrás."
+    ]
+  },
+
+  "shape": {
+    "measuredFromBrandBook": {
+      "storyCard": { "size": "510.5 × 885.5 pt", "aspectRatio": "0.577 (≈9:16)", "cornerRadius": "59.5pt", "radiusOverWidth": 0.1166, "radiusOverHeight": 0.0672 },
+      "mosaicTile": { "size": "542.3 × 570.2 pt", "aspectRatio": "0.951 (casi cuadrado)", "cornerRadius": "0" }
+    },
+    "webRadii": {
+      "comment": "Dos vocabularios, sin término medio. El radio grande se calcula como 11.7% del ancho de la card, no como un valor fijo.",
+      "soft": { "formula": "clamp(20px, 11.7% del ancho, 48px)", "use": "cards de evento, cards de story, bloques de foto destacada" },
+      "card": { "value": "14px", "use": "cards de plan y de formulario, donde el radio grande se comería el contenido" },
+      "pill": { "value": "999px", "use": "botones, badges, chips, inputs" },
+      "sharp": { "value": "0", "use": "tiles de mosaico, bandas a sangre, secciones de color plano" },
+      "banned": "Radios de 4px a 8px en superficies grandes: son el radio por defecto de cualquier plantilla y matan el carácter."
+    },
+    "borders": {
+      "hairline": "1px solid rgba(2,73,57,.14)",
+      "soft": "1px solid rgba(2,73,57,.08)",
+      "emphasis": "1px solid #024939",
+      "featured": "2px solid #024939",
+      "rule": "Los bordes tiran a Bosque, nunca a negro ni a gris neutro."
+    },
+    "dividers": {
+      "brandBookPattern": "El pull quote de la página 3 va entre dos filetes horizontales de 1px en Bosque, con el texto centrado y aire generoso arriba y abajo.",
+      "css": "border-top:1px solid #024939; border-bottom:1px solid #024939; padding: 20px 0; text-align:center"
+    },
+    "shadows": {
+      "rule": "Solo funcionales, siempre teñidas a Bosque.",
+      "card": "0 22px 50px -28px rgba(2,73,57,.20)",
+      "featured": "0 18px 40px -26px rgba(2,73,57,.22)",
+      "banned": "rgba(0,0,0,*) en cualquier sombra."
+    }
+  },
+
+  "layout": {
+    "container": { "max": "1320px", "narrow": "920px", "prose": "620px" },
+    "gutter": "clamp(20px, 5vw, 64px)",
+    "sectionPadding": "clamp(90px, 13vh, 160px) horizontalGutter",
+    "spacingScale": [4, 8, 12, 16, 20, 26, 34, 48, 64, 96, 160],
+    "grid": {
+      "agenda": "repeat(4,1fr) → 820px: repeat(2,1fr) → 560px: 1fr",
+      "pilares": "1fr 1fr → 980px: 1fr",
+      "planes": "repeat(3,1fr) o repeat(2,1fr) según cantidad",
+      "mosaico": "repeat(3,1fr) de tiles casi cuadrados, sin gutter, alternando foto y color plano",
+      "footer": "2fr 1fr 1fr 1fr → 820px: 1fr 1fr → 560px: 1fr"
+    },
+    "sectionRhythm": {
+      "rule": "Alternar fondo entre Crema y Bosque a lo largo del scroll. Nunca dos secciones oscuras seguidas ni cuatro claras seguidas.",
+      "example": ["hero (foto + velo Bosque)", "crema", "blanco", "Bosque oscuro", "crema", "Bosque (footer)"]
+    },
+    "breakpoints": { "xl": 1320, "lg": 980, "md": 820, "sm": 640, "xs": 560, "xxs": 400 }
+  },
+
+  "components": {
+    "navbar": {
+      "transparentState": {
+        "when": "scrollY <= 60 y hay hero de foto detrás",
+        "background": "transparent",
+        "color": "#ffffff",
+        "borderBottom": "1px solid rgba(255,255,255,.16)",
+        "padding": "22px clamp(20px,5vw,64px)"
+      },
+      "solidState": {
+        "when": "scrollY > 60",
+        "background": "rgba(250,248,236,.92)",
+        "backdropFilter": "blur(14px)",
+        "color": "#1B1B1B",
+        "logoColor": "#024939",
+        "borderBottom": "1px solid rgba(2,73,57,.12)",
+        "padding": "16px clamp(20px,5vw,64px)"
+      },
+      "transition": "background .4s ease, color .4s ease, border-color .4s ease, padding .4s ease",
+      "layout": "grid 1fr auto 1fr con el logo en la columna del medio, para que quede centrado sobre el eje de la página aunque los bloques laterales midan distinto",
+      "links": { "size": "12px", "letterSpacing": "0.22em", "case": "uppercase", "weight": 400, "opacity": 0.82 },
+      "mobile": "Debajo de 640px se ocultan los links de sección y quedan solo marca y sesión."
+    },
+    "hero": {
+      "structure": "Foto a sangre, alto 100vh (100svh en mobile), contenido anclado abajo a la izquierda.",
+      "imageTreatment": "object-fit cover, ken burns lento de scale(1.14) a scale(1.02) en 16s, más dos velos Bosque superpuestos (vertical y horizontal).",
+      "eyebrow": "Filete de 34px + texto 12px tracking .34em en Tierras",
+      "title": "display, uppercase, dos líneas, la segunda en Tierras",
+      "lede": "15px/1.7, max 440px, blanco al 86%",
+      "ctas": "Primario en Terracota con texto Asfáltico; secundario translúcido con borde blanco al 40%"
+    },
+    "splitCard": {
+      "description": "El patrón más característico del brand book: foto arriba, bloque de color plano abajo con el título. Aparece en las stories de las páginas 17 y 18.",
+      "geometry": "Card 9:16, radio grande. La foto ocupa ~2/3 del alto, el bloque de color ~1/3.",
+      "colorBlockOptions": ["#024939 con texto Tierras", "#fd521b con texto Asfáltico", "#e5e5cc con texto Bosque"],
+      "content": "Título en uppercase SemiBold + fecha debajo, con la barra en un peso más alto",
+      "css": "display:grid; grid-template-rows: 2fr 1fr; border-radius: clamp(20px,11.7%,48px); overflow:hidden"
+    },
+    "storyCard": {
+      "description": "Card de color plano sin foto, con el lockup script centrado y un párrafo corto abajo.",
+      "background": "Crema, Tierras, Bosque o Sky",
+      "content": "Lockup 'Social SPRINTERS® Run Club' + párrafo 21/510 del ancho, centrado",
+      "aspectRatio": "9/16"
+    },
+    "mosaic": {
+      "description": "Grilla de la página 19: tiles casi cuadrados, sin separación, alternando foto, color plano e ilustración.",
+      "rules": ["radio 0", "gap 0", "al menos un tile de color plano por fila", "al menos un tile con ilustración de línea"]
+    },
+    "buttons": {
+      "primary": { "bg": "#fd521b", "color": "#1B1B1B", "radius": "999px", "padding": "15px 26px", "size": "12px", "letterSpacing": "0.16em", "case": "uppercase", "weight": 500, "hover": "bg #d63f0d", "limit": "uno por pantalla" },
+      "secondary": { "bg": "#024939", "color": "#ffffff", "radius": "999px", "hover": "bg #012e24" },
+      "ghost": { "bg": "transparent", "color": "#024939", "border": "1px solid #024939", "hover": "bg #024939, color #ffffff" },
+      "onDark": { "bg": "rgba(255,255,255,.08)", "color": "#ffffff", "border": "1px solid rgba(255,255,255,.4)" },
+      "arrow": "Los CTA llevan → al final; en hover el arrow se desplaza 4px a la derecha."
+    },
+    "badges": {
+      "featured": { "bg": "#fd521b", "color": "#1B1B1B", "prefix": "✦", "size": "10px", "letterSpacing": "0.24em", "radius": "999px", "padding": "7px 12px" },
+      "status": "Usar los pares de color.status. Radio 999px, 11px, tracking .14em, uppercase."
+    },
+    "planCards": {
+      "default": { "bg": "#ffffff", "border": "1px solid rgba(2,73,57,.14)", "radius": "14px", "padding": "32px" },
+      "popular": { "bg": "#faf8ec", "border": "1px solid #024939", "translateY": "-12px", "shadow": "0 18px 40px -26px rgba(2,73,57,.22)", "cta": "bg Bosque, hover Terracota" },
+      "premium": { "bg": "#024939", "color": "#e5e5cc", "cta": "bg Terracota con texto Asfáltico", "note": "La card premium va en Bosque, no en negro: el verde es el color aspiracional de la marca." },
+      "hover": "translateY(-4px) + sombra teñida a Bosque"
+    },
+    "footer": {
+      "background": "#024939",
+      "color": "#e5e5cc",
+      "logo": "lockup completo a 64px",
+      "columnTitles": { "size": "11px", "letterSpacing": "0.24em", "case": "uppercase", "color": "rgba(229,229,204,.55)" },
+      "links": { "size": "14px", "weight": 300, "color": "rgba(229,229,204,.82)" },
+      "bottomBar": "11px, tracking .14em, uppercase, color al 50%, con 'Let's run together' a la derecha"
+    },
+    "forms": {
+      "input": { "radius": "999px", "border": "1px solid #1B1B1B", "bg": "#ffffff", "padding": "15px 20px" },
+      "focus": "outline 2px solid #fd521b, offset 3px",
+      "mobile": "En mobile el contenedor tipo píldora se disuelve y cada control lleva su propia píldora."
+    }
+  },
+
+  "graphicDevices": {
+    "scriptWrapLockup": {
+      "description": "La firma gráfica de la marca. 'Social' en script arriba a la izquierda, 'SPRINTERS®' en display pesado al centro, 'Run Club' en script abajo a la derecha. Los tres se superponen ópticamente.",
+      "rotation": "El conjunto va levemente rotado, entre -2° y -4°",
+      "use": "Hero secundario, remeras, gorras, story de color plano",
+      "webImplementation": "Tres elementos posicionados en un contenedor relativo; el script en Pinyon Script a 1.5em del display."
+    },
+    "circularEmblem": {
+      "description": "Sello coleccionable: 'SPRINTERS' arqueado arriba, 'SOCIAL RUN CLUB' arqueado abajo, 'EST. D' a la izquierda y '2025' a la derecha, con la corredora ilustrada al centro.",
+      "colors": ["Tierras sobre Bosque", "Bosque sobre Crema", "Asfáltico sobre blanco"],
+      "use": "Sección de comunidad, badge de miembro, loader, favicon alternativo"
+    },
+    "stickers": {
+      "description": "Formas recortadas con contorno fino: nube/blob, rectángulo con filete, óvalo, triángulo redondeado, squircle.",
+      "content": "Frases cortas de marca, 'TEAM sprinters', 'SSRC', 'SOCIAL RUN CLUB'",
+      "use": "Acentos sueltos entre secciones, nunca más de dos por pantalla"
+    },
+    "lineIllustration": {
+      "description": "Ilustración de línea de grosor único: corredores, taza de café, medialuna, croissant.",
+      "stroke": "Un solo grosor, sin variación",
+      "fill": "Sin relleno, o relleno plano en Tierras",
+      "color": "Bosque sobre claro, Tierras sobre oscuro",
+      "use": "Íconos de sección, adornos de la sección social, separadores",
+      "rule": "No mezclar con sets de íconos genéricos. Si falta un ícono, se dibuja en este estilo o no se usa ícono."
+    },
+    "dateStamp": {
+      "pattern": "07/08 — dígitos en Light, barra en Bold",
+      "use": "Cards de evento y agenda"
+    },
+    "runningFooter": {
+      "pattern": "ETIQUETA DE SECCIÓN  ▪ 05 — texto en Bold uppercase, cuadradito de color y número",
+      "webUse": "Índice lateral de secciones o encabezado de capítulo"
+    }
+  },
+
+  "imagery": {
+    "photography": {
+      "subject": "Miembros reales del club corriendo, estirando, riéndose, tomando café. Grupos por encima de individuos.",
+      "locations": ["Parque General San Martín", "Fuente de los Continentes", "Prado Español", "ciclovías de Godoy Cruz", "cafés aliados"],
+      "light": "Natural, temprano a la mañana o atardecer. Sombras largas, contraluz permitido.",
+      "palette": "Verdes de parque, tierras de otoño, cielo. Evitar escenas frías o de interior fluorescente.",
+      "framing": "Movimiento y aire. Se admite desenfoque de movimiento y encuadres cortados.",
+      "avoid": ["stock de gimnasio", "modelos posando", "fondos de estudio", "primeros planos de zapatillas sin contexto", "filtros saturados o HDR"],
+      "treatment": "Sin filtro de color. La marca entra por el velo Bosque cuando la foto lleva texto encima, no por un tratamiento global."
+    },
+    "illustration": {
+      "style": "Vectorial de línea, un solo grosor, figuras humanas estilizadas en movimiento con relleno plano en Tierras.",
+      "characters": "Corredores de perfil, tres cuartos, con cola de caballo o gorra, siempre en zancada.",
+      "rule": "La ilustración puede superponerse al texto grande (en la página 3 la corredora pasa por encima de SPRINTERS)."
+    },
+    "iconography": {
+      "rule": "Del mismo trazo que la ilustración. Nada de librerías genéricas.",
+      "existingGlyphs": ["taza de café", "medialuna", "croissant", "corredor", "flecha →", "asterisco ✦"]
+    }
+  },
+
+  "motion": {
+    "philosophy": "El movimiento acompaña el scroll, no llama la atención por sí mismo.",
+    "easing": { "standard": "cubic-bezier(.22,.7,.2,1)", "snappy": "cubic-bezier(.2,.6,.2,1)", "pill": "cubic-bezier(.32,.72,.18,1)" },
+    "durations": { "micro": "0.25s", "base": "0.35s", "reveal": "1.1s", "nav": "0.4s", "kenburns": "16s" },
+    "patterns": {
+      "reveal": "opacity 0→1 y translateY(30px→0) al entrar en viewport, 1.1s",
+      "cardHover": "translateY(-4px) + sombra, 0.35s",
+      "markerSweep": "Barrido de fondo Bosque de scaleX(0) a scaleX(1) en 0.9s, con el texto pasando a Tierras a los 0.55s. Es el subrayado de marca.",
+      "arrowNudge": "translateX(4px) en hover, 0.25s"
+    },
+    "reducedMotion": "Con prefers-reduced-motion, desactivar ken burns, reveals y el barrido; dejar solo los cambios de color."
+  },
+
+  "voice": {
+    "language": "Español rioplatense con voseo. Mendoza, Argentina.",
+    "tone": ["cálido", "directo", "cómplice", "sin solemnidad deportiva"],
+    "canonicalLines": [
+      "Lo importante no es cuánto corrés, sino con quién.",
+      "Somos el primer Social Run Club de Mendoza.",
+      "…te sumes a nuestro post run en un cafecito (muy importante!).",
+      "Let's run together"
+    ],
+    "rules": [
+      "Voseo siempre: corrés, sumate, vení, tenés.",
+      "El paréntesis con guiño es parte de la voz: '(muy importante!)'.",
+      "Hablar de gente, no de usuarios ni de atletas.",
+      "El café y el after-run tienen tanto peso como el entrenamiento."
+    ],
+    "avoid": [
+      "Jerga de rendimiento: 'optimizá tu marca', 'superate', 'sin excusas'.",
+      "Signos de exclamación en cadena.",
+      "Guiones largos como muletilla de remate.",
+      "Tuteo o español neutro."
+    ]
+  },
+
+  "siteMapping": {
+    "comment": "Cómo aterriza todo lo anterior en los archivos que ya existen en este proyecto.",
+    "brand.css": "Fuente única de los tokens. Debe contener la paleta, los derivados, los estados y las clases del logo. Se carga antes que cualquier otra hoja.",
+    "Landing v2.html": {
+      "nav": "Logo wordmark heredando color; estado transparente sobre hero y crema al scrollear.",
+      "hero": "Velo Bosque, título display con segunda línea en Tierras, CTA primario Terracota con texto Asfáltico.",
+      "agenda": "Fondo crema. Cards de evento con radio soft y sello de fecha con la barra en Bold.",
+      "pilares": "Fondo blanco. Candidato natural para el patrón splitCard.",
+      "galeria": "Fondo Bosque-900 con texto Tierras. Candidato natural para el patrón mosaic.",
+      "lideres": "Fondo crema.",
+      "join": "Form de leads con input píldora y botón Terracota.",
+      "footer": "Fondo Bosque, texto Tierras, lockup completo a 64px."
+    },
+    "subs.css": "Mapea los tokens de brand.css a los roles de las páginas de suscripción. --rust es Terracota, --cream es Crema, --ink es Asfáltico.",
+    "Suscripcion Running.html / Social.html": "Cards de plan según components.planCards. La card premium en Bosque.",
+    "Evento.html": "Hero con velo Bosque y píldoras de estado según color.status.",
+    "Cuenta.html": "Panel de cuenta; nav en grid de 3 columnas.",
+    "Admin.html": "Interno. Solo aplica paleta y logo, no la dirección de arte editorial."
+  },
+
+  "applicationOrder": [
+    "1. Reemplazar todos los colores fuera de paleta por los tokens (ver color.banned).",
+    "2. Cargar las tipografías sustitutas y aplicar typography.webScale.",
+    "3. Reemplazar radios tibios de 4-8px por soft, card, pill o sharp según el caso.",
+    "4. Corregir contraste: texto Asfáltico sobre Terracota, nunca blanco.",
+    "5. Aplicar el ritmo de secciones alternando Crema y Bosque.",
+    "6. Introducir los patrones splitCard y mosaic donde hoy hay grillas planas.",
+    "7. Sumar los recursos gráficos: sello circular, ilustración de línea, sello de fecha.",
+    "8. Revisar la voz de los textos contra la sección voice."
+  ],
+
+  "acceptanceChecks": [
+    "Ningún hex fuera de la paleta ni de los derivados declarados.",
+    "Cero apariciones de #1f7f8c, #8bd3dc, #C24A1F, #f6f3ee.",
+    "Todos los pares de texto y fondo alcanzan 4.5:1, o 3:1 si el texto es de 18px o más.",
+    "Bosque ocupa al menos el 30% de la superficie de color de la home.",
+    "Terracota aparece como fondo en un solo botón por pantalla.",
+    "El logo es el vector, no texto tipografiado.",
+    "Ninguna sombra usa rgba(0,0,0,*).",
+    "Ninguna superficie grande tiene radio entre 4px y 8px.",
+    "Todos los textos usan voseo."
+  ]
+}

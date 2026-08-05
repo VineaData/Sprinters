@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sprinters · Referencia de marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
+<meta name="theme-color" content="#024939">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:var(--crema);color:var(--asfaltico);-webkit-font-smoothing:antialiased;padding:56px clamp(20px,5vw,64px) 96px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-weight:300;text-transform:uppercase;font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:.01em}
+  h2{font-size:12px;letter-spacing:.32em;text-transform:uppercase;font-weight:500;color:var(--bosque);margin:64px 0 20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  p.lede{max-width:560px;margin-top:18px;font-size:14.5px;line-height:1.7;color:var(--ink-soft);font-weight:300}
+  .note{font-size:12.5px;line-height:1.65;color:var(--ink-soft);margin-top:14px;max-width:640px}
+
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .sw{border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  .sw .chip{height:104px}
+  .sw .meta{padding:12px 14px;background:#fff}
+  .sw .name{font-size:13px;font-weight:500}
+  .sw .hex{font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft);margin-top:3px;font-variant-numeric:tabular-nums}
+  .sw .use{font-size:11.5px;line-height:1.5;color:var(--ink-muted);margin-top:7px}
+
+  .navdemo{border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px}
+  .navdemo .bar{display:flex;align-items:center;justify-content:space-between;padding:20px 26px}
+  .navdemo .links{display:flex;gap:26px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.82}
+  .navdemo .caption{font-size:11.5px;padding:9px 26px;background:#fff;color:var(--ink-soft);border-top:1px solid var(--line)}
+  .bar.dark{background:var(--bosque);color:#fff}
+  .bar.light{background:var(--crema);color:var(--asfaltico);border-bottom:1px solid var(--line)}
+  .bar.photo{background:var(--bosque-900);color:#fff}
+
+  .btns{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:999px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;border:1px solid transparent;cursor:pointer;font-family:inherit}
+  .btn.primary{background:var(--terracota);color:var(--on-accent)}
+  .btn.secondary{background:var(--bosque);color:#fff}
+  .btn.ghost{background:transparent;color:var(--bosque);border-color:var(--bosque)}
+
+  .pills{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;padding:7px 14px;border-radius:999px}
+
+  .contrast{width:100%;border-collapse:collapse;font-size:13px}
+  .contrast th{text-align:left;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);font-weight:500;padding:0 12px 10px 0}
+  .contrast td{padding:9px 12px 9px 0;border-top:1px solid var(--line-soft);vertical-align:middle}
+  .contrast .ratio{font-variant-numeric:tabular-nums;font-weight:500}
+  .verdict{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .pass{background:var(--ok-bg);color:var(--ok-fg)}
+  .large{background:var(--pending-bg);color:var(--pending-fg)}
+  .sample{padding:7px 12px;border-radius:6px;font-size:12px;white-space:nowrap}
+
+  .logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .logobox{border:1px solid var(--line);border-radius:10px;padding:30px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:150px}
+  .logobox .cap{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted)}
+  .on-white{background:#fff}
+  .on-cream{background:var(--crema-2)}
+  .on-bosque{background:var(--bosque);color:var(--tierras)}
+  .on-bosque .cap{color:rgba(229,229,204,.66)}
+  .on-asfalto{background:var(--asfaltico);color:#fff}
+  .on-asfalto .cap{color:rgba(255,255,255,.6)}
+  .on-terracota{background:var(--terracota);color:var(--asfaltico)}
+  .on-terracota .cap{color:rgba(27,27,27,.62)}
+</style>
+</head>
+<body>
+<!-- Sprite del logo. Va inline y no como <img> ni mask porque así el SVG
+     hereda currentColor (el logo cambia de color con el nav) y porque
+     abriendo los archivos con file:// Chrome bloquea las máscaras externas.
+     Fuente: vectores del brand book, no un trazado sobre PNG. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="sl-wordmark" viewBox="0 0 1105.3 146.98"><path d="M63.66 38.92c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8C92.24.8 87.5 0 81.22 0 48.16 0 26.26 17.42 21.35 45.4c-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.96-73.79h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.34 73.59 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1C339.8 126.7 329.7 105.61 316 87.77c16.3-5.06 30.43-16.2 34.35-38.52C355.04 22.5 339 3.02 303.1 3.02H251c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15H281Zm134.93 5.06c2.45-14 5.79-30.62 7.25-36.7h-41.57c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6M669.84 3.02h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.16-35.1c-6.33.42-21.9 1.21-35.87 1.21H718.3c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81H740.4l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9H840c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.57 4.25c.92-5.27 5.36-8.52 12.44-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.33 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.12 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22Zm0 0"/></symbol><symbol id="sl-lockup" viewBox="0 0 1106.89 378.36"><path d="M13.8 372.57q-4.12 0-7.35-.52a29 29 0 0 1-6.25-1.73v-4.67a33.5 33.5 0 0 0 13.57 2.6q4.26 0 6.12-1.01 1.86-1.04 1.86-3.44 0-2.2-1.9-3.77-1.87-1.56-6.48-3.15l-1.69-.58a60 60 0 0 1-6.14-2.38 12 12 0 0 1-3.94-2.91 6.8 6.8 0 0 1-1.6-4.65 7.5 7.5 0 0 1 3.16-6.44q3.2-2.28 9.06-2.29 2.98 0 6.09.48a68 68 0 0 1 6.87 1.48v4.67a60 60 0 0 0-7-1.75 34 34 0 0 0-6.06-.56q-3.37 0-5.25 1.18a3.7 3.7 0 0 0-1.85 3.3q0 1.47 1.14 2.56a10 10 0 0 0 2.9 1.87q1.76.8 4.79 1.84l1 .4q6.45 2.28 9.2 4.74a7.7 7.7 0 0 1 2.78 5.96 7.2 7.2 0 0 1-1.6 4.67 10 10 0 0 1-4.55 3.04q-2.95 1.05-6.87 1.06m36.96 0q-5.17 0-9.3-2.17a16 16 0 0 1-6.47-6.14 17.6 17.6 0 0 1-2.36-9.15q0-5.19 2.36-9.14a16.3 16.3 0 0 1 6.48-6.15 19.5 19.5 0 0 1 9.29-2.19q5.16 0 9.25 2.19a16.3 16.3 0 0 1 6.46 6.15 17.4 17.4 0 0 1 2.37 9.14q0 5.17-2.37 9.15a16.3 16.3 0 0 1-6.46 6.14 19.4 19.4 0 0 1-9.25 2.17m0-4.31q3.87 0 6.83-1.54a11 11 0 0 0 4.58-4.5 14.5 14.5 0 0 0 1.65-7.1q0-4.15-1.65-7.11a11 11 0 0 0-4.58-4.52 14.6 14.6 0 0 0-6.83-1.54q-3.88 0-6.84 1.54a11 11 0 0 0-4.6 4.52 14.6 14.6 0 0 0-1.62 7.1q0 4.13 1.62 7.1a11 11 0 0 0 4.6 4.5 14.5 14.5 0 0 0 6.84 1.55m42.53 4.31q-5.18 0-9.32-2.17a16.5 16.5 0 0 1-6.54-6.14 17.5 17.5 0 0 1-2.37-9.15q0-5.19 2.37-9.14a16.5 16.5 0 0 1 6.54-6.15 19.6 19.6 0 0 1 9.32-2.19q2.32 0 5.04.38 2.7.36 5.29 1.02v4.64a40 40 0 0 0-5.33-1.27q-2.75-.45-5-.45-3.88 0-6.86 1.54A11 11 0 0 0 81.8 348a14 14 0 0 0-1.67 7.1q0 4.13 1.62 7.1a11 11 0 0 0 4.63 4.5 15 15 0 0 0 6.85 1.55q2.4 0 5.2-.44t5.6-1.25v4.67q-2.25.62-5.25.98-3 .35-5.48.35m18.23-34.26h4.85v33.6h-4.85Zm24.74 0h5.6l13.85 33.6h-5.06l-2.52-6.29H129.7l-2.58 6.3h-4.96Zm10.12 23-7.4-18.33-7.54 18.33Zm15.11-23h4.86v29.3h19.08v4.3h-23.93Zm314.94 5.79h11.9q7.58 0 11.1 2.62 3.54 2.6 3.54 7.84a7.5 7.5 0 0 1-1.4 4.46 10 10 0 0 1-3.6 3.06 12 12 0 0 1-4.45 1.31v.1q2.78.3 4.25 1.59a12 12 0 0 1 2.66 3.9l4.17 8.72h-5.56l-3.13-7.4a8 8 0 0 0-3-3.68 9.4 9.4 0 0 0-4.96-1.17h-6.83v12.25h-4.69Zm11.23 17.14q5.56.01 8-1.54 2.46-1.53 2.46-5.04 0-2.3-.96-3.67a5.6 5.6 0 0 0-3.14-2.02 22 22 0 0 0-5.88-.64h-7.02v12.91Zm37.77 17.13q-7.11 0-11.1-3.96-4-3.95-4-10.92v-19.4h4.68v19.4q0 5.05 2.7 7.82 2.74 2.75 7.72 2.75 5 0 7.7-2.75 2.7-2.77 2.71-7.82v-19.4h4.71v19.4q0 6.97-4.02 10.92-4 3.96-11.1 3.96m24.49-34.27h5.52l20.77 27.12h.1l-.1-8.54V344.1h4.71v33.6h-5.52l-20.8-27.12h-.08l.09 8.54v18.58h-4.69Zm385.2 28.48q-4.75 0-8.56-2.17a16 16 0 0 1-6.02-6.14 19 19 0 0 1-2.19-9.15q0-5.19 2.19-9.14a16 16 0 0 1 6.02-6.15 17 17 0 0 1 8.56-2.19q2.14 0 4.63.38 2.5.36 4.9 1.02v4.64q-2.4-.8-4.93-1.27-2.5-.45-4.6-.45-3.56 0-6.31 1.54a10.7 10.7 0 0 0-4.27 4.52 15.4 15.4 0 0 0-1.52 7.1q0 4.13 1.5 7.1a10.5 10.5 0 0 0 4.25 4.5 12.7 12.7 0 0 0 6.3 1.55q2.2 0 4.78-.44t5.15-1.25v4.67q-2.07.62-4.84.98-2.75.35-5.04.35m16.79-34.27h4.48v29.3h17.54v4.3h-22.02Zm40.99 34.27q-6.75 0-10.58-3.96-3.82-3.95-3.82-10.91v-19.4H983v19.4q0 5.04 2.59 7.8t7.33 2.76q4.77 0 7.33-2.75 2.59-2.77 2.59-7.81v-19.4h4.48v19.4q0 6.96-3.82 10.91t-10.58 3.96m23.32-34.27h12.92q5.85 0 8.79 2.1 2.96 2.1 2.96 6.21 0 3.4-1.96 5.52-1.96 2.1-5.48 2.44v.1q3.97.3 6.17 2.5 2.19 2.22 2.19 5.9 0 4.38-3.13 6.6-3.12 2.24-9.31 2.23h-13.15Zm12.52 14.54q3.6 0 5.54-1.44a4.8 4.8 0 0 0 1.96-4.08q0-2.43-1.77-3.56-1.74-1.13-5.6-1.13h-8.17v10.21Zm.04 14.75q4.49 0 6.42-1.25 1.94-1.25 1.94-4.08t-1.92-4q-1.92-1.2-6.48-1.19h-8.04v10.52ZM65.25 206.86c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.92-.8-9.67-1.6-15.94-1.6-33.06 0-54.96 17.42-59.87 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.97-73.8h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.33 73.6 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1c-15.85-17.04-25.96-38.12-39.66-55.96 16.3-5.06 30.43-16.2 34.35-38.52 4.69-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15h-9.93Zm134.94 5.06c2.45-14 5.79-30.62 7.25-36.7H388.6c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6m206.4-111.11h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.15-35.09c-6.33.42-21.9 1.21-35.87 1.21h-51.92c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81h-12.57l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.58 4.25c.91-5.27 5.35-8.52 12.43-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.34 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.13 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22ZM493.7 67.17c-1.3.38-2.3 8.2-2.38 9.7-1.39 22.22 13.08 56.48 39.13 56.48 14.73 0 26.7-14.79 15.92-27.7-10.38-12.42-28.35-19.09-40.96-29.24-3.12-2.5-5.9-5.5-9.16-7.84-.62-.45-1.83-1.61-2.55-1.4M584.67.12c6.1-.06 12.21-.28 18.3.07 3.1 1.38-.34 9.92-1.48 12.1-4.85 9.23-17.18 17.35-27.47 18.63-17.84 2.21-30.14-10.47-43.75-19.26-5.58-3.61-20.15-12-24.66-3.38-5.13 9.8 4.75 15.37 12.11 19.02 27.01 13.41 68.3 19.27 60.37 59.96-8.07 41.48-58.89 66.1-97.82 54.2-38.57-11.8-28.02-55.7.85-71.39 1.66-.9 10.1-4.32 10.48-5.62.45-1.56-3.58-5.78-4.54-7.42-10.44-17.77-.23-42.85 16.05-53.42 5.11-3.32 5.47-2.4 11.27-2.64C537.58 0 561.4.33 584.67.12m32.77 2.77c-7.61 1.2-7.75 13.27.06 14.63 12.26 2.14 12.68-16.66-.06-14.63m-5.07.34c4.74-4.5 13.78-2.98 16.04 3.38 3 8.48-4.84 15.38-13.05 12.43-6.22-2.23-7.57-11.46-2.99-15.81"/><path d="M617.52 9.62c3.13.96 5.8-2.12 1.65-2.45-2.1-.17-1.65.67-1.65 2.45m3.55-4.33c1.98.32 3.36 2.24 2.29 4.14-.52.9-1.38.74-1.82 1.42 1.15-.25 2.65 3.86 2.47 4.02-3.15.75-2.24-1.6-3.41-2.62-.8-.7-2.1-.44-3.08-.47v3.1h-2.17v-9.6c1.76.2 4.05-.27 5.72 0"/></symbol><symbol id="sl-running" viewBox="0 0 815.84 151.34"><path d="M71.27 74.45C67.57 95.54 48 108.58 25.1 108.58c-7.39 0-12.66-.85-17.97-1.61-4.88-.7-7.86-4.98-6.97-10.04l4.02-22.92c4.7 6.96 16.49 11.5 25.12 11.5 5.6 0 8.98-2.86 9.68-6.81 2.23-12.74-28.34-15.62-23.15-45.2C19.44 12.9 35.65 0 60.06 0c4.57 0 8.15.63 11.7 1.24 4.89.83 7.8 5.16 6.91 10.25l-3.52 20.06c-3.79-6.07-11.9-9.11-18.87-9.11-5.3 0-8.47 2.41-9.16 6.38-1.99 11.36 29.4 15.62 24.15 45.63m45.78-24.85h5.91a15.5 15.5 0 0 0 15.53-12.45c.98-5.62-2.19-12.58-11.13-12.58h-5.92Zm-9.16 56.55H76.8c1.27-4.69 3.72-16.84 5.52-27.14l8.7-49.59c1.81-10.31 3.67-22.6 4-27.14h39.88c25.17 0 36.72 14.55 33.1 35.17-3.64 20.79-19.7 34.44-45.31 34.44h-9.55L111.9 79c-1.82 10.3-3.64 22.45-4.01 27.14m99.61-57.78h7.29c7.43 0 13.12-4.85 14.22-11.07 1.06-6.06-2.36-11.7-10.7-11.7h-6.8Zm-9.37 57.8h-31.08c1.27-4.7 3.75-16.99 5.56-27.31l8.67-49.43c1.81-10.31 3.66-22.6 4-27.14h38.5c26.54 0 38.42 14.38 34.96 34.12-2.9 16.52-13.45 24.72-25.47 28.51 10.15 13.04 17.56 28.66 29.3 41.24H224.2c-3.96-5.92-14.45-25.63-16.58-36.85-.62.16-1.09.16-1.38.16h-2.44l-1.65 9.4c-1.8 10.3-3.64 22.6-4.02 27.3M302.4 79.01a562 562 0 0 0-4.15 27.14h-30.77a599 599 0 0 0 5.35-27.14l8.7-49.59a572 572 0 0 0 4.17-27.14h30.78a591 591 0 0 0-5.37 27.14Zm36.54 27.14h-29.56a418 418 0 0 0 4.45-21.98l9.42-53.69c1.63-9.26 3.56-22 4.7-30.18h6.22c6.88 8.34 10.7 12.44 14.6 16.23l32.7 33.07L385 29.42a724 724 0 0 0 4.16-27.14h29.57a739 739 0 0 0-5.53 27.14l-9.47 53.98a378 378 0 0 0-3.55 24.57h-5.92c-4.22-5.31-8.17-10.47-12.28-14.7l-35.17-35.5-4.66 26.55a408 408 0 0 0-3.22 21.83M522.28 1.66l-4.53 25.8c-4.5-.3-17-.77-27.47-.77h-3.49a818 818 0 0 0-3.55 19.4l-5.78 32.92c-1.81 10.31-3.64 22.45-4 27.14h-31.4c1.13-4.7 3.72-16.83 5.54-27.14l5.77-32.91a377 377 0 0 0 2.94-19.4h-3.5c-10.3 0-22.81.43-27.4.76l4.51-25.8c4.5.3 16.87.62 27.19.62h37.45c10.46 0 23.1-.33 27.72-.62m34 25.04-2.47 14.1h6.07a502 502 0 0 0 26.35-.62l-4.51 25.64c-4.64-.31-15.8-.61-26.13-.61h-6.07l-2.87 16.38h9.25c10.46 0 21.88-.3 26.5-.62l-4.53 25.8c-4.5-.3-15.82-.62-26.29-.62h-39.56a998 998 0 0 0 5.36-27.14l8.73-49.76a566 566 0 0 0 4.13-26.97h38.36c10.3 0 21.79-.62 26.53-.92l-4.55 25.93c-4.6-.45-15.94-.6-26.25-.6Zm73.26 21.66h7.28c7.43 0 13.12-4.85 14.22-11.07 1.06-6.06-2.36-11.7-10.69-11.7h-6.82Zm-9.38 57.8h-31.08c1.28-4.7 3.74-16.99 5.56-27.31l8.67-49.43c1.81-10.31 3.67-22.6 4-27.14h38.5c26.55 0 38.42 14.38 34.96 34.12-2.9 16.52-13.45 24.72-25.47 28.51 10.15 13.04 17.57 28.66 29.3 41.24h-38.36c-3.97-5.92-14.46-25.63-16.58-36.85-.63.16-1.1.16-1.4.16h-2.43l-1.65 9.4c-1.8 10.3-3.65 22.6-4.02 27.3m142.07-31.71c-3.7 21.09-23.27 34.13-46.17 34.13-7.39 0-12.66-.85-17.97-1.61-4.88-.7-7.85-4.98-6.97-10.04l4.02-22.92c4.7 6.96 16.5 11.5 25.12 11.5 5.6 0 8.99-2.86 9.68-6.81 2.23-12.74-28.34-15.62-23.15-45.2C710.41 12.9 726.62 0 751.03 0c4.57 0 8.14.63 11.7 1.24 4.88.83 7.8 5.16 6.9 10.25l-3.51 20.06c-3.8-6.07-11.9-9.11-18.87-9.11-5.31 0-8.47 2.41-9.17 6.38-1.98 11.36 29.41 15.62 24.15 45.63m36-57.34q1.73 0 2.52-.55.77-.54.78-1.84 0-2.2-3.3-2.2h-3.4v4.6Zm-7.53-8.26h7.7q7.53 0 7.53 5.14a4.4 4.4 0 0 1-1.47 3.49 6 6 0 0 1-3.4 1.47v.08q1.57.1 2.39.83a6 6 0 0 1 1.38 2.02l1.92 4.5h-4.3l-1.3-3.22a3.6 3.6 0 0 0-1.4-1.88 6 6 0 0 0-2.9-.5h-2.02v5.6h-4.13Zm17.34 19.13q3.95-3.9 3.95-10.04 0-6.15-3.95-10.05-3.94-3.9-10.18-3.9t-10.19 3.9q-3.93 3.9-3.94 10.05t3.94 10.04q3.94 3.9 10.2 3.9 6.23 0 10.17-3.9m-19.4 5.27a16.5 16.5 0 0 1-6.38-6.32 18 18 0 0 1-2.29-9q0-4.96 2.3-8.98 2.28-4.04 6.37-6.33t9.22-2.3 9.21 2.3a17 17 0 0 1 6.43 6.33 17.6 17.6 0 0 1 2.34 8.99q0 4.95-2.34 8.99-2.35 4.04-6.43 6.32a18.5 18.5 0 0 1-9.2 2.3q-5.15 0-9.23-2.3m-340.6 98.86h-7.51v-3.67h19.14v3.67h-7.54v18.7h-4.1Zm-184.06 7.66H260v-7.8h4.22q3.25 0 4.6.88t1.34 2.92q0 2.14-1.45 3.07-1.46.93-4.74.93m7.03 2.69q-1.06-.9-3.07-1.1v-.06a8 8 0 0 0 3.07-.87 6.6 6.6 0 0 0 2.4-2.05 5 5 0 0 0 .92-3q0-3.41-2.33-5.14t-7.36-1.72h-8.72v22.37h4.1v-8.02h3.89q1.95 0 3.13.76 1.19.78 1.82 2.4l1.95 4.86h4.64l-2.63-5.84a7 7 0 0 0-1.81-2.6m24.65-1.15q0 3.05-1.65 4.7t-4.65 1.66-4.64-1.66q-1.62-1.65-1.63-4.7v-12.78H279v12.78q-.01 3.1 1.24 5.37a8.3 8.3 0 0 0 3.58 3.47q2.34 1.2 5.53 1.2 3.22 0 5.56-1.2a8.3 8.3 0 0 0 3.58-3.47q1.25-2.26 1.25-5.37v-12.78h-4.1Zm27.1-1.56.13 5.6h-.07l-12.68-16.82h-4.55v22.37h4.1v-11.21l-.13-5.6h.06l12.7 16.81h4.53v-22.37h-4.09Zm36.64 11.15h4.09v-22.37h-4.1Zm27.32-11.15.13 5.6h-.06l-12.69-16.82h-4.54v22.37h4.1v-11.21l-.14-5.6h.07l12.69 16.81h4.53v-22.37h-4.09Zm77.09 11.16h15.69v-3.46h-11.6v-6.1h10.76v-3.26h-10.77v-6.1h11.6v-3.46H463.8Zm29.78-18.8 4.25 11.44h-8.57Zm-2.37-3.58-8.76 22.37h4.13l1.44-3.93h11.06l1.44 3.93h4.15L496 128.52Zm38.59 0-8.51 16.08-8.53-16.08h-4.6l.02 22.37h4.1v-10.13l-.23-5.82h.07l9.07 16.4h.17l9.07-16.4h.07l-.23 5.82v10.13h4.1l.03-22.37Zm-180.16 11.22.13 5.6h-.06l-12.7-16.82h-4.53v22.37h4.1v-11.21l-.14-5.6h.07l12.69 16.81h4.54v-22.37h-4.1Zm67.28-.32h-11.56v2.33h7.24a8.5 8.5 0 0 1-1.7 3.77 6 6 0 0 1-4.91 2.14q-2.94 0-4.5-1.92-1.55-1.91-1.55-5.62 0-4.2 2.1-6.3 2.1-2.07 6.4-2.07 1.67 0 3.5.3 1.85.3 4.4 1.07v-3.84q-2.4-.66-4.25-.94a25 25 0 0 0-3.61-.27q-6.1 0-9.45 3.18t-3.34 9q0 3.39 1.14 5.88a9 9 0 0 0 3.23 3.85q2.1 1.36 4.94 1.36a8 8 0 0 0 5.62-2.06 9 9 0 0 0 2.65-5.67h.06l.33 7.28h3.26v-9.14h.01zm0 0"/></symbol></defs></svg>
+<div class="wrap">
+
+  <svg class="brand-logo brand-logo--lockup" role="img" aria-label="Sprinters — Social Run Club" style="color:var(--bosque);margin-bottom:28px"><use href="#sl-lockup"></use></svg>
+  <h1>Referencia<br>de marca</h1>
+  <p class="lede">Cómo se aplica el brand book en la web. Todo lo de esta página sale de <code>brand.css</code>: si un color cambia acá, cambia en todo el sitio.</p>
+
+  <h2>Paleta</h2>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--bosque)"></div><div class="meta"><div class="name">Bosque</div><div class="hex">#024939</div><div class="use">Color principal. Estructura, links, eyebrows, footer.</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--terracota)"></div><div class="meta"><div class="name">Sprint Terracota</div><div class="hex">#fd521b</div><div class="use">Acento. Solo CTA de conversión y badges.</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--asfaltico)"></div><div class="meta"><div class="name">Asfáltico</div><div class="hex">#1B1B1B</div><div class="use">Texto de cuerpo y fondos oscuros.</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--tierras)"></div><div class="meta"><div class="name">Tierras</div><div class="hex">#e5e5cc</div><div class="use">Texto sobre Bosque. Fondos de arena.</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--sky)"></div><div class="meta"><div class="name">Sky</div><div class="hex">#d7e5ff</div><div class="use">Acento frío. Todavía sin uso asignado.</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--crema)"></div><div class="meta"><div class="name">Crema</div><div class="hex">#faf8ec</div><div class="use">Fondo de página del brand book. Reemplaza al blanco puro en navs y bandas.</div></div></div>
+  </div>
+  <p class="note"><strong>Ojo con una errata del PDF:</strong> bajo el swatch “Tierras” el brand book imprime <code>#024939</code>, que es el mismo hex que Bosque. El color real del swatch es <code>#e5e5cc</code> — lo muestreé del propio archivo. Si el estudio confirma otro valor, se corrige en <code>brand.css</code> y listo.</p>
+
+  <h2>Logo</h2>
+  <div class="logos">
+    <div class="logobox on-white"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters" style="color:var(--bosque)"><use href="#sl-wordmark"></use></svg><span class="cap">Bosque sobre blanco</span></div>
+    <div class="logobox on-cream"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters" style="color:var(--bosque)"><use href="#sl-wordmark"></use></svg><span class="cap">Bosque sobre crema</span></div>
+    <div class="logobox on-bosque"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg><span class="cap">Blanco sobre Bosque</span></div>
+    <div class="logobox on-asfalto"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg><span class="cap">Blanco sobre Asfáltico</span></div>
+    <div class="logobox on-terracota"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg><span class="cap">Asfáltico sobre Terracota</span></div>
+    <div class="logobox on-white"><svg class="brand-logo brand-logo--lockup" role="img" aria-label="Sprinters Social Run Club" style="color:var(--bosque);height:48px"><use href="#sl-lockup"></use></svg><span class="cap">Lockup completo — footer</span></div>
+    <div class="logobox on-white"><svg class="brand-logo brand-logo--running" role="img" aria-label="Sprinters Running Team" style="color:var(--bosque);height:44px"><use href="#sl-running"></use></svg><span class="cap">Running Team — pilar 01</span></div>
+    <div class="logobox on-white"><img src="images/brand/icon-180.png" alt="Isotipo Sprinters" width="72" height="72" style="border-radius:16px"><span class="cap">Isotipo — favicon y app</span></div>
+  </div>
+  <p class="note">El logo es SVG vectorial sacado del brand book (no un trazado sobre PNG), inline como sprite al principio del <code>&lt;body&gt;</code>. Al ser <code>&lt;svg&gt;</code> con <code>fill:currentColor</code> hereda el color de su contenedor, así que cambia solo cuando el nav pasa de transparente a crema. Va inline y no como archivo externo porque abriendo las páginas con doble clic (<code>file://</code>) Chrome bloquea máscaras y referencias externas — así anda igual sin servidor.</p>
+
+  <h2>Navbar</h2>
+  <div class="navdemo">
+    <div class="bar photo"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg><span class="links"><span>Agenda</span><span>Pilares</span><span>Galería</span></span></div>
+    <div class="caption">Arriba del todo — nav transparente sobre el hero. El logo va en blanco.</div>
+  </div>
+  <div class="navdemo">
+    <div class="bar light"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters" style="color:var(--bosque)"><use href="#sl-wordmark"></use></svg><span class="links"><span>Agenda</span><span>Pilares</span><span>Galería</span></span></div>
+    <div class="caption">Después de scrollear 60px — fondo crema translúcido. El logo pasa a Bosque solo.</div>
+  </div>
+
+  <h2>Botones</h2>
+  <div class="btns">
+    <button class="btn primary">Próxima corrida →</button>
+    <button class="btn secondary">Suscribirme</button>
+    <button class="btn ghost">Conocer el club</button>
+  </div>
+  <p class="note">Terracota se reserva para la acción que convierte — una por pantalla. Bosque es para todo lo demás. Si Terracota aparece en cinco botones, deja de ser un acento.</p>
+
+  <h2>Estados</h2>
+  <div class="pills">
+    <span class="pill" style="background:var(--ok-bg);color:var(--ok-fg)">Aprobado</span>
+    <span class="pill" style="background:var(--pending-bg);color:var(--pending-fg)">Pendiente</span>
+    <span class="pill" style="background:var(--error-bg);color:var(--error-fg)">Rechazado</span>
+    <span class="pill" style="background:var(--neutral-bg);color:var(--neutral-fg)">Borrador</span>
+  </div>
+  <p class="note">No son colores de marca, son señales. El rojo de error se mantiene lejos de Terracota a propósito: si se parecieran, un CTA podría leerse como un mensaje de fallo.</p>
+
+  <h2>Contraste</h2>
+  <table class="contrast">
+    <thead><tr><th>Combinación</th><th>Muestra</th><th>Ratio</th><th></th></tr></thead>
+    <tbody id="contrastRows"></tbody>
+  </table>
+  <p class="note">AA pide 4.5:1 para texto normal y 3:1 para texto grande (18px+ o 14px+ en negrita). Blanco sobre Terracota da 3.28:1, así que los botones naranjas llevan texto Asfáltico en vez de blanco — así el naranja de marca queda intacto y el botón se lee.</p>
+
+</div>
+
+<script>
+  const PAIRS = [
+    ['Bosque sobre blanco',            '#024939', '#ffffff'],
+    ['Bosque sobre crema',             '#024939', '#faf8ec'],
+    ['Asfáltico sobre blanco',         '#1b1b1b', '#ffffff'],
+    ['Tierras sobre Bosque',           '#e5e5cc', '#024939'],
+    ['Asfáltico sobre Terracota',      '#1b1b1b', '#fd521b'],
+    ['Blanco sobre Terracota',         '#ffffff', '#fd521b'],
+    ['Gris suave sobre crema',         '#55554f', '#faf8ec'],
+    ['Gris tenue sobre blanco',        '#767670', '#ffffff']
+  ];
+  const lum = h => {
+    const v = [1,3,5].map(i => parseInt(h.substr(i,2),16)/255)
+      .map(c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4));
+    return 0.2126*v[0] + 0.7152*v[1] + 0.0722*v[2];
+  };
+  const ratio = (a,b) => {
+    const [hi,lo] = [lum(a), lum(b)].sort((x,y)=>y-x);
+    return (hi+0.05)/(lo+0.05);
+  };
+  document.getElementById('contrastRows').innerHTML = PAIRS.map(([name,fg,bg]) => {
+    const r = ratio(fg,bg);
+    const ok = r >= 4.5;
+    return `<tr>
+      <td>${name}</td>
+      <td><span class="sample" style="background:${bg};color:${fg}">Sábados 10 AM</span></td>
+      <td class="ratio">${r.toFixed(2)}:1</td>
+      <td><span class="verdict ${ok?'pass':'large'}">${ok?'AA':'solo texto grande'}</span></td>
+    </tr>`;
+  }).join('');
+</script>
+</body>
+</html>

@@ -6,124 +6,258 @@
 <title>Sprinters · Evento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
+<link rel="stylesheet" href="brand.css">
+<link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
+<link rel="icon" href="images/brand/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="images/brand/icon-180.png">
+<meta name="theme-color" content="#024939">
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <style>
-  :root{ --teal:#1f7f8c; --teal-lt:#8bd3dc; --ink:#141412; --muted:#6b6b6b; --line:rgba(20,20,18,.14); --cream:#f6f3ee; }
+  :root{ --teal:var(--bosque); --teal-lt:var(--tierras); /* alias legacy → paleta real */ --ink:var(--asfaltico); --muted:var(--ink-soft); --line:rgba(2,73,57,.14); --cream:var(--crema); }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#fff;color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  /* Fondo de página: Crema, no blanco puro (sprinters-style.json → artDirection
+     .principles "Nada de blanco puro en las superficies grandes"). El blanco
+     se reserva para la card de inscripción, que así se despega de la página. */
+  body{background:var(--crema);color:var(--ink);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
   img{display:block;max-width:100%}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer}
-  .display{font-family:'Inter',sans-serif}
-  .eyebrow{font-family:'Inter';font-size:11px;letter-spacing:.3em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+  .display{font-family:'Poppins',sans-serif}
+  /* Bosque por defecto: funciona para el eyebrow "Ups" del estado de error,
+     que va sobre fondo claro. El del hero lo pisa más abajo (.hero-info-content
+     .eyebrow) porque ahí el fondo es oscuro y necesita Tierras para leerse. */
+  .eyebrow{font-family:'Poppins';font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:var(--bosque)}
 
   /* ===== Top bar ===== */
-  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,48px);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar .back{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px clamp(20px,4vw,48px);background:rgba(250,248,236,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  /* white-space:nowrap evita que "Volver a la agenda" / "Mi cuenta" se
+     partan en dos líneas cuando el logo del medio les deja poco lugar. */
+  .topbar .back{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;font-family:'Poppins';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
   .topbar .back:hover{opacity:1}
-  .topbar .brand{font-family:'Inter';font-weight:500;letter-spacing:.24em;font-size:14px;text-transform:uppercase}
+  /* La marca es el logo real: tamaño y máscara vienen de brand.css */
+  .topbar .brand{display:inline-flex;align-items:center;flex-shrink:0;line-height:0;color:var(--bosque)}
 
   /* ===== Hero split ===== */
   .hero{display:grid;grid-template-columns:1fr 1fr;min-height:640px}
   @media (max-width:900px){.hero{grid-template-columns:1fr;min-height:auto}}
-  .hero-img-col{position:relative;overflow:hidden;background:#111}
+  .hero-img-col{position:relative;overflow:hidden;background:var(--bosque-900)}
   .hero-img-col img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-  @media (max-width:900px){.hero-img-col{aspect-ratio:4/5}.hero-img-col img{position:static;height:100%}}
+  /* La proporción de la foto en mobile se define abajo, en el bloque de mobile. */
+  @media (max-width:900px){.hero-img-col img{position:static;height:100%}}
 
   .hero-info-col{position:relative;padding:clamp(40px,5vw,72px);display:flex;flex-direction:column;justify-content:center;overflow:hidden;color:#fff}
   .hero-info-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(22px) saturate(1.1) brightness(.6);transform:scale(1.15);z-index:0}
-  .hero-info-fade{position:absolute;inset:0;background:linear-gradient(160deg,rgba(9,22,24,.72) 0%,rgba(9,22,24,.88) 100%);z-index:1}
+  .hero-info-fade{position:absolute;inset:0;background:linear-gradient(160deg,rgba(2,42,33,.72) 0%,rgba(2,42,33,.88) 100%);z-index:1}
   .hero-info-content{position:relative;z-index:2}
 
+  /* Eyebrow sobre el hero oscuro: Tierras, no Bosque (que se confundiría con
+     el fondo). Es la aplicación que pide components.hero del brand JSON. */
+  .hero-info-content .eyebrow{color:var(--tierras)}
   .hero-info-content .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 22px}
-  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
+  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
 
-  .hero-info-content h1{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
+  .hero-info-content h1{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
+  /* .desc pasó de <p> a <div> porque ahora puede contener varios <p>, uno por
+     párrafo real de la descripción (ver renderDescription). */
   .hero-info-content .desc{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.85);font-weight:300;max-width:52ch;margin-bottom:26px}
+  .hero-info-content .desc p{margin:0 0 14px}
+  .hero-info-content .desc p:last-child{margin-bottom:0}
 
   .itinerary{display:flex;flex-direction:column;gap:0;margin-bottom:26px;max-width:420px}
   .itinerary-item{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:12px 0;border-top:1px solid rgba(255,255,255,.16)}
   .itinerary-item:last-child{border-bottom:1px solid rgba(255,255,255,.16)}
-  .itinerary-item .t{font-family:'Inter';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
+  .itinerary-item .t{font-family:'Poppins';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
   .itinerary-item .l{font-size:13px;color:rgba(255,255,255,.85);font-weight:300}
 
-  .price-row{margin-bottom:22px}
-  .price-row .amount{font-family:'Inter';font-size:38px;font-weight:400}
-  .price-row .note{font-size:12px;color:rgba(255,255,255,.6)}
-  .price-breakdown{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
-  .price-item{display:flex;flex-direction:column;gap:3px}
-  .price-item .num{font-family:'Inter';font-size:38px;font-weight:400;line-height:1;white-space:nowrap}
-  .price-item .lab{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-  .price-plus{font-family:'Inter';font-size:26px;font-weight:300;color:rgba(255,255,255,.4);padding-bottom:5px}
-  .price-total-big{margin-top:12px;font-family:'Inter';font-size:23px;font-weight:600;color:var(--teal-lt);letter-spacing:.01em}
-  .price-total-big .lab{font-family:'Inter';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-right:8px}
-  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--teal-lt);color:#0b2a2e;padding:8px 14px;border-radius:999px;margin-bottom:22px}
+  /* ===== Precio =====
+     El precio es la información que más se busca en esta pantalla, así que
+     va grande y siempre visible. El desglose Run + After run se muestra
+     exista o no cobro nuestro del after: cuánto sale es un dato del evento.
+     Quién lo cobra cambia el texto, no la visibilidad. */
+  .price-row{margin-bottom:24px}
+  .price-row .amount{font-family:'Poppins';font-size:clamp(40px,7vw,62px);font-weight:400;line-height:1;display:block;font-variant-numeric:tabular-nums}
+  .price-row .note{font-size:12.5px;color:rgba(255,255,255,.65);display:block;margin-top:8px;line-height:1.5}
+  /* align-items:flex-end anclaba los dos items por abajo: como "After run"
+     tiene una tercera línea (el tag "se paga en el lugar") que "Run" no
+     tiene, el número de After run quedaba empujado más arriba que el de Run.
+     Con flex-start los dos números arrancan a la misma altura sin importar
+     cuánto texto tengan debajo — que es lo que se pidió: "a la misma altura". */
+  .price-breakdown{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
+  .price-item{display:flex;flex-direction:column;gap:4px}
+  .price-item .num{font-family:'Poppins';font-size:clamp(34px,5.6vw,52px);font-weight:400;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .price-item .lab{font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+  .price-item .tag{font-size:11.5px;color:rgba(255,255,255,.55);font-weight:300}
+  /* El "+" se centra contra la altura del número, no contra el item entero
+     (que puede ser más alto por el tag). clamp acompaña la diferencia de
+     tamaño entre el signo y el número en cada breakpoint. */
+  .price-plus{font-family:'Poppins';font-size:clamp(22px,3vw,30px);font-weight:300;color:rgba(255,255,255,.4);align-self:flex-start;margin-top:clamp(4px,.9vw,8px)}
+  .price-total-big{margin-top:14px;font-family:'Poppins';font-size:clamp(20px,3vw,26px);font-weight:600;color:var(--teal-lt);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+  .price-total-big .lab{display:block;font-family:'Poppins';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px}
+  /* Badge "featured" del brand JSON: fondo Terracota, texto Asfáltico, ✦.
+     Antes era Tierras/Bosque-900, que es la paleta de un chip neutro, no la
+     de un beneficio destacado. */
+  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins';font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;background:var(--terracota);color:var(--on-accent);padding:8px 14px;border-radius:999px;margin-bottom:22px}
 
   .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
-  .btn-primary{background:var(--teal);color:#fff}
-  .btn-primary:hover{filter:brightness(1.08)}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Poppins';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
+  /* CTA primario en Terracota, no en Bosque: el brand JSON reserva el naranja
+     para la única acción que convierte por pantalla (components.buttons.primary).
+     El texto va en Asfáltico — blanco sobre #fd521b no llega a 4.5:1 de contraste. */
+  .btn-primary{background:var(--terracota);color:var(--on-accent)}
+  .btn-primary:hover{background:var(--terracota-700)}
   .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.4)}
   .btn-ghost:hover{background:rgba(255,255,255,.18)}
   .btn:disabled{opacity:.5;cursor:not-allowed}
 
-  .urgency{font-family:'Inter';font-size:11.5px;letter-spacing:.08em;color:var(--teal-lt);margin-bottom:8px}
-  .urgency.warn{color:#f3b98a}
+  /* Urgencia: el estado normal (cupos, cierre próximo) queda en Tierras;
+     "warn" (cierra hoy, quedan pocos lugares) pasa a Terracota — es
+     exactamente el caso de uso que el brand JSON describe para el naranja:
+     "un dato urgente o cuenta regresiva". */
+  .urgency{font-family:'Poppins';font-size:11.5px;letter-spacing:.08em;color:var(--tierras);margin-bottom:8px}
+  .urgency.warn{color:var(--terracota);font-weight:500}
 
   /* ===== Inscripción section ===== */
-  .insc{max-width:760px;margin:0 auto;padding:clamp(60px,8vh,96px) clamp(20px,5vw,0) clamp(80px,10vh,120px)}
-  .insc .eyebrow{margin-bottom:14px;display:block}
-  .insc h2{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
+  /* El padding lateral era clamp(20px,5vw,0): el máximo quedaba por debajo del
+     mínimo, así que el clamp colapsaba a 20px y nunca acompañaba al viewport. */
+  .insc{max-width:760px;margin:0 auto;padding:clamp(56px,8vh,96px) clamp(20px,5vw,32px) clamp(80px,10vh,120px)}
+  .insc h2{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
 
-  .card{background:var(--cream);border-radius:8px;padding:clamp(24px,3vw,36px)}
-  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
-  .status-pill.ok{background:#dcefe0;color:#1e5e34}
-  .status-pill.pending{background:#fdf0d5;color:#8a5a12}
-  .status-pill.rejected{background:#fbe2e0;color:#a02418}
+  /* La card blanca se despega de la página Crema (shape.webRadii.card=14px,
+     borde en línea de Bosque). Antes era del mismo tono que la página: ni
+     card ni fondo, todo un mismo bloque plano. */
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:clamp(24px,3vw,36px)}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
+  .status-pill.ok{background:var(--ok-bg);color:var(--ok-fg)}
+  .status-pill.pending{background:var(--pending-bg);color:var(--pending-fg)}
+  .status-pill.rejected{background:var(--error-bg);color:var(--error-fg)}
 
   .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
   .toggle-row:last-of-type{border-bottom:1px solid var(--line)}
   .toggle-row .lab{font-size:13.5px;font-weight:500}
   .toggle-row .sub{font-size:12px;color:var(--muted);margin-top:2px}
-  .switch{position:relative;width:46px;height:26px;border-radius:999px;background:#d8d4cb;flex-shrink:0;transition:background .2s;border:none;cursor:pointer}
+  .switch{position:relative;width:46px;height:26px;border-radius:999px;background:var(--crema-2);flex-shrink:0;transition:background .2s;border:none;cursor:pointer}
   .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .switch.on{background:var(--teal)}
   .switch.on::after{transform:translateX(20px)}
 
-  .transfer-box{margin-top:22px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:8px}
+  /* Dentro de la card blanca, los bloques anidados (transferencia, info) van
+     en Crema-2 para que se noten como un nivel más adentro, en vez de
+     perderse contra el blanco de la card que los contiene. */
+  .transfer-box{margin-top:22px;padding:20px;background:var(--crema-2);border:1px solid var(--line);border-radius:12px}
   .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
-  .transfer-box .k{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .transfer-box .k{font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .transfer-box .v{font-size:14px;font-weight:600}
-  .copy-btn{font-family:'Inter';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
+  .copy-btn{font-family:'Poppins';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
   .copy-btn:hover{background:var(--teal);color:#fff}
 
   .upload-row{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--ink);font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  /* Los bordes tiran a Bosque, no a negro (shape.borders del brand JSON). */
+  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--bosque);font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
   .file-name{font-size:12.5px;color:var(--muted)}
 
   .legal-note{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:16px}
 
   .price-line{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0}
   .price-line.total{font-weight:700;border-top:1px solid var(--line);margin-top:4px;padding-top:10px}
-  .info-block{font-size:12.5px;color:var(--muted);line-height:1.65;margin:14px 0;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:8px}
+  .info-block{font-size:12.5px;color:var(--muted);line-height:1.65;margin:14px 0;padding:14px 16px;background:var(--crema-2);border:1px solid var(--line);border-radius:12px}
   .terms-row{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:12.5px;line-height:1.5}
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
   .terms-row a{color:var(--teal);text-decoration:underline;font-weight:600}
 
-  .footer-mini{text-align:center;padding:40px 20px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .footer-mini{text-align:center;padding:40px 20px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* ===== Barra fija de mobile =====
+     En mobile el CTA queda muy lejos: el hero es alto y hay que scrollear
+     mucho para volver a él. Esta barra deja precio y acción siempre a mano,
+     y se esconde sola cuando el formulario de inscripción entra en pantalla
+     para no taparlo. */
+  .mobile-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;
+    align-items:center;justify-content:space-between;gap:14px;
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+    background:rgba(250,248,236,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    transform:translateY(110%);transition:transform .3s cubic-bezier(.22,.7,.2,1);
+  }
+  .mobile-bar.show{transform:translateY(0)}
+  .mobile-bar .mb-price{font-family:'Poppins';font-size:19px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mobile-bar .mb-sub{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .mobile-bar .btn{padding:13px 20px;font-size:11px;flex-shrink:0}
+
+  /* ===== Mobile ===== */
+  @media (max-width:900px){
+    /* 4/5 dejaba una foto altísima que empujaba todo el contenido fuera de
+       pantalla; apaisada se ve el evento y el título de una. */
+    .hero-img-col{aspect-ratio:16/11}
+    .hero-info-col{padding:32px 20px 36px}
+  }
+  @media (max-width:640px){
+    .topbar{padding:14px 18px}
+    .topbar .back{font-size:10px;letter-spacing:.14em}
+    .topbar .back span{display:none}          /* deja solo "Volver" / "Mi cuenta", sin flecha ni "a la agenda" */
+
+    .hero-info-content h1{font-size:clamp(30px,8vw,40px)}
+    .hero-info-content .desc{font-size:14px;margin-bottom:22px}
+    .meta-chip{font-size:10px;letter-spacing:.1em;padding:6px 11px}
+    .hero-info-content .meta-row{gap:8px;margin:14px 0 18px}
+
+    /* El desglose de precio en fila se parte feo: apilado se lee mejor */
+    .price-breakdown{flex-direction:column;align-items:flex-start;gap:12px}
+    .price-plus{display:none}
+    .price-item{flex-direction:row;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .price-item .num{font-size:34px}
+    .price-item .lab{font-size:10.5px}
+    .price-item .tag{width:100%}
+
+    .itinerary{max-width:none}
+    .itinerary-item{grid-template-columns:48px 1fr;gap:10px;padding:10px 0}
+
+    /* Los CTA a ancho completo, uno debajo del otro */
+    .cta-row{flex-direction:column;gap:10px}
+    .cta-row .btn{width:100%;justify-content:center}
+
+    .card{padding:20px 18px;border-radius:14px}
+    .insc h2{font-size:26px;margin-bottom:20px}
+
+    /* La fila alias / nombre / copiar no entra en una línea */
+    .transfer-box{padding:16px}
+    .transfer-box .row{flex-wrap:wrap;row-gap:4px;padding:10px 0;border-bottom:1px solid var(--line)}
+    .transfer-box .row:last-child{border-bottom:none}
+    .transfer-box .k{width:100%}
+    .transfer-box .v{font-size:15px;word-break:break-word}
+
+    .upload-row{gap:10px}
+    .file-btn{width:100%;justify-content:center}
+    .file-name{width:100%;text-align:center}
+
+    .toggle-row{align-items:flex-start;gap:12px}
+    .toggle-row .lab{font-size:13px}
+
+    #reserveBtn{width:100%;justify-content:center}
+
+    .mobile-bar{display:flex}
+    /* Aire para que la barra fija no tape el final de la página */
+    body{padding-bottom:78px}
+  }
 </style>
 </head>
 <body>
+<!-- Sprite del logo. Va inline y no como <img> ni mask porque así el SVG
+     hereda currentColor (el logo cambia de color con el nav) y porque
+     abriendo los archivos con file:// Chrome bloquea las máscaras externas.
+     Fuente: vectores del brand book, no un trazado sobre PNG. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="sl-wordmark" viewBox="0 0 1105.3 146.98"><path d="M63.66 38.92c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8C92.24.8 87.5 0 81.22 0 48.16 0 26.26 17.42 21.35 45.4c-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.96-73.79h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.34 73.59 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1C339.8 126.7 329.7 105.61 316 87.77c16.3-5.06 30.43-16.2 34.35-38.52C355.04 22.5 339 3.02 303.1 3.02H251c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15H281Zm134.93 5.06c2.45-14 5.79-30.62 7.25-36.7h-41.57c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6M669.84 3.02h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.16-35.1c-6.33.42-21.9 1.21-35.87 1.21H718.3c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81H740.4l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9H840c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.57 4.25c.92-5.27 5.36-8.52 12.44-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.33 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.12 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22Zm0 0"/></symbol></defs></svg>
 
 <nav class="topbar">
-  <a href="Landing v2.html#agenda" class="back"><span>←</span> Volver a la agenda</a>
-  <a href="Landing v2.html" class="brand">Sprinters<sup style="font-size:.55em;opacity:.6">®</sup></a>
+  <a href="Landing v2.html#agenda" class="back"><span class="back-arrow">←</span> Volver<span class="back-rest"> a la agenda</span></a>
+  <a href="Landing v2.html" class="brand" aria-label="Sprinters — Social Run Club, volver al inicio"><svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg></a>
   <a href="Cuenta.html" class="back" id="navAccount">Mi cuenta</a>
 </nav>
 
-<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Inter';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
+<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Poppins';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
 
 <div id="notFoundState" style="display:none;padding:120px 20px;text-align:center">
   <div class="eyebrow" style="margin-bottom:14px">Ups</div>
@@ -145,7 +279,7 @@
         <div class="eyebrow" id="evEyebrow">Evento</div>
         <div class="meta-row" id="evMetaRow"></div>
         <h1 id="evTitle">—</h1>
-        <p class="desc" id="evDesc"></p>
+        <div class="desc" id="evDesc"></div>
 
         <div id="evItinerary" class="itinerary" style="display:none"></div>
 
@@ -163,11 +297,19 @@
 
   <!-- ===== INSCRIPCIÓN ===== -->
   <section class="insc" id="inscripcion">
-    <span class="eyebrow">Tu lugar</span>
     <h2>Reservá tu lugar</h2>
     <div class="card" id="inscCard"><!-- llenado por JS --></div>
     <p class="legal-note">Los eventos pagos se confirman por transferencia bancaria. Subís tu comprobante acá mismo y un admin del club lo revisa en menos de 24 hs — nada de tarjetas ni pasarelas de pago.</p>
   </section>
+
+  <!-- Barra fija de mobile: precio + acción siempre visibles -->
+  <div class="mobile-bar" id="mobileBar">
+    <div>
+      <div class="mb-price" id="mbPrice">—</div>
+      <div class="mb-sub" id="mbSub"></div>
+    </div>
+    <a href="#inscripcion" class="btn btn-primary" id="mbCta">Reservar →</a>
+  </div>
 </div>
 
 <div class="footer-mini">© 2026 Sprinters · Mendoza, AR</div>
@@ -193,7 +335,8 @@ document.addEventListener('DOMContentLoaded', function(){
   const EV_TAG = { running: 'Running', social: 'Social' };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmtDate = (iso) => new Intl.DateTimeFormat('es-AR', { weekday:'long', day:'2-digit', month:'long' }).format(new Date(iso));
-  const fmtTime = (iso) => new Intl.DateTimeFormat('es-AR', { hour:'2-digit', minute:'2-digit' }).format(new Date(iso));
+  // hour12:false — ver misma nota en Landing v2: sin esto quedaba '06:39 p. m. hs'.
+  const fmtTime = (iso) => new Intl.DateTimeFormat('es-AR', { hour:'2-digit', minute:'2-digit', hour12:false }).format(new Date(iso));
 
   const evId = new URLSearchParams(location.search).get('id');
   let session = null;
@@ -231,6 +374,22 @@ document.addEventListener('DOMContentLoaded', function(){
     show('eventContent', true);
   }
 
+  // El textarea de Admin guarda los saltos de línea tal cual los escribís
+  // (Enter = \n en el valor). El bug era que evDesc era un <p> y se llenaba
+  // con textContent: el HTML colapsa cualquier salto de línea a un espacio,
+  // así que tres párrafos separados terminaban leyéndose como uno solo.
+  // Ahora partimos por salto de línea (uno o más seguidos cuentan como un
+  // solo corte, para bancar tanto Enter simple como Enter doble) y armamos
+  // un <p> por párrafo.
+  function renderDescription(text){
+    const el = document.getElementById('evDesc');
+    const raw = String(text || '').replace(/\r\n?/g, '\n').trim();
+    if (!raw){ el.style.display = 'none'; return; }
+    el.style.display = '';
+    const paragraphs = raw.split(/\n+/).map(p => p.trim()).filter(Boolean);
+    el.innerHTML = paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
+  }
+
   function effectivePrice(){
     if (event_.included_in_running_pro && userIsPro) return 0;
     return Number(event_.base_price || 0);
@@ -243,10 +402,12 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('evBgBlur').style.backgroundImage = `url('${img}')`;
     document.title = 'Sprinters · ' + event_.title;
 
-    document.getElementById('evEyebrow').textContent = EV_TAG[event_.branch] || event_.branch || 'Evento';
+    // custom_tag es la etiqueta editable desde Admin (columna nueva, ver
+    // db/2026-08-06_event_custom_tag.sql). Si está vacía, cae al nombre de
+    // la categoría (Running/Social) como venía siendo.
+    document.getElementById('evEyebrow').textContent = event_.custom_tag || EV_TAG[event_.branch] || event_.branch || 'Evento';
     document.getElementById('evTitle').textContent = event_.title;
-    document.getElementById('evDesc').textContent = event_.description || '';
-    if (!event_.description) document.getElementById('evDesc').style.display = 'none';
+    renderDescription(event_.description);
 
     // Meta chips: fecha, hora, ubicación
     const metaRow = document.getElementById('evMetaRow');
@@ -298,37 +459,97 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     const priceRow = document.getElementById('evPriceRow');
     const afterRunPrice = Number(event_.after_run_price || 0);
-    // 'organizer' = lo cobramos nosotros y va al total. 'on_site' (default) =
-    // paga cada uno en el bar, así que el monto es solo referencia.
+    // 'organizer' = lo cobramos nosotros, entra en la transferencia y suma al
+    // total. 'on_site' (default) = paga cada uno en el bar.
+    // Ojo: esto define QUIÉN COBRA, no si el precio se muestra. El monto del
+    // after run se muestra siempre — es un dato del evento que la gente
+    // necesita para decidir si va. Antes solo aparecía en grande cuando lo
+    // cobrábamos nosotros y en el resto de los casos quedaba en una nota chica.
     const afterRunByUs = event_.after_run_payment === 'organizer';
-    const hasAfterRunPrice = event_.has_after_run && afterRunPrice > 0 && afterRunByUs;
-    const afterRunOnSite = event_.has_after_run && afterRunPrice > 0 && !afterRunByUs;
+    const showAfterRun = event_.has_after_run && afterRunPrice > 0;
+    const money = n => '$' + n.toLocaleString('es-AR');
 
-    if (price === 0 && !hasAfterRunPrice){
-      priceRow.innerHTML = `<span class="amount">Gratis</span>`
-        + (afterRunOnSite ? `<span class="note">After run $${afterRunPrice.toLocaleString('es-AR')} — se paga en el lugar</span>` : '');
-    } else if (!hasAfterRunPrice){
-      priceRow.innerHTML = `<span class="amount">$${price.toLocaleString('es-AR')}</span><span class="note">Run · transferencia + comprobante</span>`
-        + (afterRunOnSite ? `<span class="note">After run $${afterRunPrice.toLocaleString('es-AR')} — se paga en el lugar</span>` : '');
+    if (!showAfterRun){
+      priceRow.innerHTML = price === 0
+        ? `<span class="amount">Gratis</span>`
+        : `<span class="amount">${money(price)}</span><span class="note">Transferencia + comprobante</span>`;
     } else {
-      const total = price + afterRunPrice;
-      priceRow.innerHTML = `
+      const breakdown = `
         <div class="price-breakdown">
-          <div class="price-item"><span class="num">${price === 0 ? 'Gratis' : '$' + price.toLocaleString('es-AR')}</span><span class="lab">Run</span></div>
+          <div class="price-item">
+            <span class="num">${price === 0 ? 'Gratis' : money(price)}</span>
+            <span class="lab">Run</span>
+          </div>
           <span class="price-plus">+</span>
-          <div class="price-item"><span class="num">$${afterRunPrice.toLocaleString('es-AR')}</span><span class="lab">After run</span></div>
-        </div>
-        <div class="price-total-big"><span class="lab">Total con after run</span>$${total.toLocaleString('es-AR')}</div>
-        <div class="note" style="margin-top:8px">Transferencia + comprobante</div>`;
+          <div class="price-item">
+            <span class="num">${money(afterRunPrice)}</span>
+            <span class="lab">After run</span>
+            ${afterRunByUs ? '' : '<span class="tag">se paga en el lugar</span>'}
+          </div>
+        </div>`;
+
+      if (afterRunByUs){
+        // Lo cobramos nosotros: el after run entra en la misma transferencia.
+        priceRow.innerHTML = breakdown
+          + `<div class="price-total-big"><span class="lab">Total con after run</span>${money(price + afterRunPrice)}</div>`
+          + `<span class="note">Transferencia + comprobante</span>`;
+      } else {
+        // Se paga en el lugar: mostramos el monto pero no lo sumamos, porque
+        // ese dinero no pasa por nosotros.
+        priceRow.innerHTML = breakdown
+          + `<span class="note">${price === 0
+                ? 'El run es gratis. El after run lo abona cada uno en el lugar.'
+                : 'Por transferencia abonás solo el run. El after run lo abona cada uno en el lugar.'}</span>`;
+      }
     }
+
+    renderMobileBar({ price, afterRunPrice, showAfterRun, afterRunByUs, money });
 
     // Compartir
     document.getElementById('ctaShare').addEventListener('click', () => {
-      const text = `Vengo a ${event_.title} con Sprinters — ${fmtDate(event_.event_date)}. ${location.href}`;
+      const text = `Voy a ${event_.title} el ${fmtDate(event_.event_date)}. ${location.href}`;
       window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
     });
 
     renderInscripcion();
+  }
+
+  // Barra fija de mobile. Repite precio y acción porque en pantallas chicas el
+  // CTA del hero queda muy arriba: sin esto hay que scrollear de vuelta para
+  // encontrarlo. Se esconde cuando el formulario entra en pantalla.
+  function renderMobileBar({ price, afterRunPrice, showAfterRun, afterRunByUs, money }){
+    const bar = document.getElementById('mobileBar');
+    if (!bar) return;
+
+    let big, sub;
+    if (showAfterRun && afterRunByUs){
+      big = money(price + afterRunPrice);
+      sub = 'Run + after run';
+    } else if (showAfterRun){
+      big = price === 0 ? 'Gratis' : money(price);
+      sub = '+ ' + money(afterRunPrice) + ' after run en el lugar';
+    } else {
+      big = price === 0 ? 'Gratis' : money(price);
+      sub = price === 0 ? 'Sin costo' : 'Por transferencia';
+    }
+    document.getElementById('mbPrice').textContent = big;
+    document.getElementById('mbSub').textContent = sub;
+
+    const cta = document.getElementById('mbCta');
+    const cerrado = closedByCutoff() || soldOut();
+    if (cerrado && !existingReg) cta.textContent = 'Ver estado →';
+    else if (existingReg) cta.textContent = 'Mi reserva →';
+
+    const insc = document.getElementById('inscripcion');
+    const hero = document.querySelector('.hero');
+    if (!('IntersectionObserver' in window) || !insc || !hero){ bar.classList.add('show'); return; }
+
+    let heroOut = false, inscVisible = false;
+    const sync = () => bar.classList.toggle('show', heroOut && !inscVisible);
+    new IntersectionObserver(([e]) => { heroOut = !e.isIntersecting; sync(); },
+      { rootMargin: '-60% 0px 0px 0px' }).observe(hero);
+    new IntersectionObserver(([e]) => { inscVisible = e.isIntersecting; sync(); },
+      { threshold: 0.12 }).observe(insc);
   }
 
   function closedByCutoff(){
@@ -344,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (!session){
       card.innerHTML = `
         <p style="margin-bottom:18px;font-size:14px;line-height:1.6">Necesitás una cuenta gratis para reservar tu lugar. Se crea en dos minutos.</p>
-        <a href="Cuenta.html?event=${encodeURIComponent(evId)}" class="btn btn-primary" style="background:var(--ink)">Crear cuenta y reservar →</a>`;
+        <a href="Cuenta.html?event=${encodeURIComponent(evId)}" class="btn btn-primary" style="background:var(--bosque);color:#fff">Crear cuenta y reservar →</a>`;
       return;
     }
 
