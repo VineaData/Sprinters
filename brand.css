@@ -113,6 +113,44 @@
   color:inherit;
 }
 
+/* ============================================================
+   TIPOGRAFÍA DISPLAY · Harper Bold
+   ============================================================
+   Harper es la tipografía del brand book. Va SOLO en titulares grandes:
+   es una display de un único peso (bold), con contraformas muy chicas,
+   que de ~26px para abajo se empasta y deja de leerse. Todo el resto del
+   sitio — cuerpo, etiquetas, nav, precios, botones — sigue en Inter.
+
+   Le faltan el guion largo (—) y el punto medio (·). No es un problema:
+   si un título los usa, esos dos caracteres caen a Inter por el fallback
+   del stack. Por eso Inter va sí o sí como segunda opción, nunca a secas.
+
+   Convertida de OTF (333 KB) a WOFF2 (35 KB) con fontTools.
+
+   LICENCIA: el archivo original es la versión "Personal Use" de Harper
+   (Ryan Rivaldo Vierra). Para uso comercial hace falta comprar la licencia
+   escribiendo a ryanrivaldovierrag@gmail.com. Queda anotado acá para que
+   el día que se compre, o que haya que sacarla, se sepa de dónde salió.
+
+   El logotipo NO depende de esto: es el sprite SVG de más arriba y se ve
+   igual aunque la fuente no cargue. */
+@font-face{
+  font-family:'Harper';
+  src:url('images/fonts/harper-bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;               /* el titular se ve en Inter y "salta" a Harper al cargar */
+}
+
+/* Aplicar solo a titulares grandes (h1 / h2 de hero y de sección).
+   Harper viene únicamente en bold, así que pisa el font-weight:300 que
+   traían los títulos: es el peso real de la marca, no un descuido. */
+.display-brand{
+  font-family:'Harper','Inter',sans-serif !important;
+  font-weight:700 !important;
+  letter-spacing:0 !important;     /* Harper ya es ancha: el tracking extra la separa de más */
+}
+
 .brand-logo{
   display:block;
   fill:currentColor;              /* de acá sale el color: lo hereda del nav */

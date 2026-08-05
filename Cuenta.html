@@ -6,7 +6,7 @@
 <title>Sprinters · Tu cuenta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
 <link rel="stylesheet" href="brand.css">
 <link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
@@ -15,24 +15,34 @@
 <meta name="theme-color" content="#024939">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+  /* Esta página venía de una maqueta "minimalist white": todo lo interactivo
+     (píldora de tabs, foco de los campos, opciones elegidas, botón) usaba
+     --ink, que es Asfáltico #1B1B1B. Se leía como blanco y negro genérico,
+     no como Sprinters. Ahora lo estructural va en Bosque y el CTA en
+     Terracota, que es el reparto que fija el brand book. Asfáltico queda
+     donde corresponde: el texto.
+
+     Los grises de las líneas también pasan a tener Bosque adentro
+     (rgba(2,73,57,...)) en vez de negro puro: es lo que hace que los bordes
+     se sientan parte de la paleta y no un gris de sistema. */
   :root{
-    --bg:#ffffff;
+    --bg:var(--crema);              /* nada de blanco puro en superficies grandes */
     --ink:var(--asfaltico);
     --ink-2:var(--asfaltico);
     --muted:var(--ink-soft);
     --muted-2:var(--ink-muted);
-    --line:rgba(10,10,10,.10);
-    --line-2:rgba(10,10,10,.06);
+    --line:rgba(2,73,57,.14);
+    --line-2:rgba(2,73,57,.08);
     --rust:var(--terracota);
-    --marker:#024939;
-    --marker-fg:#e5e5cc;
-    --field-bg:var(--crema);
-    --field-border:rgba(10,10,10,.10);
-    --field-border-hover:rgba(10,10,10,.22);
+    --marker:var(--bosque);
+    --marker-fg:var(--tierras);
+    --field-bg:#ffffff;             /* el campo es la superficie clara sobre Crema */
+    --field-border:rgba(2,73,57,.16);
+    --field-border-hover:rgba(2,73,57,.34);
     --error:var(--error-fg);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{background:var(--bg);color:var(--ink);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
   body{min-height:100vh;overflow-x:clip}
   a{color:inherit;text-decoration:none}
   img{display:block;max-width:100%}
@@ -49,12 +59,12 @@
 
   /* ====== Top nav ====== */
   nav.top{position:sticky;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 36px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-2)}
-  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
+  nav.top .back{display:inline-flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .2s}
   nav.top .back:hover{opacity:1}
-  nav.top .back .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:16px;line-height:1}
-  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Poppins',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
-  nav.top .brand sup{font-family:'Poppins',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
-  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
+  nav.top .back .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1}
+  nav.top .brand{display:inline-flex;align-items:baseline;gap:8px;font-family:'Inter',sans-serif;font-style:italic;font-weight:900;letter-spacing:-0.02em;font-size:18px;text-transform:uppercase;color:var(--ink)}
+  nav.top .brand sup{font-family:'Inter',sans-serif;font-style:normal;font-size:9px;font-weight:500;opacity:.45;letter-spacing:0;vertical-align:super}
+  nav.top .help{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.65}
   @media (max-width:720px){nav.top{padding:14px 18px}nav.top .help span{display:none}nav.top .back span:not(.a){display:none}}
 
   /* ====== Layout ====== */
@@ -62,19 +72,20 @@
   @media (max-width:980px){.page{grid-template-columns:1fr}}
 
   /* ===== Aside hero ===== */
-  .aside{background:var(--ink);color:#fff;padding:80px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:100%}
-  .aside .lab{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
+  .aside{background:var(--bosque);color:#fff;padding:80px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:100%}
+  .aside .lab{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;opacity:.55;display:inline-flex;align-items:center;gap:14px}
   .aside .lab::before{content:"";width:30px;height:1px;background:currentColor;opacity:.6}
-  .aside h1{font-family:'Poppins',sans-serif;font-weight:400;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:-0.022em;text-transform:uppercase;margin-top:38px}
+  /* Titular display: Harper (ver @font-face en brand.css). */
+  .aside h1{font-family:'Harper','Inter',sans-serif;font-weight:700;font-size:clamp(48px,5.5vw,84px);line-height:.92;letter-spacing:0;text-transform:uppercase;margin-top:38px}
   .aside h1 em{font-style:italic;color:var(--marker-fg)}
-  .aside .lede{font-family:'Poppins',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
+  .aside .lede{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;opacity:.75;max-width:36ch;margin-top:24px;font-weight:400}
   .aside .perks{display:flex;flex-direction:column;gap:18px;margin-top:40px}
-  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Poppins',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
-  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
-  .aside .perk strong{display:block;font-family:'Poppins',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
+  .aside .perk{display:flex;align-items:flex-start;gap:14px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;font-weight:400}
+  .aside .perk .icn{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-style:italic;font-size:14px;color:var(--marker-fg)}
+  .aside .perk strong{display:block;font-family:'Inter',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;font-size:11px;margin-bottom:4px}
   .aside .perk span{opacity:.7}
-  .aside .signature{font-family:'Poppins',sans-serif;font-style:italic;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
-  .aside .footer-note{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
+  .aside .signature{font-family:'Inter',sans-serif;font-style:italic;color:var(--marker-fg);font-size:48px;line-height:.9;margin-top:32px;letter-spacing:-0.02em}
+  .aside .footer-note{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;opacity:.45;font-weight:500;margin-top:24px}
   @media (max-width:980px){.aside{padding:64px 28px 48px;min-height:auto}.aside h1{font-size:48px}.aside .signature{font-size:38px;margin-top:24px}}
 
   /* ===== Form area ===== */
@@ -83,33 +94,36 @@
 
   /* Tabs */
   .tabs{position:relative;display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px;gap:0;align-self:flex-start;margin-bottom:36px}
-  .tabs-pill{position:absolute;top:5px;left:5px;height:calc(100% - 10px);background:var(--ink);border-radius:999px;transition:transform .45s cubic-bezier(.32,.72,.18,1),width .45s cubic-bezier(.32,.72,.18,1);z-index:0}
-  .tab{position:relative;z-index:1;background:transparent;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
+  .tabs-pill{position:absolute;top:5px;left:5px;height:calc(100% - 10px);background:var(--bosque);border-radius:999px;transition:transform .45s cubic-bezier(.32,.72,.18,1),width .45s cubic-bezier(.32,.72,.18,1);z-index:0}
+  .tab{position:relative;z-index:1;background:transparent;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;padding:13px 22px;color:var(--ink);transition:color .35s;white-space:nowrap}
   .tab.active{color:#fff}
 
   /* Form titles */
   .step-head{margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .step-head h2{font-family:'Poppins',sans-serif;font-weight:400;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase}
+  /* "Iniciar sesión" / "Crear cuenta": es el titular display del formulario,
+     así que va en Harper como los h1/h2 del resto del sitio (ver @font-face
+     en brand.css). Se anula el letter-spacing negativo: Harper ya es ancha. */
+  .step-head h2{font-family:'Harper','Inter',sans-serif;font-weight:700;font-size:clamp(36px,4.4vw,56px);line-height:1;letter-spacing:0;color:var(--bosque);text-transform:uppercase}
   .step-head h2 em{font-style:italic}
-  .step-head .hint{font-family:'Poppins',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
-  .step-head .hint a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
+  .step-head .hint{font-family:'Inter',sans-serif;font-size:12px;line-height:1.55;color:var(--muted);max-width:32ch;font-weight:400}
+  .step-head .hint a{color:var(--bosque);border-bottom:1px solid var(--bosque);padding-bottom:1px}
 
   /* Sections */
   .section-block{margin-top:36px}
   .section-block:first-of-type{margin-top:0}
-  .section-block .sec-title{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .section-block .sec-title{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--marker);margin-bottom:18px;display:flex;align-items:center;gap:12px}
   .section-block .sec-title::before{content:"";width:18px;height:1px;background:var(--marker)}
 
   /* Photo uploader */
   .photo-row{display:flex;align-items:center;gap:18px;margin-bottom:32px}
   .photo-up{width:88px;height:88px;border-radius:50%;background:var(--field-bg);border:1.5px dashed var(--field-border);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;flex-shrink:0;transition:border-color .25s}
-  .photo-up:hover{border-color:var(--ink)}
-  .photo-up.has-img{border-style:solid;border-color:var(--ink)}
+  .photo-up:hover{border-color:var(--bosque)}
+  .photo-up.has-img{border-style:solid;border-color:var(--bosque)}
   .photo-up img{width:100%;height:100%;object-fit:cover}
-  .photo-up .ico{font-family:'Poppins',sans-serif;font-style:italic;font-size:32px;color:var(--muted)}
+  .photo-up .ico{font-family:'Inter',sans-serif;font-style:italic;font-size:32px;color:var(--muted)}
   .photo-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
-  .photo-info .lbl{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
-  .photo-info .desc{font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
+  .photo-info .lbl{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--ink);margin-bottom:4px}
+  .photo-info .desc{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);line-height:1.5}
 
   /* Form grid */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
@@ -118,25 +132,25 @@
 
   /* Field */
   .field{display:flex;flex-direction:column;gap:8px;min-width:0}
-  .field-label{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
+  .field-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;color:var(--marker);display:inline-flex;align-items:center;gap:6px}
   .field-label .req{color:var(--rust);font-size:10px;line-height:1}
-  .field-label .opt{font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
+  .field-label .opt{font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;font-size:11px;color:var(--muted);font-weight:400}
   .field-wrap{position:relative}
-  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
+  .field-input{width:100%;height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 44px 0 16px;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,background .2s;font-weight:500}
   .field-input::placeholder{color:var(--muted-2);font-weight:400}
   .field-input:hover{border-color:var(--field-border-hover)}
-  .field-input:focus{border-color:var(--ink);background:#fff}
+  .field-input:focus{border-color:var(--bosque);background:#fff;box-shadow:0 0 0 3px rgba(2,73,57,.10)}
   .field-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;pointer-events:none}
-  .field-icon.serif{font-family:'Poppins',sans-serif;font-style:italic;font-size:17px;color:var(--muted)}
-  .field-error{font-family:'Poppins',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
+  .field-icon.serif{font-family:'Inter',sans-serif;font-style:italic;font-size:17px;color:var(--muted)}
+  .field-error{font-family:'Inter',sans-serif;font-size:11px;color:var(--error);font-weight:500;display:none}
   .field.is-error .field-input{border-color:var(--error)}
   .field.is-error .field-error{display:block}
 
   /* Phone field (country + number) */
   .phone-row{display:grid;grid-template-columns:auto 1fr;gap:8px}
-  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+  .country-sel{height:50px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:0 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 22px,calc(100% - 11px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
   .country-sel:hover{border-color:var(--field-border-hover)}
-  .country-sel:focus{border-color:var(--ink);background-color:#fff}
+  .country-sel:focus{border-color:var(--bosque);background-color:#fff;box-shadow:0 0 0 3px rgba(2,73,57,.10)}
 
   /* Pill option groups */
   .pill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -144,32 +158,32 @@
   .pill-grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:780px){.pill-grid.cols-4{grid-template-columns:repeat(3,minmax(0,1fr))}}
   @media (max-width:580px){.pill-grid,.pill-grid.cols-3,.pill-grid.cols-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
+  .pill-opt{position:relative;display:flex;align-items:center;gap:10px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:13px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer;transition:all .2s;user-select:none;line-height:1.2;min-width:0}
   .pill-opt::before{content:"";width:16px;height:16px;border-radius:50%;border:1.5px solid var(--field-border-hover);background:#fff;flex-shrink:0;transition:all .2s}
   .pill-opt:hover{border-color:var(--field-border-hover)}
-  .pill-opt:hover::before{border-color:var(--ink)}
+  .pill-opt:hover::before{border-color:var(--bosque)}
   .pill-opt input{position:absolute;opacity:0;pointer-events:none}
   .pill-opt.checked,.pill-opt input:checked + *{}
-  .pill-opt.checked{background:#fff;border-color:var(--ink);color:var(--ink)}
-  .pill-opt.checked::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px #fff}
+  .pill-opt.checked{background:#fff;border-color:var(--bosque);color:var(--bosque)}
+  .pill-opt.checked::before{border-color:var(--bosque);background:var(--bosque);box-shadow:inset 0 0 0 3px #fff}
   .pill-opt > span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 
   /* Signup intro card */
   .signup-intro{display:flex;flex-direction:column;gap:20px;max-width:560px}
-  .signup-intro .intro-copy{font-family:'Poppins',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
+  .signup-intro .intro-copy{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.65;color:var(--ink-2);font-weight:400;max-width:48ch}
   .signup-intro .intro-perks{display:flex;flex-direction:column;gap:14px;margin:14px 0 8px}
   .signup-intro .intro-perk{display:grid;grid-template-columns:46px 1fr;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
   .signup-intro .intro-perk:last-child{border-bottom:1px solid var(--line)}
-  .signup-intro .intro-perk .k{font-family:'Poppins',sans-serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
-  .signup-intro .intro-perk strong{display:block;font-family:'Poppins',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
-  .signup-intro .intro-perk span{font-family:'Poppins',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
+  .signup-intro .intro-perk .k{font-family:'Inter',sans-serif;font-style:italic;font-size:18px;color:var(--marker);line-height:1}
+  .signup-intro .intro-perk strong{display:block;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .signup-intro .intro-perk span{font-family:'Inter',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;font-weight:400}
 
   /* Switch participated */
   .participated-row{display:flex;gap:8px;margin-top:12px}
-  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
+  .pp-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--field-bg);border:1px solid var(--field-border);border-radius:10px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;transition:all .2s}
   .pp-pill:hover{border-color:var(--field-border-hover)}
-  .pp-pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
-  .pp-pill .em{font-family:'Poppins',sans-serif;font-style:italic;font-weight:400;font-size:14px}
+  .pp-pill.active{background:var(--bosque);border-color:var(--bosque);color:#fff}
+  .pp-pill .em{font-family:'Inter',sans-serif;font-style:italic;font-weight:400;font-size:14px}
 
   /* Conditional reveal */
   .conditional{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.22,.7,.2,1),opacity .35s ease,margin-top .45s}
@@ -177,25 +191,25 @@
 
   /* Submit row */
   .submit-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .submit-row .legal{font-family:'Poppins',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
-  .submit-row .legal a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:15px 28px;border-radius:999px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
-  .btn-primary:hover{background:var(--marker)}
-  .btn-primary .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
+  .submit-row .legal{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);line-height:1.6;max-width:34ch;font-weight:400}
+  .submit-row .legal a{color:var(--bosque);border-bottom:1px solid var(--bosque);padding-bottom:1px}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--terracota);color:var(--on-accent);padding:15px 28px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500;transition:all .25s}
+  .btn-primary:hover{background:var(--terracota-700)}
+  .btn-primary .a{font-family:'Inter',sans-serif;font-style:italic;font-size:16px;line-height:1;transition:transform .25s}
   .btn-primary:hover .a{transform:translateX(4px)}
 
   /* Login compact form */
   .login-form{display:flex;flex-direction:column;gap:20px;max-width:440px}
-  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Poppins',sans-serif;font-size:12px}
+  .login-form .row-between{display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;font-size:12px}
   .login-form .row-between label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);font-weight:500}
   .login-form .row-between label input{width:14px;height:14px;accent-color:var(--ink)}
-  .login-form .row-between a{color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px}
-  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
+  .login-form .row-between a{color:var(--bosque);border-bottom:1px solid var(--bosque);padding-bottom:1px}
+  .login-form .or{display:flex;align-items:center;gap:14px;color:var(--muted);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;margin:10px 0}
   .login-form .or::before,.login-form .or::after{content:"";flex:1;height:1px;background:var(--line)}
-  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Poppins',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
-  .social-btn:hover{border-color:var(--ink)}
+  .login-form .social-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;background:#fff;border:1px solid var(--line);border-radius:10px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.08em;font-weight:500;color:var(--ink);transition:all .2s}
+  .social-btn:hover{border-color:var(--bosque)}
   .social-btn .ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:700}
-  .login-form .switch{font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
+  .login-form .switch{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-weight:400}
   .login-form .switch button{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px}
 
   /* Profile view */
@@ -205,23 +219,23 @@
   .profile-pic{width:160px;height:160px;border-radius:50%;background:var(--field-bg);background-size:cover;background-position:center;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
   .profile-pic::after{content:'';display:block;width:64%;height:64%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c0bfbb'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E") center/contain no-repeat;opacity:.7}
   .profile-pic.has-photo::after{display:none}
-  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
+  .profile-card .role-pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--marker);color:var(--marker-fg)}
   .profile-card .role-pill::before{content:"✦"}
-  .profile-card h3{font-family:'Poppins',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
-  .profile-card .since{font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
+  .profile-card h3{font-family:'Inter',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)}
+  .profile-card .since{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:6px}
   .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .profile-stat{background:var(--field-bg);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-  .profile-stat .n{font-family:'Poppins',sans-serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
-  .profile-stat .lab{font-family:'Poppins',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
+  .profile-stat .n{font-family:'Inter',sans-serif;font-size:28px;line-height:1;color:var(--ink);margin-bottom:6px}
+  .profile-stat .lab{font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);font-weight:500;line-height:1.4}
   .profile-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
   .profile-info .it{display:flex;flex-direction:column;gap:4px;min-width:0}
-  .profile-info .l{font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
-  .profile-info .v{font-family:'Poppins',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+  .profile-info .l{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .profile-info .v{font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
   .profile-action-row{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
 
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Poppins',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--marker);color:var(--marker-fg);padding:13px 22px;border-radius:999px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;z-index:100;opacity:0;transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:10px}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast .a{font-family:'Poppins',sans-serif;font-style:italic;font-size:14px}
+  .toast .a{font-family:'Inter',sans-serif;font-style:italic;font-size:14px}
 
   /* Profile card meta wrapper (badge + name + since) */
   .profile-card-meta{display:flex;flex-direction:column;gap:8px}
@@ -493,7 +507,7 @@
                 </div>
                 <!-- La edad no se pide: se calcula sola y se muestra como confirmación.
                      En la base la deriva el trigger sync_age_from_birth_date. -->
-                <div id="ageHint" style="display:none;font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
+                <div id="ageHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
               </div>
               <div class="field">
                 <label class="field-label">Sexo <span class="req">*</span></label>
@@ -568,14 +582,14 @@
                 Adjuntar apto físico
               </label>
               <input type="file" id="signupMedCert" accept="image/*,application/pdf" style="display:none" />
-              <div id="signupMedCertName" style="font-family:'Poppins',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
+              <div id="signupMedCertName" style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
             </div>
           </div>
 
           <!-- Sec 4: Suscripción (opcional, elegís al crear la cuenta) -->
           <div class="section-block">
-            <div class="sec-title">Tu plan <span style="font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
-            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Poppins',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil.</p>
+            <div class="sec-title">Tu plan <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <p style="font-size:12.5px;line-height:1.6;color:var(--muted);font-family:'Inter',sans-serif;margin-bottom:18px">Podés crear tu cuenta gratis y sumarte a un plan después desde tu perfil.</p>
 
             <div class="field">
               <label class="field-label">Running Team</label>
@@ -598,7 +612,7 @@
 
           <!-- Sec 5: Foto (al final, opcional) -->
           <div class="section-block">
-            <div class="sec-title">Foto de perfil <span style="font-family:'Poppins',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
+            <div class="sec-title">Foto de perfil <span style="font-family:'Inter',sans-serif;font-style:italic;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400;font-size:13px;margin-left:6px">opcional</span></div>
             <div class="photo-row">
               <label class="photo-up" id="photoUp">
                 <div class="ico">＋</div>
@@ -713,7 +727,7 @@
               <div class="lab">Eventos sociales</div>
             </div>
             <div class="profile-stat">
-              <div class="n" id="profStatKm">0<span style="font-family:'Poppins',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span></div>
+              <div class="n" id="profStatKm">0<span style="font-family:'Inter',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span></div>
               <div class="lab">Total acumulado</div>
             </div>
             <div class="profile-stat">
@@ -741,7 +755,7 @@
           </div>
           <!-- Admin panel — visible solo para is_admin = true -->
           <div id="adminPanel" style="display:none;margin-top:24px;padding:18px 0;border-top:1px solid var(--line)">
-            <div style="font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
+            <div style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--rust);margin-bottom:12px">Panel Admin</div>
             <div class="admin-btn-grid">
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar eventos <span class="a">→</span></button>
               <button type="button" onclick="location.href='Admin.html'" class="btn-primary" style="background:#fff;color:var(--ink);border:1px solid var(--ink)">Gestionar usuarios <span class="a">→</span></button>
@@ -752,7 +766,7 @@
 
           <!-- Danger zone -->
           <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--line)">
-            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Poppins',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
+            <button type="button" onclick="confirmDeleteAccount()" style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1;this.style.color='var(--error)'" onmouseout="this.style.opacity=.7;this.style.color='var(--muted)'">
               Eliminar mi cuenta
             </button>
           </div>
@@ -775,7 +789,7 @@
               Cambiar foto
             </label>
             <input type="file" id="editAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewAvatar(this)">
-            <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'Poppins',sans-serif">JPG, PNG o WebP · máx. 2 MB</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'Inter',sans-serif">JPG, PNG o WebP · máx. 2 MB</div>
           </div>
         </div>
 
@@ -808,7 +822,7 @@
               <div class="field-wrap">
                 <input class="field-input" type="date" id="ep-birth" />
               </div>
-              <div id="epAgeHint" style="display:none;font-family:'Poppins',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
+              <div id="epAgeHint" style="display:none;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);margin-top:7px"></div>
             </div>
           </div>
 
@@ -818,7 +832,7 @@
               <input class="field-input" type="tel" id="ep-emerg" placeholder="Nombre · +54 11 5555 5555" maxlength="120" />
               <span class="field-icon serif">☏</span>
             </div>
-            <div style="font-family:'Poppins',sans-serif;font-size:11.5px;color:var(--muted);margin-top:7px">A quién llamamos si te pasa algo en una corrida. Mantenelo al día.</div>
+            <div style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:7px">A quién llamamos si te pasa algo en una corrida. Mantenelo al día.</div>
           </div>
 
           <div class="field" style="margin-bottom:24px">
@@ -843,12 +857,12 @@
                accesible por URL pública y solo lo ve la persona o un admin. -->
           <div class="field" style="margin-bottom:24px;padding-top:20px;border-top:1px solid var(--line)">
             <label class="field-label">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
-            <div id="medCertStatus" style="font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
+            <div id="medCertStatus" style="font-family:'Inter',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
             <label for="medCertInput" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:10px">
               Subir apto físico
             </label>
             <input type="file" id="medCertInput" accept="image/*,application/pdf" style="display:none" />
-            <div style="font-family:'Poppins',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
+            <div style="font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
           </div>
 
           <div class="profile-action-row" style="margin-top:8px">
@@ -864,8 +878,8 @@
   <!-- Confirm delete dialog -->
   <div id="deleteConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:24px">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.18)">
-      <h3 style="font-family:'Poppins',sans-serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
-      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Poppins',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
+      <h3 style="font-family:'Inter',sans-serif;font-size:22px;margin-bottom:10px">¿Eliminás tu cuenta?</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;font-family:'Inter',sans-serif;margin-bottom:24px">Tu historial y datos quedan archivados internamente por auditoría. No podrás acceder con este mail hasta que el equipo reactive la cuenta.</p>
       <div style="display:flex;gap:10px">
         <button type="button" class="btn-primary" onclick="executeDeleteAccount()" style="background:var(--error);flex:1;justify-content:center">Sí, eliminar</button>
         <button type="button" class="btn-primary" onclick="closeDeleteConfirm()" style="background:#fff;color:var(--ink);border:1px solid var(--ink);flex:1;justify-content:center">Cancelar</button>
@@ -1151,7 +1165,7 @@
 
     // Stats
     if(el('profStatEvents')) el('profStatEvents').textContent = p?.social_events_attended ?? 0;
-    if(el('profStatKm'))     el('profStatKm').innerHTML = (p?.total_km ?? 0) + '<span style="font-family:\'Poppins\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatKm'))     el('profStatKm').innerHTML = (p?.total_km ?? 0) + '<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
     if(el('profStatSaved'))  el('profStatSaved').textContent = p?.total_money_saved ? '$' + Number(p.total_money_saved).toLocaleString('es-AR') : '$0';
 
     // Plan badge & admin panel
@@ -1185,7 +1199,7 @@
     ids.forEach(id => { const e = el(id); if(e) e.textContent = '—'; });
     if(el('profSince')) el('profSince').textContent = 'Miembro desde · —';
     if(el('profStatEvents')) el('profStatEvents').textContent = '0';
-    if(el('profStatKm'))     el('profStatKm').innerHTML = '0<span style="font-family:\'Poppins\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
+    if(el('profStatKm'))     el('profStatKm').innerHTML = '0<span style="font-family:\'Inter\',sans-serif;font-size:.45em;font-weight:500;color:var(--muted);margin-left:3px">km</span>';
     if(el('profStatSaved'))  el('profStatSaved').textContent = '$0';
     if(el('profilePic')){ el('profilePic').style.backgroundImage = ''; el('profilePic').classList.remove('has-photo'); }
     if(el('profPlanBadge'))  el('profPlanBadge').textContent = 'Plan Free';

@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex,nofollow" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
 <link rel="stylesheet" href="brand.css">
 <link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
@@ -18,33 +18,33 @@
 <style>
   :root{ --teal:var(--bosque); --teal-lt:var(--tierras); /* alias legacy → paleta real */ --ink:var(--asfaltico); --muted:var(--ink-soft); --line:rgba(2,73,57,.14); --cream:var(--crema); --error:var(--error-fg); }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#fff;color:var(--ink);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
+  body{background:#fff;color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   button,input,select,textarea{font-family:inherit}
   button{cursor:pointer}
-  .display{font-family:'Poppins',sans-serif}
-  .eyebrow{font-family:'Poppins';font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--teal)}
+  .display{font-family:'Inter',sans-serif}
+  .eyebrow{font-family:'Inter';font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--teal)}
 
   .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,4vw,48px);background:rgba(250,248,236,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar a{font-family:'Poppins';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.8}
+  .topbar a{font-family:'Inter';font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;opacity:.8}
   .topbar a:hover{opacity:1}
   .topbar .brand{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;line-height:0;color:var(--bosque)}
-  .topbar .brand-sub{font-family:'Poppins';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;line-height:1;color:var(--muted)}
+  .topbar .brand-sub{font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;line-height:1;color:var(--muted)}
 
   .wrap{max-width:1200px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,4vw,48px) 100px}
 
-  h1{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,44px);margin-bottom:6px}
+  h1{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(30px,3.6vw,44px);margin-bottom:6px}
   .sub{color:var(--muted);font-size:13.5px;margin-bottom:28px}
 
   .tabs{display:inline-flex;background:var(--cream);border-radius:999px;padding:4px;gap:2px;margin-bottom:28px}
-  .tab-btn{padding:11px 22px;border:none;background:none;border-radius:999px;font-family:'Poppins';font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--muted);transition:all .2s}
+  .tab-btn{padding:11px 22px;border:none;background:none;border-radius:999px;font-family:'Inter';font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--muted);transition:all .2s}
   .tab-btn.active{background:var(--ink);color:#fff}
 
   .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
   .search-input{flex:1;min-width:200px;height:42px;border:1px solid var(--line);border-radius:8px;padding:0 14px;font-size:13.5px;outline:none;background:var(--cream)}
   .search-input:focus{border-color:var(--ink)}
   .chk-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:'Poppins';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;border:none;transition:filter .2s,background .2s}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:'Inter';font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;border:none;transition:filter .2s,background .2s}
   .btn-primary{background:var(--teal);color:#fff}
   .btn-primary:hover{filter:brightness(1.08)}
   .btn-ghost{background:#fff;border:1px solid var(--ink);color:var(--ink)}
@@ -52,10 +52,10 @@
   .btn-danger{background:none;color:var(--error);border:1px solid var(--error)}
 
   table{width:100%;border-collapse:collapse;font-size:13.5px}
-  thead th{text-align:left;font-family:'Poppins';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line)}
+  thead th{text-align:left;font-family:'Inter';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line)}
   tbody td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
   tbody tr.inactive{opacity:.5}
-  .badge{display:inline-flex;align-items:center;gap:5px;font-family:'Poppins';font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-family:'Inter';font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
   .badge.admin{background:var(--pending-bg);color:var(--pending-fg)}
   .badge.pub{background:var(--ok-bg);color:var(--ok-fg)}
   .badge.unpub{background:var(--neutral-bg);color:var(--neutral-fg)}
@@ -66,7 +66,7 @@
   .itin-builder{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--cream)}
   .itin-row{display:grid;grid-template-columns:118px 1fr 34px;gap:8px;align-items:center;margin-bottom:8px}
   .itin-row:last-of-type{margin-bottom:0}
-  .itin-row input{height:40px;border:1px solid var(--line);border-radius:8px;padding:0 11px;font-family:'Poppins',sans-serif;font-size:13.5px;background:#fff;outline:none;width:100%}
+  .itin-row input{height:40px;border:1px solid var(--line);border-radius:8px;padding:0 11px;font-family:'Inter',sans-serif;font-size:13.5px;background:#fff;outline:none;width:100%}
   .itin-row input:focus{border-color:var(--ink)}
   .itin-row input[type=time]{font-variant-numeric:tabular-nums;letter-spacing:.02em}
   .itin-del{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;transition:color .15s,border-color .15s}
@@ -79,12 +79,12 @@
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(10,10,10,.5);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
   .modal-bg.show{display:flex}
   .modal{background:#fff;border-radius:12px;padding:32px;max-width:640px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.2)}
-  .modal h3{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:24px;margin-bottom:20px}
+  .modal h3{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:24px;margin-bottom:20px}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .f-grid .full{grid-column:1/-1}
   @media (max-width:560px){.f-grid{grid-template-columns:1fr}}
   .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-  .field label{font-family:'Poppins';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .field label{font-family:'Inter';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .field input, .field select, .field textarea{height:42px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font-size:13.5px;outline:none;background:var(--cream)}
   .field textarea{height:auto;padding:10px 12px;resize:vertical;min-height:70px}
   .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--ink)}
@@ -96,7 +96,7 @@
   .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
   .modal-err{background:var(--error-bg);color:var(--error-fg);padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
 
-  .gate-msg{padding:120px 20px;text-align:center;font-family:'Poppins';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .gate-msg{padding:120px 20px;text-align:center;font-family:'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 </style>
 </head>
 <body>

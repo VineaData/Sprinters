@@ -6,7 +6,7 @@
 <title>Sprinters · Evento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lilita+One&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <!-- Tokens de marca: paleta oficial + helpers del logo. Antes de subs.css. -->
 <link rel="stylesheet" href="brand.css">
 <link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
@@ -21,21 +21,21 @@
   /* Fondo de página: Crema, no blanco puro (sprinters-style.json → artDirection
      .principles "Nada de blanco puro en las superficies grandes"). El blanco
      se reserva para la card de inscripción, que así se despega de la página. */
-  body{background:var(--crema);color:var(--ink);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
+  body{background:var(--crema);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
   img{display:block;max-width:100%}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer}
-  .display{font-family:'Poppins',sans-serif}
+  .display{font-family:'Inter',sans-serif}
   /* Bosque por defecto: funciona para el eyebrow "Ups" del estado de error,
      que va sobre fondo claro. El del hero lo pisa más abajo (.hero-info-content
      .eyebrow) porque ahí el fondo es oscuro y necesita Tierras para leerse. */
-  .eyebrow{font-family:'Poppins';font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:var(--bosque)}
+  .eyebrow{font-family:'Inter';font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:var(--bosque)}
 
   /* ===== Top bar ===== */
   .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px clamp(20px,4vw,48px);background:rgba(250,248,236,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
   /* white-space:nowrap evita que "Volver a la agenda" / "Mi cuenta" se
      partan en dos líneas cuando el logo del medio les deja poco lugar. */
-  .topbar .back{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;font-family:'Poppins';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
+  .topbar .back{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;font-family:'Inter';font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;opacity:.75;transition:opacity .2s}
   .topbar .back:hover{opacity:1}
   /* La marca es el logo real: tamaño y máscara vienen de brand.css */
   .topbar .brand{display:inline-flex;align-items:center;flex-shrink:0;line-height:0;color:var(--bosque)}
@@ -57,9 +57,11 @@
      el fondo). Es la aplicación que pide components.hero del brand JSON. */
   .hero-info-content .eyebrow{color:var(--tierras)}
   .hero-info-content .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 22px}
-  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
+  .meta-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);padding:7px 13px;border-radius:999px}
 
-  .hero-info-content h1{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:.01em;margin-bottom:18px}
+  /* El título del evento es el único titular display de esta página: va en
+     Harper (ver @font-face en brand.css). El resto sigue en Inter. */
+  .hero-info-content h1{font-family:'Harper','Inter',sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(34px,4.4vw,58px);line-height:.98;letter-spacing:0;margin-bottom:18px}
   /* .desc pasó de <p> a <div> porque ahora puede contener varios <p>, uno por
      párrafo real de la descripción (ver renderDescription). */
   .hero-info-content .desc{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.85);font-weight:300;max-width:52ch;margin-bottom:26px}
@@ -69,7 +71,7 @@
   .itinerary{display:flex;flex-direction:column;gap:0;margin-bottom:26px;max-width:420px}
   .itinerary-item{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:12px 0;border-top:1px solid rgba(255,255,255,.16)}
   .itinerary-item:last-child{border-bottom:1px solid rgba(255,255,255,.16)}
-  .itinerary-item .t{font-family:'Poppins';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
+  .itinerary-item .t{font-family:'Inter';font-size:12px;color:var(--teal-lt);letter-spacing:.05em}
   .itinerary-item .l{font-size:13px;color:rgba(255,255,255,.85);font-weight:300}
 
   /* ===== Precio =====
@@ -78,7 +80,7 @@
      exista o no cobro nuestro del after: cuánto sale es un dato del evento.
      Quién lo cobra cambia el texto, no la visibilidad. */
   .price-row{margin-bottom:24px}
-  .price-row .amount{font-family:'Poppins';font-size:clamp(40px,7vw,62px);font-weight:400;line-height:1;display:block;font-variant-numeric:tabular-nums}
+  .price-row .amount{font-family:'Inter';font-size:clamp(40px,7vw,62px);font-weight:400;line-height:1;display:block;font-variant-numeric:tabular-nums}
   .price-row .note{font-size:12.5px;color:rgba(255,255,255,.65);display:block;margin-top:8px;line-height:1.5}
   /* align-items:flex-end anclaba los dos items por abajo: como "After run"
      tiene una tercera línea (el tag "se paga en el lugar") que "Run" no
@@ -87,22 +89,22 @@
      cuánto texto tengan debajo — que es lo que se pidió: "a la misma altura". */
   .price-breakdown{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
   .price-item{display:flex;flex-direction:column;gap:4px}
-  .price-item .num{font-family:'Poppins';font-size:clamp(34px,5.6vw,52px);font-weight:400;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .price-item .lab{font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+  .price-item .num{font-family:'Inter';font-size:clamp(34px,5.6vw,52px);font-weight:400;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .price-item .lab{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
   .price-item .tag{font-size:11.5px;color:rgba(255,255,255,.55);font-weight:300}
   /* El "+" se centra contra la altura del número, no contra el item entero
      (que puede ser más alto por el tag). clamp acompaña la diferencia de
      tamaño entre el signo y el número en cada breakpoint. */
-  .price-plus{font-family:'Poppins';font-size:clamp(22px,3vw,30px);font-weight:300;color:rgba(255,255,255,.4);align-self:flex-start;margin-top:clamp(4px,.9vw,8px)}
-  .price-total-big{margin-top:14px;font-family:'Poppins';font-size:clamp(20px,3vw,26px);font-weight:600;color:var(--teal-lt);letter-spacing:.01em;font-variant-numeric:tabular-nums}
-  .price-total-big .lab{display:block;font-family:'Poppins';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px}
+  .price-plus{font-family:'Inter';font-size:clamp(22px,3vw,30px);font-weight:300;color:rgba(255,255,255,.4);align-self:flex-start;margin-top:clamp(4px,.9vw,8px)}
+  .price-total-big{margin-top:14px;font-family:'Inter';font-size:clamp(20px,3vw,26px);font-weight:600;color:var(--teal-lt);letter-spacing:.01em;font-variant-numeric:tabular-nums}
+  .price-total-big .lab{display:block;font-family:'Inter';font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px}
   /* Badge "featured" del brand JSON: fondo Terracota, texto Asfáltico, ✦.
      Antes era Tierras/Bosque-900, que es la paleta de un chip neutro, no la
      de un beneficio destacado. */
-  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins';font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;background:var(--terracota);color:var(--on-accent);padding:8px 14px;border-radius:999px;margin-bottom:22px}
+  .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;background:var(--terracota);color:var(--on-accent);padding:8px 14px;border-radius:999px;margin-bottom:22px}
 
   .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Poppins';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-family:'Inter';font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:transform .2s,filter .2s,background .2s}
   /* CTA primario en Terracota, no en Bosque: el brand JSON reserva el naranja
      para la única acción que convierte por pantalla (components.buttons.primary).
      El texto va en Asfáltico — blanco sobre #fd521b no llega a 4.5:1 de contraste. */
@@ -116,20 +118,20 @@
      "warn" (cierra hoy, quedan pocos lugares) pasa a Terracota — es
      exactamente el caso de uso que el brand JSON describe para el naranja:
      "un dato urgente o cuenta regresiva". */
-  .urgency{font-family:'Poppins';font-size:11.5px;letter-spacing:.08em;color:var(--tierras);margin-bottom:8px}
+  .urgency{font-family:'Inter';font-size:11.5px;letter-spacing:.08em;color:var(--tierras);margin-bottom:8px}
   .urgency.warn{color:var(--terracota);font-weight:500}
 
   /* ===== Inscripción section ===== */
   /* El padding lateral era clamp(20px,5vw,0): el máximo quedaba por debajo del
      mínimo, así que el clamp colapsaba a 20px y nunca acompañaba al viewport. */
   .insc{max-width:760px;margin:0 auto;padding:clamp(56px,8vh,96px) clamp(20px,5vw,32px) clamp(80px,10vh,120px)}
-  .insc h2{font-family:'Poppins';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
+  .insc h2{font-family:'Inter';font-weight:300;text-transform:uppercase;font-size:clamp(28px,3.6vw,42px);line-height:1;margin-bottom:28px}
 
   /* La card blanca se despega de la página Crema (shape.webRadii.card=14px,
      borde en línea de Bosque). Antes era del mismo tono que la página: ni
      card ni fondo, todo un mismo bloque plano. */
   .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:clamp(24px,3vw,36px)}
-  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:18px}
   .status-pill.ok{background:var(--ok-bg);color:var(--ok-fg)}
   .status-pill.pending{background:var(--pending-bg);color:var(--pending-fg)}
   .status-pill.rejected{background:var(--error-bg);color:var(--error-fg)}
@@ -148,14 +150,14 @@
      perderse contra el blanco de la card que los contiene. */
   .transfer-box{margin-top:22px;padding:20px;background:var(--crema-2);border:1px solid var(--line);border-radius:12px}
   .transfer-box .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
-  .transfer-box .k{font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .transfer-box .k{font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .transfer-box .v{font-size:14px;font-weight:600}
-  .copy-btn{font-family:'Poppins';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
+  .copy-btn{font-family:'Inter';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:999px;padding:6px 12px;transition:background .2s,color .2s}
   .copy-btn:hover{background:var(--teal);color:#fff}
 
   .upload-row{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   /* Los bordes tiran a Bosque, no a negro (shape.borders del brand JSON). */
-  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--bosque);font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--bosque);font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
   .file-name{font-size:12.5px;color:var(--muted)}
 
   .legal-note{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:16px}
@@ -167,7 +169,7 @@
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
   .terms-row a{color:var(--teal);text-decoration:underline;font-weight:600}
 
-  .footer-mini{text-align:center;padding:40px 20px;font-family:'Poppins';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .footer-mini{text-align:center;padding:40px 20px;font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
   /* ===== Barra fija de mobile =====
      En mobile el CTA queda muy lejos: el hero es alto y hay que scrollear
@@ -183,7 +185,7 @@
     transform:translateY(110%);transition:transform .3s cubic-bezier(.22,.7,.2,1);
   }
   .mobile-bar.show{transform:translateY(0)}
-  .mobile-bar .mb-price{font-family:'Poppins';font-size:19px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mobile-bar .mb-price{font-family:'Inter';font-size:19px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
   .mobile-bar .mb-sub{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
   .mobile-bar .btn{padding:13px 20px;font-size:11px;flex-shrink:0}
 
@@ -257,7 +259,7 @@
   <a href="Cuenta.html" class="back" id="navAccount">Mi cuenta</a>
 </nav>
 
-<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Poppins';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
+<div id="loadingState" style="padding:120px 20px;text-align:center;font-family:'Inter';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)">Cargando evento…</div>
 
 <div id="notFoundState" style="display:none;padding:120px 20px;text-align:center">
   <div class="eyebrow" style="margin-bottom:14px">Ups</div>

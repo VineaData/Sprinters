@@ -57,7 +57,10 @@ nav.top .cta:hover{background:var(--bosque);border-color:var(--bosque);color:#ff
 .sub-hero{padding:96px 36px 56px;text-align:center;position:relative}
 .sub-hero .pillar-tag{display:inline-flex;align-items:center;gap:14px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;font-weight:500;color:var(--muted);margin-bottom:40px}
 .sub-hero .pillar-tag::before,.sub-hero .pillar-tag::after{content:"";width:48px;height:1px;background:var(--ink);opacity:.25}
-.sub-hero h1{font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(48px,7.6vw,124px);line-height:.92;letter-spacing:-0.02em;color:var(--ink);text-transform:uppercase;text-wrap:balance;max-width:1100px;margin:0 auto}
+/* Titular display: Harper (ver @font-face en brand.css, que se carga antes
+   que este archivo). El letter-spacing negativo se anula: Harper ya es
+   pesada y ancha, apretarla más cierra las contraformas. */
+.sub-hero h1{font-family:'Harper','Inter',sans-serif;font-weight:700;font-size:clamp(48px,7.6vw,124px);line-height:.92;letter-spacing:0;color:var(--ink);text-transform:uppercase;text-wrap:balance;max-width:1100px;margin:0 auto}
 .sub-hero h1 em{font-style:italic}
 .sub-hero h1 .script{font-family:'Inter',sans-serif;font-style:italic;color:var(--rust);font-size:1.0em;display:inline-block;transform:translateY(.04em) rotate(-3deg);text-transform:none}
 .sub-hero .lede{font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;color:var(--ink-2);max-width:580px;margin:32px auto 0;text-wrap:pretty;font-weight:400}

@@ -34,3 +34,8 @@ Sprinters Web - *
 
 # Versiones archivadas (Landing-mobile viejo, etc.) — no se publican
 .archive/
+
+# Carpeta de prueba tipográfica: comparaba Harper contra Inter lado a lado.
+# Se mantiene fuera del repo porque adentro está el .otf original (333 KB) y
+# no hace falta versionarlo — la que se publica es la .woff2 de images/fonts/.
+_preview-harper/
