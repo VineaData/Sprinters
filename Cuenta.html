@@ -1244,8 +1244,21 @@
     box.textContent = txt;
   }
 
-  function showEditMode(){
+  async function showEditMode(){
     const el = (id) => document.getElementById(id);
+
+    // Releemos el perfil de la base en vez de confiar en la copia en memoria.
+    // Si _currentProfile quedó null o viejo (por ejemplo al entrar directo con
+    // ?tab=profile, donde loadProfile puede no haber terminado), el formulario
+    // se abría vacío — y al guardar, los campos vacíos se escribían como null
+    // y borraban los datos buenos. Ahora abrimos siempre con lo que hay guardado.
+    if (_currentUser){
+      const { data: fresh, error } = await supa
+        .from('users').select('*').eq('id', _currentUser.id).maybeSingle();
+      if (error) console.error('[perfil] no pudimos releer los datos:', error.message);
+      else if (fresh) _currentProfile = fresh;
+    }
+
     // Pre-fill from stored profile data (not parsed display text)
     if(el('ep-name')) el('ep-name').value = _currentProfile?.first_name || '';
     if(el('ep-last')) el('ep-last').value = _currentProfile?.last_name || '';
@@ -1414,14 +1427,22 @@
     const updates = { first_name: firstName, last_name: lastName };
     if(avatarUrl) updates.avatar_url = avatarUrl;
 
-    // Campos editables desde el perfil. Se mandan como null cuando quedan
-    // vacíos para que se puedan borrar, no solo cambiar.
+    // Campos editables desde el perfil. Un campo vacío se manda como null a
+    // propósito: así se puede borrar un dato, no solo cambiarlo.
+    //
+    // Red de seguridad: si nunca pudimos leer el perfil (_currentProfile null),
+    // el formulario se abrió vacío y guardar borraría todo. En ese caso solo
+    // mandamos lo que la persona efectivamente escribió.
+    const perfilCargado = !!_currentProfile;
     const val = (id) => (document.getElementById(id)?.value || '').trim() || null;
-    updates.phone             = val('ep-phone');
-    updates.emergency_contact = val('ep-emerg');
-    updates.origin            = val('ep-origin');
-    updates.birth_date        = val('ep-birth');   // el trigger recalcula age
-    updates.sex               = document.querySelector('input[name="epSexo"]:checked')?.value || null;
+    const put = (campo, valor) => {
+      if (valor !== null || perfilCargado) updates[campo] = valor;
+    };
+    put('phone',             val('ep-phone'));
+    put('emergency_contact', val('ep-emerg'));
+    put('origin',            val('ep-origin'));
+    put('birth_date',        val('ep-birth'));   // el trigger recalcula age
+    put('sex', document.querySelector('input[name="epSexo"]:checked')?.value || null);
 
     const { error: upErr } = await supa.from('users').update(updates).eq('id', _currentUser.id);
     if(upErr){
