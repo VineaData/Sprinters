@@ -1567,13 +1567,24 @@
       return;
     }
 
-    // Full signup — session active, upsert extended profile fields
-    // (trigger creates base row; upsert adds the rest — error logged, not thrown)
-    const { error: upsertErr } = await supa.from('users').upsert({
-      id: data.user.id, first_name: firstName, last_name: lastName,
-      birth_date: birthDate, sex, origin, emergency_contact: emerg, phone, how_heard: howHeard
-    });
-    if(upsertErr) console.error('[signup] upsert error:', upsertErr.message);
+    // El trigger on_auth_user_created ya creó la fila con los datos del
+    // metadata. Acá solo completamos, con UPDATE y no con upsert.
+    //
+    // Por qué no upsert: public.users tiene GRANT UPDATE por columna y la
+    // lista NO incluye 'id'. Un upsert se traduce a
+    // INSERT ... ON CONFLICT DO UPDATE SET id=..., first_name=...
+    // y al tocar 'id' Postgres rechaza la sentencia entera por permisos.
+    // El error se logueaba solo en consola, así que el registro parecía
+    // exitoso y el perfil quedaba a medio llenar sin que nadie se enterara.
+    const { error: profErr } = await supa.from('users').update({
+      first_name: firstName, last_name: lastName,
+      birth_date: birthDate, sex, origin,
+      emergency_contact: emerg, phone, how_heard: howHeard
+    }).eq('id', data.user.id);
+    if(profErr){
+      console.error('[signup] perfil incompleto:', profErr.message);
+      showToast('Tu cuenta se creó, pero no pudimos guardar todos tus datos. Completalos desde tu perfil.');
+    }
 
     // Apto físico opcional: recién acá hay sesión, que es lo que exige el bucket
     await uploadSignupMedCert(data.user.id);
