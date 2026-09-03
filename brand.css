@@ -40,6 +40,13 @@
   --line:          rgba(2,73,57,.14);
   --line-soft:     rgba(2,73,57,.08);
 
+  /* Terracota puro (#fd521b) sobre crema da 3.0:1 y los eyebrows son de
+     12px: no pasa AA. Esta variante oscurecida da 5.6:1 y mantiene el
+     tono. Misma maniobra que --ink-muted más arriba.
+     Vivía en el :root local de Landing v2; subió acá el 2026-09-03 cuando
+     Padel.html y Trekking.html también la necesitaron. */
+  --terracota-ink: #b83409;
+
   --brand:         var(--bosque);      /* estructura, links, eyebrows */
   --brand-on-dark: var(--tierras);     /* texto de marca sobre Bosque */
   --accent:        var(--terracota);   /* CTA de conversión, badges */
@@ -127,10 +134,24 @@
 
    Convertida de OTF (333 KB) a WOFF2 (35 KB) con fontTools.
 
-   LICENCIA: el archivo original es la versión "Personal Use" de Harper
-   (Ryan Rivaldo Vierra). Para uso comercial hace falta comprar la licencia
-   escribiendo a ryanrivaldovierrag@gmail.com. Queda anotado acá para que
-   el día que se compre, o que haya que sacarla, se sepa de dónde salió.
+   ⚠️ LIMITACIÓN ACTIVA — LOS DÍGITOS NO SE VEN.
+   El archivo que está en uso es la versión "Personal Use" de Harper
+   (Ryan Rivaldo Vierra) y tiene los diez dígitos 0-9 reemplazados por el
+   sello "Personal Use Only". No es un bug del sitio ni algo que se arregle
+   por CSS: es la protección del autor. Verificado sobre el .otf — cada
+   dígito tiene 115 contornos y todos el mismo ancho (una letra normal tiene
+   entre 1 y 3).
+
+   Efecto práctico: cualquier titular con números se ve roto. Los títulos de
+   evento arrancan con la fecha ("8/08 — Sprinters x Margha"), así que es el
+   caso más visible.
+
+   Para arreglarlo hay que comprar la licencia comercial y reemplazar este
+   .woff2 por el archivo completo: ryanrivaldovierrag@gmail.com
+   Si se decide no comprarla, sacar el @font-face y la clase .display-brand,
+   y devolver los titulares a 'Inter' (están marcados con class="display-brand"
+   en Landing v2, y en las reglas .hero-info-content h1 / .sub-hero h1 /
+   .aside h1 / .step-head h2).
 
    El logotipo NO depende de esto: es el sprite SVG de más arriba y se ve
    igual aunque la fuente no cargue. */

@@ -29,11 +29,10 @@
   /* --teal/--teal-lt eran de la maqueta original y no existían en la marca.
      Quedan como alias de la paleta real (brand.css) para no romper nada que
      todavía los referencie; en código nuevo usar --bosque / --tierras. */
-  :root{ --teal:var(--bosque); --teal-lt:var(--tierras);
-          /* Terracota puro sobre crema da 3.0:1 y el eyebrow es de 12px: no pasa
-             AA. Esta variante oscurecida da 5.6:1 y mantiene el tono. Misma
-             maniobra que brand.css hace con --ink-muted. */
-          --terracota-ink:#b83409; }
+  /* --terracota-ink se mudó a brand.css el 2026-09-03: lo usan también
+     Padel.html y Trekking.html, y tener el valor en tres lugares es la
+     receta para que uno quede desfasado. */
+  :root{ --teal:var(--bosque); --teal-lt:var(--tierras); }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--surface);color:var(--asfaltico);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   img{display:block;max-width:100%}
@@ -630,7 +629,11 @@
           <!-- TODO(foto): placeholder. Reemplazar por images/padel.jpg cuando esté la foto real de cancha. -->
           <img class="xp-card__photo" style="object-position:50% 45%" src="images/leaders-trio.jpg" alt="Jugadores de pádel de Sprinters antes de un partido" loading="lazy" decoding="async">
           <span class="xp-card__veil" aria-hidden="true"></span>
-          <span class="xp-card__badge">Próximamente</span>
+          <!-- 2026-09-03: se sacó el badge "Próximamente". Pádel ya tiene
+               pilar propio en events.branch y página propia que explica la
+               actividad (Padel.html), así que la actividad existe. Que haya
+               o no fecha lo dice la agenda de más abajo, que lista cualquier
+               pilar — no hace falta un cartel acá. -->
           <span class="xp-card__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M15 3.2c3 1.2 4.6 4.6 3.5 7.7-1 3-4.3 4.6-7.3 3.6-3-1-4.7-4.4-3.6-7.5C8.7 3.9 12 2.2 15 3.2Z"/><path d="m9.6 14.6-4.4 6.2"/><circle cx="12.5" cy="7.6" r="1"/><circle cx="14.6" cy="10.4" r="1"/></svg>
           </span>
@@ -640,8 +643,8 @@
           <h3 class="xp-card__title display-brand">Pádel</h3>
           <span class="xp-card__rule" aria-hidden="true"></span>
           <p class="xp-card__desc">Partidos, torneos y eventos. Competí, divertite y conectá con la comunidad.</p>
-          <a class="xp-card__cta" href="#join" data-lead-source="padel">
-            <span>Avisame
+          <a class="xp-card__cta" href="Padel.html">
+            <span>Conocer más
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg>
             </span>
           </a>
@@ -654,7 +657,8 @@
           <!-- TODO(foto): placeholder. Reemplazar por images/trekking.jpg cuando esté la foto real de montaña. -->
           <img class="xp-card__photo" src="images/run-trees-1.jpg" alt="Grupo de Sprinters reunido al aire libre" loading="lazy" decoding="async">
           <span class="xp-card__veil" aria-hidden="true"></span>
-          <span class="xp-card__badge">Próximamente</span>
+          <!-- Mismo criterio que Pádel: el badge salió el 2026-09-03, la
+               actividad ya tiene página propia (Trekking.html). -->
           <span class="xp-card__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M2.5 19h19L14 5.5 10 12.8 7.8 9.4 2.5 19Z"/><path d="m11.6 9.8 2.4-4.3"/></svg>
           </span>
@@ -664,8 +668,8 @@
           <h3 class="xp-card__title display-brand">Trekking</h3>
           <span class="xp-card__rule" aria-hidden="true"></span>
           <p class="xp-card__desc">Salimos a la montaña. Aventuras, paisajes y momentos inolvidables.</p>
-          <a class="xp-card__cta" href="#join" data-lead-source="trekking">
-            <span>Avisame
+          <a class="xp-card__cta" href="Trekking.html">
+            <span>Conocer más
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg>
             </span>
           </a>
@@ -1070,8 +1074,20 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   // ================================================================
-  // LISTAS DE ESPERA (Pádel, Trekking)
+  // LISTAS DE ESPERA POR PILAR
   // ================================================================
+  // 2026-09-03: hoy NINGÚN elemento de esta página tiene data-lead-source.
+  // Pádel y Trekking dejaron de mandar al form de #join porque pasaron a ser
+  // pilares de verdad: sus fechas salen en la agenda de acá abajo y sus
+  // páginas explican la actividad. OJO: con eso se perdió la captura de mails
+  // por pilar, que era la forma de medir demanda — está anotado como decisión
+  // abierta en _DEPLOY-PADEL-TREKKING.md.
+  //
+  // El mecanismo se deja armado: si mañana aparece un pilar nuevo
+  // "Próximamente", alcanza con ponerle el atributo al CTA y sumarlo a
+  // NOMBRE_PILAR. Sin elementos que lo usen, el forEach de abajo no hace
+  // nada y el form queda en su source por defecto, 'landing'.
+  //
   // Va acá, FUERA del waitFor de Supabase, a propósito: si el CDN de
   // supabase-js no carga, esto tiene que seguir andando. El visitante igual
   // baja al form (lo hace el handler de anclas) y ve de qué lista se trata;
@@ -1105,8 +1121,16 @@ document.addEventListener('DOMContentLoaded', function(){
       'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'
     );
 
-    const EV_IMG_DEFAULT = { running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg' };
-    const EV_TAG = { running: 'Running', social: 'Social' };
+    // TODO(foto): no existen images/padel.jpg ni images/trekking.jpg. Hasta
+    // que estén, apuntan a los mismos placeholders que usan las tarjetas 03 y
+    // 04 de #experiencias. Se dejan archivos QUE EXISTEN a propósito: poner
+    // la ruta final acá haría que cada card pidiera un 404 y mostrara la
+    // imagen roto-y-después-fallback en cada carga.
+    const EV_IMG_DEFAULT = {
+      running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg',
+      padel: 'images/leaders-trio.jpg', trekking: 'images/run-trees-1.jpg'
+    };
+    const EV_TAG = { running: 'Running', social: 'Social', padel: 'Pádel', trekking: 'Trekking' };
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const fmtEvDate = (iso) => {
       const d = new Date(iso);

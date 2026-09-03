@@ -101,6 +101,8 @@
   /* Badge "featured" del brand JSON: fondo Terracota, texto Asfáltico, ✦.
      Antes era Tierras/Bosque-900, que es la paleta de un chip neutro, no la
      de un beneficio destacado. */
+  .member-note{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11.5px;letter-spacing:.1em;font-weight:500;background:var(--ok-bg);color:var(--ok-fg);padding:8px 14px;border-radius:999px;margin-bottom:22px}
+  .member-note a{text-decoration:underline}
   .pro-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;background:var(--terracota);color:var(--on-accent);padding:8px 14px;border-radius:999px;margin-bottom:22px}
 
   .cta-row{display:flex;gap:12px;flex-wrap:wrap}
@@ -287,6 +289,10 @@
 
         <div id="evUrgency" class="urgency" style="display:none"></div>
         <div id="evProBadge" class="pro-badge" style="display:none">✦ Incluido en tu Training Plus</div>
+        <!-- Precio de socio: lo llena render(). Dos textos distintos según
+             haya suscripción activa o no — al socio le confirma que ya está
+             pagando menos, al visitante le muestra que existe la opción. -->
+        <div id="evMemberNote" class="member-note" style="display:none"></div>
         <div id="evPriceRow" class="price-row"></div>
 
         <div class="cta-row">
@@ -333,8 +339,16 @@ document.addEventListener('DOMContentLoaded', function(){
   const TERMS_URL = window.SPRINTERS.TERMS_URL;
   const CASH_CONTACT_PHONE = window.SPRINTERS.CONTACT_PHONE;
 
-  const EV_IMG_DEFAULT = { running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg' };
-  const EV_TAG = { running: 'Running', social: 'Social' };
+    // TODO(foto): no existen images/padel.jpg ni images/trekking.jpg. Hasta
+  // que estén, apuntan a los mismos placeholders que usan las tarjetas 03 y
+  // 04 de #experiencias. Se dejan archivos QUE EXISTEN a propósito: poner
+  // la ruta final acá haría que cada card pidiera un 404 y mostrara la
+  // imagen roto-y-después-fallback en cada carga.
+  const EV_IMG_DEFAULT = {
+    running: 'images/run-autumn.jpg', social: 'images/cafe-talk.jpg',
+    padel: 'images/leaders-trio.jpg', trekking: 'images/run-trees-1.jpg'
+  };
+  const EV_TAG = { running: 'Running', social: 'Social', padel: 'Pádel', trekking: 'Trekking' };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmtDate = (iso) => new Intl.DateTimeFormat('es-AR', { weekday:'long', day:'2-digit', month:'long' }).format(new Date(iso));
   // hour12:false — ver misma nota en Landing v2: sin esto quedaba '06:39 p. m. hs'.
@@ -345,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function(){
   let event_ = null;
   let existingReg = null;
   let userIsPro = false;
+  let userIsMember = false;   // cualquier suscripción activa (Core, Plus, Social…)
 
   function show(id, on){ const e = document.getElementById(id); if (e) e.style.display = on ? '' : 'none'; }
 
@@ -361,10 +376,16 @@ document.addEventListener('DOMContentLoaded', function(){
     event_ = ev;
 
     if (session){
-      const { data: sub } = await supa.from('subscriptions')
+      // Sin maybeSingle(): alguien puede tener dos suscripciones activas a la
+      // vez (una de Running y una de Social) y maybeSingle() devuelve error
+      // con más de una fila — el usuario quedaba tratado como no-socio.
+      const { data: subs } = await supa.from('subscriptions')
         .select('status, membership_plans(name)')
-        .eq('user_id', session.user.id).eq('status', 'active').maybeSingle();
-      userIsPro = sub?.membership_plans?.name === 'Training Plus';
+        .eq('user_id', session.user.id).eq('status', 'active');
+      const lista = subs || [];
+      userIsPro = lista.some(x => x?.membership_plans?.name === 'Training Plus');
+      // Socio = cualquier plan activo. Es lo que habilita events.member_price.
+      userIsMember = lista.length > 0;
 
       const { data: reg } = await supa.from('event_registrations')
         .select('*').eq('event_id', evId).eq('user_id', session.user.id).maybeSingle();
@@ -392,8 +413,28 @@ document.addEventListener('DOMContentLoaded', function(){
     el.innerHTML = paragraphs.map(p => `<p>${esc(p)}</p>`).join('');
   }
 
+  // Precio de socio disponible para ESTE evento (haya sesión o no): sirve
+  // para mostrarle a un visitante sin cuenta que existe un precio mejor.
+  // != null y no truthiness: member_price = 0 significa "los socios entran
+  // gratis" y con truthiness se leería como "no hay precio de socio".
+  // Ver db/2026-09-03_padel_trekking.sql.
+  function memberPrice(){
+    if (event_.member_price == null) return null;
+    const m = Number(event_.member_price);
+    // Un "descuento" que no descuenta no se anuncia.
+    if (!Number.isFinite(m) || m >= Number(event_.base_price || 0)) return null;
+    return m;
+  }
+
+  // Cómo se llama la línea de precio. "Run" solo tiene sentido en los
+  // pilares de correr; en Pádel y Trekking el concepto es la inscripción.
+  const PRICE_LABEL = { running: 'Run', social: 'Run', padel: 'Inscripción', trekking: 'Inscripción' };
+  function priceLabel(){ return PRICE_LABEL[event_.branch] || 'Inscripción'; }
+
   function effectivePrice(){
     if (event_.included_in_running_pro && userIsPro) return 0;
+    const m = memberPrice();
+    if (m != null && userIsMember) return m;
     return Number(event_.base_price || 0);
   }
 
@@ -458,6 +499,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const price = effectivePrice();
     if (event_.included_in_running_pro && userIsPro){
       show('evProBadge', true);
+    }
+    const mPrice = memberPrice();
+    const mNote = document.getElementById('evMemberNote');
+    // No se muestra si el Plus ya entra gratis: dos avisos de descuento
+    // encimados sobre el mismo precio confunden más de lo que aclaran.
+    if (mNote && mPrice != null && !(event_.included_in_running_pro && userIsPro)){
+      const mTxt = mPrice === 0 ? 'gratis' : '$' + mPrice.toLocaleString('es-AR');
+      mNote.innerHTML = userIsMember
+        ? '✓ Precio de socio aplicado — ' + esc(mTxt)
+        : 'Socios pagan ' + esc(mTxt) + ' — <a href="Suscripcion Running.html">ver planes</a>';
+      mNote.style.display = '';
     }
     const priceRow = document.getElementById('evPriceRow');
     const afterRunPrice = Number(event_.after_run_price || 0);
@@ -605,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     if (needsPayment){
       html += `
-        <div class="price-line"><span>Run</span><span>$${price.toLocaleString('es-AR')}</span></div>
+        <div class="price-line"><span>${esc(priceLabel())}</span><span>$${price.toLocaleString('es-AR')}</span></div>
         ${afterRunPrice ? `<div class="price-line" id="afterRunPriceLine" style="display:none"><span>After run</span><span>$${afterRunPrice.toLocaleString('es-AR')}</span></div>` : ''}
         <div class="price-line total" id="totalPriceLine" style="display:${afterRunPrice ? '' : 'none'}"><span>Total</span><span id="totalPriceAmount">$${price.toLocaleString('es-AR')}</span></div>`;
     }

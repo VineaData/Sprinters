@@ -209,12 +209,22 @@
     <form id="eventForm">
       <div class="f-grid">
         <div class="field full"><label>Título <span style="color:var(--error)">*</span></label><input type="text" id="e-title" required /></div>
+        <div class="field">
+          <label>Categoría <span style="color:var(--error)">*</span></label>
+          <select id="e-branch">
+            <option value="running">Running</option>
+            <option value="social">Social</option>
+            <option value="padel">Pádel</option>
+            <option value="trekking">Trekking</option>
+          </select>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Define en qué página se lista y qué campos aplican</div>
+        </div>
         <div class="field"><label>Fecha y hora <span style="color:var(--error)">*</span></label><input type="datetime-local" id="e-date" required /></div>
         <div class="field"><label>Ubicación</label><input type="text" id="e-location" /></div>
-        <div class="field full">
+        <div class="field">
           <label>Etiqueta</label>
-          <input type="text" id="e-tag" placeholder="Running, Social, Trekking…" maxlength="24" />
-          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Vacío = usa el nombre de la categoría (Running/Social)</div>
+          <input type="text" id="e-tag" placeholder="Torneo, Salida a la montaña…" maxlength="24" />
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Vacío = usa el nombre de la categoría</div>
         </div>
         <div class="field full">
           <label>Imagen del evento</label>
@@ -222,9 +232,14 @@
           <input type="file" id="e-image-file" accept="image/*" />
           <div id="e-image-status" style="font-size:11.5px;color:var(--muted);margin-top:4px"></div>
         </div>
-        <div class="field"><label>Precio Run ($, vacío = gratis)</label><input type="number" id="e-price" min="0" placeholder="5000" /></div>
+        <div class="field"><label id="e-price-label">Precio general ($, vacío = gratis)</label><input type="number" id="e-price" min="0" placeholder="5000" /></div>
+        <div class="field">
+          <label>Precio socios ($, opcional)</label>
+          <input type="number" id="e-member-price" min="0" placeholder="Sin descuento" />
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Vacío = todos pagan igual · 0 = los socios entran gratis</div>
+        </div>
         <div class="field"><label>Cupo total (vacío = sin límite)</label><input type="number" id="e-capacity" min="1" /></div>
-        <div class="field full"><label>Cierre de inscripción (opcional)</label><input type="datetime-local" id="e-cutoff" /></div>
+        <div class="field"><label>Cierre de inscripción (opcional)</label><input type="datetime-local" id="e-cutoff" /></div>
         <div class="field full"><label>Descripción</label><textarea id="e-desc"></textarea></div>
         <div class="field full">
           <label>Itinerario</label>
@@ -235,6 +250,11 @@
           </div>
         </div>
       </div>
+      <!-- Estos dos controles son propios del mundo running/social: un torneo
+           de pádel no tiene after-run ni entra en Training Plus. En vez de
+           dejarlos ahí confundiendo, toggleBranchFields() esconde el bloque
+           entero y apaga los switches cuando la categoría es otra. -->
+      <div id="e-run-only">
       <div class="field-toggle"><div><strong style="font-size:13px">After-run</strong><div style="font-size:11.5px;color:var(--muted)">El evento tiene reserva de after-run</div></div><button type="button" class="switch" id="e-afterrun-switch"></button></div>
       <div id="e-afterrun-block" style="display:none">
         <div class="field-toggle" style="margin-top:-4px">
@@ -250,6 +270,7 @@
         </div>
       </div>
       <div class="field-toggle"><div><strong style="font-size:13px">Incluido en Training Plus</strong><div style="font-size:11.5px;color:var(--muted)">Los Plus entran sin costo</div></div><button type="button" class="switch" id="e-pro-switch"></button></div>
+      </div><!-- /#e-run-only -->
       <div class="field-toggle"><div><strong style="font-size:13px">Publicado</strong><div style="font-size:11.5px;color:var(--muted)">Visible en la agenda del sitio</div></div><button type="button" class="switch on" id="e-published-switch"></button></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" id="eventModalCancel">Cancelar</button>
@@ -486,7 +507,10 @@ document.addEventListener('DOMContentLoaded', function(){
     // ================================================================
     // EVENTOS
     // ================================================================
-    const BRANCH_LABEL = { running: 'Running', social: 'Social' };
+    const BRANCH_LABEL = { running: 'Running', social: 'Social', padel: 'Pádel', trekking: 'Trekking' };
+    // Pilares que usan el flujo running: after-run y "incluido en Training Plus".
+    // Pádel y Trekking son eventos sueltos y abiertos a todos, así que no los usan.
+    const BRANCH_HAS_RUN_FIELDS = new Set(['running', 'social']);
 
     async function loadEvents(){
       const tbody = document.getElementById('eventsTbody');
@@ -507,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <td>${esc(ev.title)}</td>
           <td>${fmtDate(ev.event_date)}</td>
           <td>${esc(ev.custom_tag || BRANCH_LABEL[ev.branch] || ev.branch)}</td>
-          <td>${ev.base_price ? '$' + Number(ev.base_price).toLocaleString('es-AR') : 'Gratis'}${ev.has_after_run && ev.after_run_price ? ' + after $' + Number(ev.after_run_price).toLocaleString('es-AR') : ''}</td>
+          <td>${ev.base_price ? '$' + Number(ev.base_price).toLocaleString('es-AR') : 'Gratis'}${ev.has_after_run && ev.after_run_price ? ' + after $' + Number(ev.after_run_price).toLocaleString('es-AR') : ''}${ev.member_price != null ? `<span style="display:block;font-size:11px;color:var(--muted)">socios ${Number(ev.member_price) === 0 ? 'gratis' : '$' + Number(ev.member_price).toLocaleString('es-AR')}</span>` : ''}</td>
           <td>${ev.is_published ? '<span class="badge pub">Sí</span>' : '<span class="badge unpub">No</span>'}</td>
           <td>${ev.total_capacity != null ? (ev.sold_tickets || 0) + ' / ' + ev.total_capacity : '—'}</td>
           <td>${ev.deleted_at ? '<span class="badge inactive">Inactivo</span>' : '<span class="badge pub">Activo</span>'}</td>
@@ -565,7 +589,10 @@ document.addEventListener('DOMContentLoaded', function(){
       const row = document.createElement('div');
       row.className = 'itin-row';
       row.innerHTML =
-        `<input type="time" class="itin-time" step="300" />` +
+        // step="300" obligaba a que los minutos fueran múltiplos de 5: el
+        // navegador rechazaba 10:06 con "the two nearest valid values are
+        // 10:05 and 10:10". step="60" acepta cualquier minuto.
+        `<input type="time" class="itin-time" step="60" />` +
         `<input type="text" class="itin-label" placeholder="Qué pasa a esa hora (ej. Salida desde Prado Español)" />` +
         `<button type="button" class="itin-del" title="Quitar paso">×</button>`;
       row.querySelector('.itin-time').value = normalizeTime(time);
@@ -621,6 +648,26 @@ document.addEventListener('DOMContentLoaded', function(){
         : 'Cada uno paga en el lugar: el monto se muestra como referencia, no se cobra acá.';
     }
 
+    // Muestra u oculta el bloque que solo aplica a Running/Social y, al
+    // ocultarlo, APAGA los switches. Es a propósito: si un evento se pasa de
+    // Running a Pádel, dejar has_after_run=true en la base haría que la
+    // página del evento muestre un bloque de after-run que nadie puede ver
+    // ni editar desde el form.
+    function toggleBranchFields(){
+      const runFlow = BRANCH_HAS_RUN_FIELDS.has(document.getElementById('e-branch').value);
+      document.getElementById('e-run-only').style.display = runFlow ? '' : 'none';
+      if (!runFlow){
+        document.getElementById('e-afterrun-switch').classList.remove('on');
+        document.getElementById('e-afterrun-pay-switch').classList.remove('on');
+        document.getElementById('e-afterrun-price').value = '';
+        document.getElementById('e-pro-switch').classList.remove('on');
+        toggleAfterRunPriceField();
+      }
+      document.getElementById('e-price-label').textContent = runFlow
+        ? 'Precio Run ($, vacío = gratis)'
+        : 'Precio general ($, vacío = gratis)';
+    }
+
     function openEventModal(ev){
       editingEventId = ev ? ev.id : null;
       pendingImageFile = null;
@@ -630,6 +677,7 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('e-title').value = ev?.title || '';
       document.getElementById('e-date').value = toDatetimeLocal(ev?.event_date);
       document.getElementById('e-location').value = ev?.location_text || '';
+      document.getElementById('e-branch').value = ev?.branch || 'running';
       document.getElementById('e-tag').value = ev?.custom_tag || '';
       document.getElementById('e-image-file').value = '';
       document.getElementById('e-image-status').textContent = '';
@@ -641,6 +689,9 @@ document.addEventListener('DOMContentLoaded', function(){
         preview.style.display = 'none';
       }
       document.getElementById('e-price').value = ev ? (ev?.base_price ?? '') : 5000;
+      // ?? y no || : member_price = 0 es válido ("los socios entran gratis") y
+      // con || se convertiría en campo vacío, que significa lo contrario.
+      document.getElementById('e-member-price').value = ev?.member_price ?? '';
       document.getElementById('e-capacity').value = ev?.total_capacity ?? '';
       document.getElementById('e-cutoff').value = toDatetimeLocal(ev?.sales_cutoff);
       document.getElementById('e-desc').value = ev?.description || '';
@@ -651,10 +702,13 @@ document.addEventListener('DOMContentLoaded', function(){
       toggleAfterRunPriceField();
       document.getElementById('e-pro-switch').classList.toggle('on', !!ev?.included_in_running_pro);
       document.getElementById('e-published-switch').classList.toggle('on', ev ? !!ev.is_published : true);
+      // Va último: puede apagar los switches de arriba según la categoría.
+      toggleBranchFields();
       document.getElementById('eventModalBg').classList.add('show');
     }
     document.getElementById('newEventBtn').addEventListener('click', () => openEventModal(null));
     document.getElementById('eventModalCancel').addEventListener('click', () => document.getElementById('eventModalBg').classList.remove('show'));
+    document.getElementById('e-branch').addEventListener('change', toggleBranchFields);
     document.getElementById('e-afterrun-switch').addEventListener('click', function(){ this.classList.toggle('on'); toggleAfterRunPriceField(); });
     document.getElementById('e-afterrun-pay-switch').addEventListener('click', function(){ this.classList.toggle('on'); toggleAfterRunPriceField(); });
     ['e-pro-switch', 'e-published-switch'].forEach(id => {
@@ -695,13 +749,26 @@ document.addEventListener('DOMContentLoaded', function(){
           document.getElementById('e-image-status').textContent = '';
         }
 
-        const afterRunOn = document.getElementById('e-afterrun-switch').classList.contains('on');
+        const branchVal = document.getElementById('e-branch').value;
+        // Cinturón y tirantes: toggleBranchFields() ya apaga los switches al
+        // cambiar de categoría, pero si algo fallara igual no queremos mandar
+        // after-run ni Training Plus en un evento de pádel.
+        const runFlow = BRANCH_HAS_RUN_FIELDS.has(branchVal);
+        const afterRunOn = runFlow && document.getElementById('e-afterrun-switch').classList.contains('on');
         const afterRunPriceVal = document.getElementById('e-afterrun-price').value;
         const tagVal = document.getElementById('e-tag').value.trim();
+        // '' y '0' son cosas distintas: '' = sin precio de socio (NULL en la
+        // base, todos pagan igual), '0' = los socios entran gratis. Por eso
+        // se compara contra '' en vez de usar truthiness, que trata al 0
+        // como vacío. Number.isFinite descarta cualquier basura.
+        const memberPriceRaw = document.getElementById('e-member-price').value.trim();
+        const memberPriceNum = memberPriceRaw === '' ? null : parseFloat(memberPriceRaw);
+        const memberPriceVal = Number.isFinite(memberPriceNum) ? memberPriceNum : null;
 
         const params = {
           p_title: title,
           p_event_date: new Date(dateVal).toISOString(),
+          p_branch: branchVal,
           p_location_text: document.getElementById('e-location').value.trim() || null,
           p_cover_image_url: imageUrl,
           p_base_price: document.getElementById('e-price').value ? parseFloat(document.getElementById('e-price').value) : null,
@@ -712,13 +779,15 @@ document.addEventListener('DOMContentLoaded', function(){
           p_has_after_run: afterRunOn,
           p_after_run_payment: afterRunOn && document.getElementById('e-afterrun-pay-switch').classList.contains('on')
             ? 'organizer' : 'on_site',
-          p_included_in_running_pro: document.getElementById('e-pro-switch').classList.contains('on'),
+          p_included_in_running_pro: runFlow && document.getElementById('e-pro-switch').classList.contains('on'),
           p_is_published: document.getElementById('e-published-switch').classList.contains('on'),
           p_after_run_price: afterRunOn && afterRunPriceVal ? parseFloat(afterRunPriceVal) : null,
           // Etiqueta editable — requiere la migración db/2026-08-06_event_custom_tag.sql
           // corrida en Supabase. Sin eso, admin_create_event/admin_update_event no
           // tienen este parámetro y "Guardar" va a tirar error.
           p_custom_tag: tagVal || null,
+          // Requiere db/2026-09-03_padel_trekking.sql corrida en Supabase.
+          p_member_price: memberPriceVal,
         };
 
         if (!editingEventId){
@@ -734,6 +803,9 @@ document.addEventListener('DOMContentLoaded', function(){
             // fallback de categoría), no porque "no cambió nada". Sin este
             // flag, COALESCE del lado de la función ignoraría el vaciado.
             p_clear_custom_tag: !tagVal,
+            // Mismo motivo que p_clear_custom_tag, y acá pesa más: sin este
+            // flag un evento con precio de socio no podría volver a no tenerlo.
+            p_clear_member_price: memberPriceVal === null,
           });
           if (error) throw new Error(error.message);
         }

@@ -8,7 +8,9 @@
     { "source": "/evento", "destination": "/Evento.html" },
     { "source": "/running", "destination": "/Suscripcion Running.html" },
     { "source": "/social", "destination": "/Suscripcion Social.html" },
-    { "source": "/admin", "destination": "/Admin.html" }
+    { "source": "/admin", "destination": "/Admin.html" },
+    { "source": "/padel", "destination": "/Padel.html" },
+    { "source": "/trekking", "destination": "/Trekking.html" }
   ],
 
   "headers": [

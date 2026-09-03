@@ -1,0 +1,76 @@
+/* ============================================================
+   SPRINTERS — Páginas de actividad (Pádel, Trekking)
+
+   Actividades que pasan de vez en cuando y están abiertas a
+   cualquiera: no tienen planes ni suscripción. Estas páginas SOLO
+   explican de qué va la actividad — las fechas salen en la agenda
+   del home (`Landing v2.html#agenda`), que no filtra por pilar y
+   ya lista cualquier evento publicado.
+
+   ORDEN DE CARGA (importa):
+     brand.css       → tokens de marca
+     subs.css        → nav.top, .sub-hero, .tinyfoot
+     actividad.css   → este archivo
+
+   Por qué se carga subs.css en una página que no vende nada:
+   el nav, el hero y el pie son literalmente los mismos componentes
+   que en /running y /social. Duplicarlos acá los desincroniza a la
+   primera corrección. Lo que sí se ignora de ese archivo es todo
+   el bloque de planes (.plan*, .toggle*), que no se usa.
+   ============================================================ */
+
+/* ====== Bloques de sección ====== */
+.act-sec{padding:clamp(56px,8vh,104px) clamp(20px,5vw,48px)}
+.act-sec--cream{background:var(--crema)}
+.act-inner{max-width:1160px;margin:0 auto}
+
+/* --terracota-ink (brand.css) y no --terracota puro: sobre crema el terracota
+   de marca da 3.0:1 y estos textos son de 11-12px, así que no pasa AA. */
+.act-eyebrow{
+  font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:.32em;
+  text-transform:uppercase;font-weight:600;color:var(--terracota-ink);margin-bottom:16px;
+}
+/* Los titulares de sección van en Inter, no en Harper: el Harper del repo
+   tiene los dígitos reemplazados por el sello del autor (ver brand.css), y
+   acá el copy lo escribe otra persona — mejor que no haya forma de romperlo. */
+.act-h2{
+  font-family:'Inter',sans-serif;font-weight:300;text-transform:uppercase;
+  font-size:clamp(28px,4vw,52px);line-height:1;letter-spacing:.01em;
+  color:var(--asfaltico);
+}
+.act-lead-txt{
+  margin-top:18px;max-width:620px;font-size:15px;line-height:1.7;
+  font-weight:300;color:var(--ink-soft);text-wrap:pretty;
+}
+
+/* ====== "Qué es" — texto + rasgos ====== */
+.act-what{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,64px);align-items:start}
+.act-what p + p{margin-top:14px}
+.act-facts{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.act-fact{padding:18px 20px;border-bottom:1px solid var(--line-soft)}
+.act-fact:last-child{border-bottom:none}
+.act-fact dt{
+  font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;font-weight:600;color:var(--terracota-ink);margin-bottom:6px;
+}
+.act-fact dd{font-size:14px;line-height:1.6;color:var(--ink-soft);font-weight:300}
+
+/* ====== Banda de cierre ====== */
+.act-band-cta{background:var(--bosque-900);color:#fff;text-align:center;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px)}
+.act-band-cta h2{font-family:'Inter',sans-serif;font-weight:300;text-transform:uppercase;font-size:clamp(24px,3.4vw,44px);line-height:1.05;letter-spacing:.01em}
+.act-band-cta p{margin:16px auto 0;max-width:520px;font-size:14.5px;line-height:1.7;font-weight:300;color:rgba(255,255,255,.75)}
+.act-band-cta .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
+.act-btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;
+  font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+  transition:transform .25s,filter .25s,background .25s,color .25s;
+}
+.act-btn--solid{background:var(--terracota);color:var(--on-accent)}
+.act-btn--solid:hover{transform:translateY(-2px);filter:brightness(1.06);color:var(--on-accent)}
+.act-btn--ghost{border:1px solid rgba(255,255,255,.4);color:#fff}
+.act-btn--ghost:hover{background:#fff;color:var(--bosque)}
+
+/* ====== Responsive ====== */
+@media (max-width:900px){
+  .act-what{grid-template-columns:1fr}
+}

@@ -39,3 +39,15 @@ Sprinters Web - *
 # Se mantiene fuera del repo porque adentro está el .otf original (333 KB) y
 # no hace falta versionarlo — la que se publica es la .woff2 de images/fonts/.
 _preview-harper/
+
+# Informes de deploy: son notas de trabajo para una subida puntual (migración
+# primero, comandos de git, checklist de verificación, cómo revertir). Se leen
+# y se borran. Además, cualquier archivo suelto en la raíz que no esté acá
+# Vercel lo sirve público.
+_DEPLOY-*.md
+
+# Papelera de trabajo. Existe porque el shell del asistente no tiene permiso
+# de borrado: cuando hay que sacar algo del medio (un .git/index.lock trabado,
+# un archivo que se descartó a mitad de camino) se mueve acá con mv y se borra
+# a mano después.
+_to_delete/
