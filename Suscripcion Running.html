@@ -58,11 +58,215 @@
   Todavía te falta tu plan <strong id="pendingPlanLabel"></strong> — <a href="#" id="pendingPlanLink" style="color:#fff;text-decoration:underline;font-weight:600">completar ahora →</a>
 </div>
 
-<header class="sub-hero" data-screen-label="01 Hero · Running">
-  <div class="pillar-tag">Pilar 01 / Running Team</div>
-  <h1>Empezá a <span class="marker" id="subMarker"><span class="marker-bg"></span><span class="marker-txt">correr.</span></span></h1>
-  <p class="lede">Dos formas de sumarte al Running Team. Entrenamiento real con coach, para los que nunca corrieron y para los que quieren más. Membresía mensual, cancelás cuando quieras.</p>
-</header>
+<!-- ══════════ BLOQUE RUNNING TEAM ══════════
+     Reemplaza al <header class="sub-hero"> que tenía esta página: decía
+     "Empezá a correr." igual que el hero del bloque, así que quedaban dos
+     titulares iguales seguidos. Las reglas .sub-hero / .marker siguen en
+     subs.css porque /social las usa — acá solo se saca el markup.
+     Copy: "SRPINTERS WEB (1).docx" (reunión con Ines y Alan).
+     Scope: todo cuelga de .rt para no pisar subs.css. -->
+<style>
+/* ══════════ BLOQUE RUNNING TEAM — copiar desde acá ══════════
+   Scope: todo cuelga de .rt para no pisar subs.css.
+   Regla: Harper (.display-brand) solo en titulares SIN dígitos.
+   "Pilar 01" y "18:30 hs" van en Inter. */
+.rt{
+  --rt-bosque:#024939;
+  --rt-bosque-900:#01342a;
+  --rt-terracota:#fd521b;
+  --rt-terracota-ink:#b83409;   /* = --terracota-ink de brand.css */
+  --rt-crema:#f6f1e7;
+  --rt-tinta:#1d2420;
+  color:var(--rt-tinta);
+  line-height:1.55;
+}
+.rt *{box-sizing:border-box;}
+.rt-wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+.rt p{margin:0 0 1em;max-width:62ch;}
+.rt h1,.rt h2{margin:0;line-height:1.02;letter-spacing:-.01em;}
+
+/* Botones
+   El documento los escribe en mayúsculas y con flecha ("AGENDAR CLASE DE
+   PRUEBA →"). Las mayúsculas van por CSS y no en el HTML para que el texto
+   del markup se siga leyendo normal y los lectores de pantalla no deletreen. */
+.rt-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:8px;padding:15px 26px;border-radius:999px;
+  font-weight:700;font-size:.9rem;text-decoration:none;
+  text-transform:uppercase;letter-spacing:.12em;
+  transition:transform .15s ease;
+}
+.rt-cta:hover{transform:translateY(-2px);}
+.rt-cta__a{transition:transform .2s ease;}
+.rt-cta:hover .rt-cta__a{transform:translateX(4px);}
+.rt-cta:focus-visible{outline:3px solid var(--rt-terracota);outline-offset:3px;}
+.rt-cta--claro{background:var(--rt-crema);color:var(--rt-bosque);}
+.rt-cta--bosque{background:var(--rt-bosque);color:#fff;}
+
+/* Bajada de sección — los Heading 3 del documento de copy
+   ("PILAR 01 / RUNNING TEAM", "QUÉ ES", "LOS ENTRENAMIENTOS").
+   color:currentColor para que sirva igual sobre Bosque y sobre Crema; lo
+   único fijo es el filete Terracota de arriba, que es el gesto de marca. */
+.rt-eyebrow{font-weight:600;font-size:.95rem;color:currentColor;opacity:.85;margin:0 0 20px;
+  padding-top:14px;border-top:3px solid var(--rt-terracota);display:inline-block;
+  letter-spacing:.14em;text-transform:uppercase;}
+
+/* 1. Hero */
+.rt-hero{background:var(--rt-bosque);color:#fff;padding:96px 0 88px;}
+/* Mayúsculas y tracking como el resto de las bajadas: en el documento va
+   "PILAR 01 / RUNNING TEAM". Queda en Inter, no en Harper, porque tiene
+   dígitos (el "01") y Harper no los renderiza. */
+.rt-pilar{font-weight:600;font-size:.85rem;color:#fff;opacity:.85;margin:0 0 20px;
+  padding-top:14px;border-top:3px solid var(--rt-terracota);display:inline-block;
+  text-transform:uppercase;letter-spacing:.14em;}
+.rt-hero h1{font-size:clamp(3rem,9vw,6.5rem);margin-bottom:24px;}
+.rt-hero .rt-sub{font-size:1.15rem;opacity:.9;margin-bottom:.4em;}
+.rt-hero .rt-lead{font-size:1.25rem;font-weight:600;max-width:34ch;margin-bottom:28px;}
+
+/* 2. Qué es */
+.rt-que{background:var(--rt-crema);padding:88px 0;}
+.rt-que__grid{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:start;}
+.rt-que h2{font-size:clamp(2rem,4.5vw,3.2rem);color:var(--rt-bosque);}
+.rt-para{list-style:none;margin:0 0 28px;padding:0;}
+.rt-para li{font-size:1.15rem;padding:10px 0;border-bottom:1px solid rgba(2,73,57,.18);}
+.rt-para li:last-child{border-bottom:0;}
+.rt-que strong{color:var(--rt-bosque);}
+.rt-remate{font-weight:700;color:var(--rt-terracota-ink);}
+
+/* 3. Los entrenamientos */
+.rt-datos{background:var(--rt-bosque-900);color:#fff;padding:56px 0;}
+.rt-datos ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.rt-datos li{padding-left:18px;border-left:3px solid var(--rt-terracota);}
+/* "MARTES + JUEVES", "PARQUE GENERAL SAN MARTÍN", "CON COACH" van en
+   mayúsculas en el documento. El dato de abajo (la hora, la ciudad) no. */
+.rt-datos b{display:block;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+.rt-datos span{opacity:.8;}
+
+/* 4. ¿Nunca corriste? — el momento fuerte del bloque */
+.rt-nunca{background:var(--rt-crema);padding:96px 0;}
+.rt-nunca h2{font-size:clamp(2.4rem,6vw,4.2rem);color:var(--rt-bosque);}
+.rt-nunca .rt-mejor{font-size:clamp(2.4rem,6vw,4.2rem);color:var(--rt-terracota-ink);margin:4px 0 36px;}
+.rt-tachado{list-style:none;margin:0 0 20px;padding:0;}
+.rt-tachado li{font-size:clamp(1.1rem,2.4vw,1.45rem);padding:6px 0;
+  text-decoration:line-through;text-decoration-color:var(--rt-terracota);
+  text-decoration-thickness:3px;color:rgba(29,36,32,.7);}
+.rt-paraeso{font-size:1.5rem;font-weight:800;color:var(--rt-bosque);margin-bottom:20px;}
+
+/* 5. Cierre */
+.rt-cierre{background:var(--rt-bosque);color:#fff;padding:96px 0;}
+.rt-cierre h2{font-size:clamp(2rem,5vw,3.6rem);max-width:18ch;margin-bottom:28px;}
+.rt-cierre p{opacity:.9;font-size:1.1rem;}
+
+@media (max-width:760px){
+  .rt-hero,.rt-que,.rt-nunca,.rt-cierre{padding:64px 0;}
+  .rt-que__grid{grid-template-columns:1fr;gap:28px;}
+  .rt-datos ul{grid-template-columns:1fr;gap:18px;}
+}
+@media (prefers-reduced-motion:reduce){.rt-cta{transition:none;}.rt-cta:hover{transform:none;}}
+/* ══════════ fin CSS bloque ══════════ */
+</style>
+
+<div class="rt">
+
+  <section class="rt-hero" id="running-team">
+    <div class="rt-wrap">
+      <p class="rt-pilar">Pilar 01 / Running Team</p>
+      <h1 class="display-brand">EMPEZÁ A CORRER.</h1>
+      <p class="rt-sub">Running team para principiantes e intermedios.</p>
+      <p class="rt-lead">No hace falta que seas rápido. Ni que te sientas runner. Solo que tengas ganas de empezar.</p>
+      <a class="rt-cta rt-cta--claro" data-wa href="#">Agendar clase de prueba <span class="rt-cta__a" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="rt-que">
+    <div class="rt-wrap rt-que__grid">
+      <!-- El div envuelve bajada + título para que los dos caigan en la
+           primera columna de la grilla. Sueltos, la bajada ocuparía una
+           celda propia y rompería las dos columnas. -->
+      <div>
+        <p class="rt-eyebrow">Qué es</p>
+        <h2 class="display-brand">UN RUNNING TEAM PARA PERSONAS REALES.</h2>
+      </div>
+      <div>
+        <ul class="rt-para">
+          <li>Para las que recién empiezan.</li>
+          <li>Para las que quieren volver a correr.</li>
+          <li>Para las que necesitan constancia.</li>
+          <li>Y para las que solas siempre encuentran una buena excusa para dejarlo para mañana.</li>
+        </ul>
+        <p>Sprinters Running Team es nuestro espacio de entrenamiento semanal para <strong>aprender a correr, progresar y construir el hábito acompañado.</strong></p>
+        <p>No venís simplemente a sumar kilómetros. Venís a entender cómo correr, mejorar de a poco y descubrir que probablemente podés mucho más de lo que pensabas.</p>
+        <p class="rt-remate">La misma energía de Sprinters. La misma comunidad. Ahora, dos veces por semana.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- aria-labelledby en vez de aria-label: ahora el título está visible en
+       la página, así que el lector de pantalla usa ese mismo texto. -->
+  <section class="rt-datos" aria-labelledby="rtDatosTitulo">
+    <div class="rt-wrap">
+      <p class="rt-eyebrow" id="rtDatosTitulo">Los entrenamientos</p>
+      <ul>
+        <li><b>Martes + Jueves</b><span>18:30 hs</span></li>
+        <li><b>Parque General San Martín</b><span>Mendoza</span></li>
+        <li><b>Con coach</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="rt-nunca">
+    <div class="rt-wrap">
+      <h2 class="display-brand">¿NUNCA CORRISTE?</h2>
+      <p class="rt-mejor display-brand">MEJOR.</p>
+      <ul class="rt-tachado">
+        <li>No necesitás haber corrido una carrera.</li>
+        <li>No necesitás correr rápido.</li>
+        <li>No necesitás poder hacer 5K.</li>
+      </ul>
+      <p class="rt-paraeso">Para eso estamos.</p>
+      <p>Sumate a una clase de prueba, conocé al equipo y viví un entrenamiento antes de decidir si querés seguir.</p>
+      <a class="rt-cta rt-cta--bosque" data-wa href="#">Quiero probar una clase <span class="rt-cta__a" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="rt-cierre">
+    <div class="rt-wrap">
+      <h2 class="display-brand">CORRER ESTÁ BUENO. CORRER CON GENTE, MÁS.</h2>
+      <p>Entrenar es una parte de Sprinters Running Team.</p>
+      <p>La otra son las personas que conocés, los kilómetros que empezás a compartir y esa sensación de darte cuenta de que algo que parecía imposible ya no lo es.</p>
+      <a class="rt-cta rt-cta--claro" data-wa href="#">Vení a probarlo <span class="rt-cta__a" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* Puro UI: NO va dentro del waitFor(supabase). Un solo lugar para número y mensaje.
+   Son dos grupos de botones:
+   · .rt [data-wa]        → los tres CTA del bloque, mensaje genérico.
+   · [data-wa-plan="…"]   → los de las tarjetas, que además dicen qué plan
+     venía mirando la persona. Así el que atiende el WhatsApp sabe de entrada
+     si pregunta por Core o por Plus, sin tener que repreguntarlo. */
+(function(){
+  var WA_NUMERO = '542619298844'; // TODO(número): confirmar si Running Team usa la línea del club
+  var BASE = 'https://wa.me/' + WA_NUMERO + '?text=';
+  var MSJ_GENERICO = 'Hola! Quiero agendar una clase de prueba en el Running Team.';
+
+  document.querySelectorAll('.rt [data-wa]').forEach(function(a){
+    a.href = BASE + encodeURIComponent(MSJ_GENERICO);
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+
+  document.querySelectorAll('[data-wa-plan]').forEach(function(a){
+    var plan = a.getAttribute('data-wa-plan');
+    a.href = BASE + encodeURIComponent(
+      'Hola! Quiero agendar una clase de prueba en el Running Team. Vi el plan ' + plan + '.'
+    );
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+})();
+</script>
+<!-- ══════════ fin bloque Running Team ══════════ -->
 
 <section class="plans cols-2" id="plans">
 
@@ -73,14 +277,12 @@
     </div>
     <p class="plan-desc">Empezá a correr con acompañamiento real. Ocho clases al mes con coach, pensadas para arrancar de cero o seguir sumando.</p>
 
-    <div class="price-row">
-      <span class="price-curr">$</span>
-      <span class="price-num">35.000</span>
-      <span class="price-period">/ mes</span>
-    </div>
-    <div class="price-note">Renovación mensual automática · cancelás cuando quieras</div>
-
-    <button class="plan-cta" data-subscribe="Training Core">Suscribirme a Core <span class="a">→</span></button>
+    <!-- Running Team ya no se cobra ni se inscribe por la plataforma: la
+         página muestra los planes y la conversión es agendar una clase de
+         prueba por WhatsApp (reunión con Ines y Alan, 2026-10).
+         El botón usa la misma clase .plan-cta para no tocar el diseño, y
+         [data-wa-plan] lo engancha el script del bloque Running Team. -->
+    <a class="plan-cta" data-wa-plan="Training Core" href="#" target="_blank" rel="noopener">Agendar clase de prueba <span class="a">→</span></a>
 
     <ul class="plan-features">
       <li class="plan-feature"><span class="feature-icon">↗</span><span>8 clases / mes · Martes y Jueves 18:30 (1h)</span></li>
@@ -92,7 +294,9 @@
       <h4 class="plan-includes-title">Incluye además:</h4>
       <ul class="plan-includes-list">
         <li><span class="check">✓</span><span>Cupos limitados (45) para entrenamiento personalizado</span></li>
-        <li><span class="check">✓</span><span>Apto médico requerido (lo cargás antes de tu primera clase)</span></li>
+        <!-- Se quitó "Apto médico requerido" el 2026-10-01: el campo ya no
+             existe en el registro ni en el perfil, así que prometerlo acá
+             dejaba al visitante buscando algo que no va a encontrar. -->
         <li><span class="check">✓</span><span>Inscripción bonificada</span></li>
       </ul>
     </div>
@@ -113,7 +317,7 @@
     </div>
     <div class="price-note">Renovación mensual automática · cancelás cuando quieras</div>
 
-    <button class="plan-cta" data-subscribe="Training Plus">Suscribirme a Plus <span class="a">→</span></button>
+    <a class="plan-cta" data-wa-plan="Training Plus" href="#" target="_blank" rel="noopener">Agendar clase de prueba <span class="a">→</span></a>
 
     <ul class="plan-features">
       <li class="plan-feature"><span class="feature-icon">↗</span><span>Todo lo del Training Core</span></li>
@@ -154,6 +358,9 @@
 
 <script>
   // ===== Marker highlight trigger =====
+  // El if (m) dejó de ser defensivo y pasó a ser necesario: esta página ya
+  // no tiene #subMarker (se fue con el .sub-hero). Se deja el bloque porque
+  // es el mismo script que /social, que sí lo usa.
   (function(){
     const m = document.getElementById('subMarker');
     if (m) setTimeout(() => m.classList.add('is-on'), 600);
@@ -231,10 +438,21 @@
       }
     }
 
-    // Volvió de crear cuenta / loguearse con ?pay=core|plus → arranca el flujo de transferencia
+    // Volvió de crear cuenta / loguearse con ?pay=core|plus → arranca el flujo
+    // de transferencia.
+    //
+    // Antes esto buscaba el botón [data-subscribe] de la tarjeta. Desde que
+    // Running Team no se cobra por la plataforma (reunión 2026-10) esos
+    // botones ya no existen, así que el banner de "te falta completar tu
+    // plan" quedaba sin destino: llevaba acá y no pasaba nada.
+    //
+    // Se mantiene el camino vivo porque el modelo de suscripciones sigue en
+    // la base y hay gente que eligió plan al registrarse y todavía no pagó.
+    // Lo que se cerró es la venta pública, no la cobranza de lo ya empezado.
+    // El botón que recibe subscribe() es un elemento suelto, fuera del DOM:
+    // la función lo usa solo para mostrar "Preparando…" y restaurar el label.
     const planName = PLAN_BY_SLUG[new URLSearchParams(location.search).get('pay')];
-    const btn = planName && document.querySelector(`[data-subscribe="${planName}"]`);
-    if (btn) subscribe(planName, btn);
+    if (planName) subscribe(planName, document.createElement('button'));
   })();
 
   const ORIGINAL_BTN_LABEL = {

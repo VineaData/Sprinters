@@ -572,19 +572,13 @@
               <span class="field-error">Ingresá un contacto de emergencia.</span>
             </div>
 
-            <!-- Apto físico · opcional al registrarse (2026-08-04).
-                 Se sube después de crear la cuenta, porque el bucket privado
-                 exige una sesión activa para saber a qué carpeta va. Si el
-                 signup requiere confirmar el mail, se lo pedimos desde el perfil. -->
-            <div class="field full" style="margin-top:18px">
-              <label class="field-label" for="signupMedCert">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
-              <label for="signupMedCert" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:11px 18px;font-size:10px;margin-top:4px">
-                Adjuntar apto físico
-              </label>
-              <input type="file" id="signupMedCert" accept="image/*,application/pdf" style="display:none" />
-              <div id="signupMedCertName" style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:8px">Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.</div>
-            </div>
-          </div>
+            <!-- Apto físico: se sacó de la interfaz el 2026-10-01 (reunión con Ines y
+     Alan). NO se tocó la base: las columnas med_cert_* de public.users, el
+     bucket privado 'medical-certs' y la RPC submit_med_cert() siguen ahí con
+     los aptos que ya había cargada la gente. Lo único que se quitó es la
+     posibilidad de subir uno nuevo y de verlo desde la web, así que volver
+     atrás es restaurar markup, no migrar datos. -->
+                    </div>
 
           <!-- Sec 4: Suscripción (opcional, elegís al crear la cuenta) -->
           <div class="section-block">
@@ -745,7 +739,6 @@
             <div class="it"><span class="l">¿De dónde sos?</span><span class="v" id="profOrigin">—</span></div>
             <div class="it"><span class="l">Nos conociste por</span><span class="v" id="profHow">—</span></div>
             <div class="it"><span class="l">Contacto emergencia</span><span class="v" id="profEmerg">—</span></div>
-            <div class="it"><span class="l">Apto físico</span><span class="v" id="profMedCert">—</span></div>
           </div>
 
           <div class="profile-action-row">
@@ -850,19 +843,6 @@
               <input class="field-input" type="text" id="ep-origin" placeholder="Godoy Cruz, Capital, Maipú…" maxlength="80" />
               <span class="field-icon">=</span>
             </div>
-          </div>
-
-          <!-- Apto físico · opcional por ahora (2026-08-04).
-               El bucket 'medical-certs' es privado: el archivo nunca queda
-               accesible por URL pública y solo lo ve la persona o un admin. -->
-          <div class="field" style="margin-bottom:24px;padding-top:20px;border-top:1px solid var(--line)">
-            <label class="field-label">Apto físico <span style="text-transform:none;font-weight:400;letter-spacing:0;color:var(--muted)">· opcional</span></label>
-            <div id="medCertStatus" style="font-family:'Inter',sans-serif;font-size:12.5px;color:var(--muted);margin:8px 0 12px">Todavía no cargaste tu apto.</div>
-            <label for="medCertInput" class="btn-primary" style="cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--ink);display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:10px">
-              Subir apto físico
-            </label>
-            <input type="file" id="medCertInput" accept="image/*,application/pdf" style="display:none" />
-            <div style="font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-top:8px">JPG, PNG o PDF · máx. 5 MB. Es un dato de salud: se guarda en privado y solo lo vemos nosotros.</div>
           </div>
 
           <div class="profile-action-row" style="margin-top:8px">
@@ -1150,10 +1130,6 @@
     if(el('profFullName')) el('profFullName').textContent = name || '—';
     if(el('profPhone'))    el('profPhone').textContent   = p?.phone || '—';
     if(el('profAge'))      el('profAge').textContent     = p?.age ? p.age + ' años' : '—';
-    if(el('profMedCert')){
-      const MC = { none: 'Sin cargar', pending: 'En revisión', approved: 'Aprobado', rejected: 'Rechazado' };
-      el('profMedCert').textContent = MC[p?.med_cert_status || 'none'] || 'Sin cargar';
-    }
     if(el('profSex'))      el('profSex').textContent     = SEX_MAP[p?.sex] || '—';
     if(el('profOrigin'))   el('profOrigin').textContent  = ORIGIN_MAP[p?.origin] || p?.origin || '—';
     if(el('profHow'))      el('profHow').textContent     = HOW_MAP[p?.how_heard] || p?.how_heard || '—';
@@ -1194,7 +1170,7 @@
   function clearProfile(){
     _currentUser = null;
     _currentProfile = null;
-    const ids = ['profName','profEmail','profFullName','profPhone','profAge','profSex','profOrigin','profHow','profEmerg','profMedCert'];
+    const ids = ['profName','profEmail','profFullName','profPhone','profAge','profSex','profOrigin','profHow','profEmerg'];
     const el = (id) => document.getElementById(id);
     ids.forEach(id => { const e = el(id); if(e) e.textContent = '—'; });
     if(el('profSince')) el('profSince').textContent = 'Miembro desde · —';
@@ -1255,28 +1231,6 @@
   }
 
   // ===== Edit profile =====
-  const MED_CERT_LABEL = {
-    none:     'Todavía no cargaste tu apto.',
-    pending:  '⏳ Apto cargado — lo estamos revisando.',
-    approved: '✓ Apto aprobado.',
-    rejected: '⚠ No pudimos validar tu apto. Subí uno nuevo.'
-  };
-
-  function renderMedCertStatus(p){
-    const box = document.getElementById('medCertStatus');
-    if (!box) return;
-    const st = p?.med_cert_status || 'none';
-    let txt = MED_CERT_LABEL[st] || MED_CERT_LABEL.none;
-    if (st === 'approved' && p?.med_cert_expires_at){
-      const [y, m, d] = String(p.med_cert_expires_at).slice(0, 10).split('-');
-      const vencido = new Date(p.med_cert_expires_at) < new Date();
-      txt = vencido
-        ? `⚠ Tu apto venció el ${d}/${m}/${y}. Subí uno nuevo.`
-        : `✓ Apto aprobado · vence el ${d}/${m}/${y}.`;
-    }
-    box.textContent = txt;
-  }
-
   async function showEditMode(){
     const el = (id) => document.getElementById(id);
 
@@ -1310,7 +1264,6 @@
     const sexRadio = document.querySelector(`input[name="epSexo"][value="${_currentProfile?.sex || ''}"]`);
     document.querySelectorAll('input[name="epSexo"]').forEach(r => { r.checked = false; });
     if (sexRadio) sexRadio.checked = true;
-    renderMedCertStatus(_currentProfile);
     // Mirror current avatar into edit preview
     const pic = el('profilePic');
     const preview = el('editAvatarPreview');
@@ -1341,73 +1294,6 @@
     if (!hint) return;
     hint.style.display = a == null ? 'none' : '';
     hint.textContent = a == null ? '' : a + ' años';
-  });
-
-  // Nombre del apto elegido durante el signup
-  document.getElementById('signupMedCert')?.addEventListener('change', function(){
-    const box = document.getElementById('signupMedCertName');
-    const f = this.files?.[0];
-    if (!box) return;
-    if (!f){ box.textContent = 'Si ya lo tenés, adjuntalo ahora. Si no, lo cargás después desde tu perfil.'; return; }
-    if (f.size > 5 * 1024 * 1024){
-      showToast('El apto debe pesar menos de 5 MB');
-      this.value = '';
-      return;
-    }
-    box.textContent = f.name;
-  });
-
-  // Sube el apto adjuntado en el signup, una vez que ya hay sesión.
-  // Devuelve true/false solo para poder avisar; nunca corta el registro.
-  async function uploadSignupMedCert(userId){
-    const input = document.getElementById('signupMedCert');
-    const file = input?.files?.[0];
-    if (!file || !userId) return false;
-    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    const path = `${userId}/apto-${Date.now()}.${ext}`;
-    const { error: upErr } = await supa.storage
-      .from('medical-certs').upload(path, file, { upsert: true, contentType: file.type });
-    if (upErr){ console.error('[signup] apto:', upErr.message); return false; }
-    const { error: rpcErr } = await supa.rpc('submit_med_cert', { p_url: path });
-    if (rpcErr){ console.error('[signup] submit_med_cert:', rpcErr.message); return false; }
-    return true;
-  }
-
-  // ===== Apto físico (opcional) =====
-  //   Sube al bucket privado 'medical-certs' bajo <uid>/ — la policy exige que
-  //   la primera carpeta sea el uid, así que nadie puede leer el de otro.
-  //   submit_med_cert() deja el estado en 'pending' para que lo revise un admin.
-  document.getElementById('medCertInput')?.addEventListener('change', async function(){
-    const file = this.files?.[0];
-    if (!file) return;
-    const box = document.getElementById('medCertStatus');
-    if (file.size > 5 * 1024 * 1024){
-      showToast('El apto debe pesar menos de 5 MB');
-      this.value = '';
-      return;
-    }
-    if (!_currentUser){ showToast('Se cerró tu sesión. Volvé a entrar.'); return; }
-
-    box.textContent = 'Subiendo…';
-    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    const path = `${_currentUser.id}/apto-${Date.now()}.${ext}`;
-    const { error: upErr } = await supa.storage
-      .from('medical-certs').upload(path, file, { upsert: true, contentType: file.type });
-    if (upErr){
-      box.textContent = 'No pudimos subirlo: ' + upErr.message;
-      this.value = '';
-      return;
-    }
-    const { error: rpcErr } = await supa.rpc('submit_med_cert', { p_url: path });
-    if (rpcErr){
-      box.textContent = 'Subimos el archivo pero no pudimos registrarlo: ' + rpcErr.message;
-      this.value = '';
-      return;
-    }
-    if (_currentProfile) _currentProfile.med_cert_status = 'pending';
-    renderMedCertStatus(_currentProfile);
-    showToast('Apto físico cargado');
-    this.value = '';
   });
 
   function previewAvatar(input){
@@ -1593,9 +1479,7 @@
       if (runningSlug || socialSlug){
         sessionStorage.setItem('sprinters_signup_plan_choice', JSON.stringify({ runningSlug, socialSlug }));
       }
-      showToast(document.getElementById('signupMedCert')?.files?.[0]
-        ? '¡Cuenta creada! Confirmá tu mail y cargá el apto desde tu perfil.'
-        : '¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
+      showToast('¡Cuenta creada! Revisá tu mail para confirmar y después iniciá sesión.');
       setTimeout(() => switchTab('login'), 2000);
       return;
     }
@@ -1620,7 +1504,6 @@
     }
 
     // Apto físico opcional: recién acá hay sesión, que es lo que exige el bucket
-    await uploadSignupMedCert(data.user.id);
 
     setAuthUI(true);
     switchTab('profile');

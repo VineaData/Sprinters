@@ -162,6 +162,31 @@
   .file-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;background:#fff;border:1.5px dashed var(--bosque);font-family:'Inter';font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
   .file-name{font-size:12.5px;color:var(--muted)}
 
+  /* Quitar el archivo elegido antes de confirmar. Va en gris, no en Terracota:
+     es una acción secundaria y el rojo de marca no se lee bien en texto chico
+     sobre fondo claro. El rojo aparece solo en hover, que es cuando el usuario
+     ya está apuntando al botón. */
+  .file-clear{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:14px;line-height:1;cursor:pointer;flex-shrink:0;transition:color .2s,border-color .2s}
+  .file-clear:hover{color:var(--error-fg);border-color:var(--error-fg)}
+
+  /* Comprobante ya subido: fila con el nombre del archivo y las acciones. */
+  .receipt-current{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0;padding:14px 16px;background:var(--crema-2);border:1px solid var(--line);border-radius:12px}
+  .receipt-current .rc-ico{flex-shrink:0;font-size:15px;color:var(--bosque)}
+  .receipt-current .rc-txt{flex:1;min-width:0;font-size:12.5px;line-height:1.5}
+  .receipt-current .rc-txt .rc-name{display:block;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .receipt-current .rc-txt .rc-date{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .receipt-actions{display:flex;gap:8px;flex-shrink:0}
+  .rc-btn{font-family:'Inter';font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;padding:9px 14px;border-radius:999px;border:1px solid var(--bosque);background:#fff;color:var(--bosque);cursor:pointer;transition:background .2s,color .2s}
+  .rc-btn:hover{background:var(--bosque);color:#fff}
+  .rc-btn.danger{border-color:var(--line);color:var(--muted)}
+  .rc-btn.danger:hover{background:var(--error-fg);border-color:var(--error-fg);color:#fff}
+  .rc-btn[disabled]{opacity:.5;cursor:default}
+  @media (max-width:640px){
+    .receipt-current{align-items:flex-start}
+    .receipt-actions{width:100%}
+    .rc-btn{flex:1}
+  }
+
   .legal-note{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:16px}
 
   .price-line{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0}
@@ -350,6 +375,96 @@ document.addEventListener('DOMContentLoaded', function(){
   };
   const EV_TAG = { running: 'Running', social: 'Social', padel: 'Pádel', trekking: 'Trekking' };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // ───────────────────────────────────────────────────────────────
+  // COMPROBANTES — tamaño y compresión
+  //
+  // Antes el tope era 5 MB y se rechazaba el archivo de una. Una foto de
+  // cualquier celular actual pasa ese límite sin esfuerzo, así que el que
+  // sacaba la foto del comprobante no podía anotarse.
+  //
+  // En vez de subir el techo y listo, las imágenes se reducen en el navegador
+  // antes de subirlas: una foto de 12 MB viaja como ~500 KB. Es mejor para el
+  // que sube (con datos móviles la diferencia es enorme) y para el Storage.
+  // Un comprobante se mira, no se imprime: 2000px de lado largo sobran.
+  //
+  // Los PDF no se tocan — no se pueden recomprimir sin una librería — así
+  // que ahí sí hay un tope duro, pero holgado.
+  // ───────────────────────────────────────────────────────────────
+  const RECEIPT_MAX_INPUT_MB  = 25;   // lo que se acepta del disco antes de procesar
+  const RECEIPT_MAX_UPLOAD_MB = 15;   // lo que se permite subir ya procesado (tope de los PDF)
+  const RECEIPT_MAX_EDGE_PX   = 2000; // lado largo al que se reduce una imagen
+  const RECEIPT_JPEG_QUALITY  = 0.85;
+  const MB = 1024 * 1024;
+
+  const fmtBytes = n => n >= MB
+    ? (n / MB).toFixed(1).replace('.', ',') + ' MB'
+    : Math.max(1, Math.round(n / 1024)) + ' KB';
+
+  // Devuelve { file, error }. Nunca tira: el llamador muestra error y corta.
+  async function prepareReceipt(file){
+    if (!file) return { error: 'No elegiste ningún archivo.' };
+
+    if (file.size > RECEIPT_MAX_INPUT_MB * MB){
+      return { error: `El archivo pesa ${fmtBytes(file.size)} y el máximo es ${RECEIPT_MAX_INPUT_MB} MB.` };
+    }
+
+    // PDF (o cualquier cosa que no sea imagen): va tal cual, con tope duro.
+    if (!/^image\//i.test(file.type || '')){
+      if (file.size > RECEIPT_MAX_UPLOAD_MB * MB){
+        return { error: `El PDF pesa ${fmtBytes(file.size)} y el máximo es ${RECEIPT_MAX_UPLOAD_MB} MB. Probá sacarle una foto.` };
+      }
+      return { file };
+    }
+
+    try {
+      const compressed = await compressImage(file);
+      // Si comprimir no achicó nada (ya era chica, o es un PNG de pantalla),
+      // nos quedamos con el original: no tiene sentido recodificar de más.
+      const best = (compressed && compressed.size < file.size) ? compressed : file;
+      if (best.size > RECEIPT_MAX_UPLOAD_MB * MB){
+        return { error: `Incluso reducida la imagen pesa ${fmtBytes(best.size)}. Probá con una captura en vez de la foto.` };
+      }
+      return { file: best, original: file.size };
+    } catch (err){
+      // Si el canvas falla (HEIC que el navegador no decodifica, memoria),
+      // intentamos subir el original mientras entre en el tope duro.
+      if (file.size <= RECEIPT_MAX_UPLOAD_MB * MB) return { file };
+      return { error: 'No pudimos procesar esa imagen. Probá con una captura de pantalla o un PDF.' };
+    }
+  }
+
+  function compressImage(file){
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const scale = Math.min(1, RECEIPT_MAX_EDGE_PX / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width  * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          // Fondo blanco: un PNG con transparencia pasado a JPEG queda negro.
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(blob => {
+            URL.revokeObjectURL(url);
+            if (!blob) return reject(new Error('toBlob devolvió null'));
+            const name = (file.name || 'comprobante').replace(/\.[^.]+$/, '') + '.jpg';
+            resolve(new File([blob], name, { type: 'image/jpeg', lastModified: Date.now() }));
+          }, 'image/jpeg', RECEIPT_JPEG_QUALITY);
+        } catch (err){ URL.revokeObjectURL(url); reject(err); }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('No se pudo decodificar la imagen')); };
+      img.src = url;
+    });
+  }
+
+  // Texto de ayuda debajo del botón de subir. Se usa en los dos flujos.
+  const RECEIPT_HINT = `JPG, PNG o PDF · hasta ${RECEIPT_MAX_INPUT_MB} MB`;
   const fmtDate = (iso) => new Intl.DateTimeFormat('es-AR', { weekday:'long', day:'2-digit', month:'long' }).format(new Date(iso));
   // hour12:false — ver misma nota en Landing v2: sin esto quedaba '06:39 p. m. hs'.
   const fmtTime = (iso) => new Intl.DateTimeFormat('es-AR', { hour:'2-digit', minute:'2-digit', hour12:false }).format(new Date(iso));
@@ -711,17 +826,53 @@ document.addEventListener('DOMContentLoaded', function(){
     const termsCheck = document.getElementById('termsCheck');
     const reserveBtn = document.getElementById('reserveBtn');
     const receiptInput = card.querySelector('#receiptInput');
+    const receiptClear = card.querySelector('#receiptClear');
+    const receiptNameEl = card.querySelector('#receiptFileName');
+
+    // El archivo ya procesado (comprimido) queda acá, no en el <input>: un
+    // file input es de solo lectura, no se le puede reasignar el File nuevo.
+    // Lo que se sube es pendingReceipt, no receiptInput.files[0].
+    let pendingReceipt = null;
+
+    function clearReceipt(){
+      pendingReceipt = null;
+      if (receiptInput) receiptInput.value = '';
+      if (receiptNameEl) receiptNameEl.textContent = RECEIPT_HINT;
+      if (receiptClear) receiptClear.style.display = 'none';
+      updateReserveEnabled();
+    }
+
     function updateReserveEnabled(){
       const termsOk = termsCheck.checked;
-      const fileOk = !needsPayment || (receiptInput && receiptInput.files && receiptInput.files[0]);
+      const fileOk = !needsPayment || !!pendingReceipt;
       reserveBtn.disabled = !(termsOk && fileOk);
     }
     termsCheck.addEventListener('change', updateReserveEnabled);
+
+    if (receiptClear) receiptClear.addEventListener('click', clearReceipt);
+
     if (receiptInput){
-      receiptInput.addEventListener('change', () => {
-        const f = receiptInput.files && receiptInput.files[0];
-        const nameEl = document.getElementById('receiptFileName');
-        if (f) nameEl.textContent = f.name;
+      receiptInput.addEventListener('change', async () => {
+        const raw = receiptInput.files && receiptInput.files[0];
+        if (!raw){ clearReceipt(); return; }
+
+        receiptNameEl.textContent = 'Procesando…';
+        if (receiptClear) receiptClear.style.display = '';
+        reserveBtn.disabled = true;
+
+        const { file, error, original } = await prepareReceipt(raw);
+        if (error){
+          receiptNameEl.textContent = error;
+          pendingReceipt = null;
+          updateReserveEnabled();
+          return;
+        }
+        pendingReceipt = file;
+        // Si se comprimió, mostrarlo: explica por qué el archivo "cambió" de
+        // nombre y de peso, y da confianza de que la subida va a andar.
+        receiptNameEl.textContent = (original && file.size < original)
+          ? `${file.name} · ${fmtBytes(original)} → ${fmtBytes(file.size)}`
+          : `${file.name} · ${fmtBytes(file.size)}`;
         updateReserveEnabled();
       });
     }
@@ -748,11 +899,9 @@ document.addEventListener('DOMContentLoaded', function(){
       const labelDefault = needsPayment ? 'Confirmar y reservar mi lugar →' : 'Confirmar mi lugar →';
       const restore = () => { reserveBtn.disabled = false; reserveBtn.textContent = labelDefault; };
 
-      const file = receiptInput && receiptInput.files && receiptInput.files[0];
-      if (needsPayment && file && file.size > 5 * 1024 * 1024){
-        alert('El comprobante debe pesar menos de 5 MB');
-        return;
-      }
+      // pendingReceipt ya pasó por prepareReceipt() en el change del input:
+      // acá no hace falta revalidar tamaño, si está seteado es porque entró.
+      const file = pendingReceipt;
 
       reserveBtn.disabled = true; reserveBtn.textContent = 'Reservando…';
 
@@ -787,7 +936,11 @@ document.addEventListener('DOMContentLoaded', function(){
           if (rpcErr){
             alert('Subimos el comprobante pero no pudimos confirmarlo: ' + rpcErr.message + '\nEscribinos y lo resolvemos.');
           } else {
-            existingReg.payment_status = 'verified';
+            // Se reflejan las tres columnas que toca la RPC: sin receipt_url
+            // la pantalla siguiente no mostraría la fila con Cambiar/Eliminar.
+            existingReg.payment_status      = 'verified';
+            existingReg.receipt_url         = path;
+            existingReg.receipt_uploaded_at = new Date().toISOString();
           }
         }
       }
@@ -824,8 +977,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const cancelNote = `<div class="info-block">¿Necesitás cancelar tu lugar? Escribinos al ${esc(CASH_CONTACT_PHONE)} y te ayudamos.</div>`;
 
+    // Si ya hay comprobante subido se muestra la fila con Cambiar / Eliminar.
+    // Si no hay (recién anotada, o lo acaba de eliminar, o se lo rechazaron),
+    // se muestra la caja de transferencia para subir uno.
+    const hasReceipt = needsPayment && !!reg.receipt_url;
+    const needsUpload = needsPayment && !hasReceipt &&
+      (reg.payment_status === 'not_required' || reg.payment_status === 'rejected');
+
     card.innerHTML = statusHtml + afterRunHtml +
-      (needsPayment && (reg.payment_status === 'not_required' || reg.payment_status === 'rejected') ? transferBoxHtml() : '') +
+      (hasReceipt ? receiptCurrentHtml(reg) : '') +
+      (needsUpload ? transferBoxHtml() : '') +
       cancelNote;
 
     const sw = document.getElementById('afterRunSwitch');
@@ -837,6 +998,7 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     wireTransferUpload(card, reg);
+    wireReceiptCurrent(card, reg);
   }
 
   function transferBoxHtml(){
@@ -847,7 +1009,8 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
       <div class="upload-row">
         <label class="file-btn">＋ Subir comprobante<input type="file" id="receiptInput" accept="image/*,application/pdf" style="display:none" /></label>
-        <span class="file-name" id="receiptFileName">JPG, PNG o PDF · hasta 5 MB</span>
+        <span class="file-name" id="receiptFileName">${RECEIPT_HINT}</span>
+        <button type="button" class="file-clear" id="receiptClear" title="Quitar el archivo" aria-label="Quitar el archivo" style="display:none">×</button>
       </div>`;
   }
 
@@ -859,14 +1022,27 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
     const input = card.querySelector('#receiptInput');
+    const clearBtn = card.querySelector('#receiptClear');
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+      input.value = '';
+      const nameEl = card.querySelector('#receiptFileName');
+      if (nameEl) nameEl.textContent = RECEIPT_HINT;
+      clearBtn.style.display = 'none';
+    });
+
     if (!input) return;
     input.addEventListener('change', async () => {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      if (file.size > 5 * 1024 * 1024){ alert('El archivo debe pesar menos de 5 MB'); input.value = ''; return; }
-      const nameEl = document.getElementById('receiptFileName');
-      nameEl.textContent = 'Subiendo…';
-      const ext = file.name.split('.').pop().toLowerCase();
+      const raw = input.files && input.files[0];
+      if (!raw) return;
+      const nameEl = card.querySelector('#receiptFileName');
+      if (clearBtn) clearBtn.style.display = '';
+
+      nameEl.textContent = 'Procesando…';
+      const { file, error } = await prepareReceipt(raw);
+      if (error){ nameEl.textContent = error; input.value = ''; return; }
+
+      nameEl.textContent = `Subiendo ${fmtBytes(file.size)}…`;
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
       const path = `${session.user.id}/${reg.id}-${Date.now()}.${ext}`;
       const { error: upErr } = await supa.storage.from('payment-receipts').upload(path, file, { upsert: true, contentType: file.type });
       if (upErr){
@@ -878,7 +1054,103 @@ document.addEventListener('DOMContentLoaded', function(){
         nameEl.textContent = 'Subimos el archivo pero no pudimos confirmarlo: ' + rpcErr.message;
         return;
       }
-      existingReg.payment_status = 'verified';
+      existingReg.payment_status      = 'verified';
+      existingReg.receipt_url         = path;
+      existingReg.receipt_uploaded_at = new Date().toISOString();
+      renderInscripcion();
+    });
+  }
+
+  // ───────────────────────────────────────────────────────────────
+  // Comprobante ya subido: verlo, reemplazarlo o eliminarlo.
+  //
+  // Eliminar revierte payment_status a 'not_required', así que el lugar
+  // vuelve a figurar como impago y reaparece la caja de transferencia. La
+  // inscripción NO se cancela y el cupo NO se libera: la persona sigue
+  // anotada, solo le falta el comprobante de nuevo.
+  //
+  // Requiere db/2026-10-01_borrar_comprobante.sql (RPC delete_event_receipt
+  // + política DELETE en storage). Sin esa migración el botón Eliminar va a
+  // devolver error; Cambiar sí funciona porque usa submit_event_receipt,
+  // que ya existe.
+  // ───────────────────────────────────────────────────────────────
+  function receiptCurrentHtml(reg){
+    if (!reg.receipt_url) return '';
+    const fileName = String(reg.receipt_url).split('/').pop() || 'comprobante';
+    const when = reg.receipt_uploaded_at
+      ? `Subido el ${fmtDate(reg.receipt_uploaded_at)} · ${fmtTime(reg.receipt_uploaded_at)} hs`
+      : 'Subido';
+    return `
+      <div class="receipt-current" id="receiptCurrent">
+        <span class="rc-ico" aria-hidden="true">✓</span>
+        <span class="rc-txt">
+          <span class="rc-name">${esc(fileName)}</span>
+          <span class="rc-date" id="rcDate">${esc(when)}</span>
+        </span>
+        <span class="receipt-actions">
+          <label class="rc-btn">Cambiar<input type="file" id="receiptReplace" accept="image/*,application/pdf" style="display:none" /></label>
+          <button type="button" class="rc-btn danger" id="receiptDelete">Eliminar</button>
+        </span>
+      </div>`;
+  }
+
+  function wireReceiptCurrent(card, reg){
+    const box = card.querySelector('#receiptCurrent');
+    if (!box) return;
+    const dateEl    = card.querySelector('#rcDate');
+    const replaceEl = card.querySelector('#receiptReplace');
+    const deleteBtn = card.querySelector('#receiptDelete');
+    const setBusy = on => box.querySelectorAll('.rc-btn').forEach(b => b.toggleAttribute('disabled', on));
+
+    if (replaceEl) replaceEl.addEventListener('change', async () => {
+      const raw = replaceEl.files && replaceEl.files[0];
+      if (!raw) return;
+      setBusy(true);
+      dateEl.textContent = 'Procesando…';
+
+      const { file, error } = await prepareReceipt(raw);
+      if (error){ dateEl.textContent = error; replaceEl.value = ''; setBusy(false); return; }
+
+      dateEl.textContent = `Subiendo ${fmtBytes(file.size)}…`;
+      const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${session.user.id}/${reg.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supa.storage.from('payment-receipts')
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr){ dateEl.textContent = 'Error al subir: ' + upErr.message; setBusy(false); return; }
+
+      const { error: rpcErr } = await supa.rpc('submit_event_receipt', { reg_id: reg.id, receipt_path: path });
+      if (rpcErr){ dateEl.textContent = 'Subimos el archivo pero no pudimos confirmarlo: ' + rpcErr.message; setBusy(false); return; }
+
+      existingReg.receipt_url         = path;
+      existingReg.receipt_uploaded_at = new Date().toISOString();
+      existingReg.payment_status      = 'verified';
+      renderInscripcion();
+    });
+
+    if (deleteBtn) deleteBtn.addEventListener('click', async () => {
+      if (!confirm('¿Eliminar el comprobante? Tu lugar sigue reservado, pero va a figurar como impago hasta que subas uno nuevo.')) return;
+      setBusy(true);
+      dateEl.textContent = 'Eliminando…';
+
+      // Primero la RPC: si falla, el archivo sigue en su lugar y la fila
+      // queda consistente. Al revés dejaría la fila apuntando a un archivo
+      // que ya no existe.
+      const { error: rpcErr } = await supa.rpc('delete_event_receipt', { reg_id: reg.id });
+      if (rpcErr){
+        dateEl.textContent = 'No pudimos eliminarlo: ' + rpcErr.message;
+        setBusy(false);
+        return;
+      }
+
+      // El archivo de Storage es best-effort: si falla el borrado queda un
+      // huérfano, pero la fila ya no lo referencia y nadie puede llegar a él
+      // (el bucket es privado y las URLs son firmadas al momento).
+      const { error: delErr } = await supa.storage.from('payment-receipts').remove([reg.receipt_url]);
+      if (delErr) console.warn('Comprobante desvinculado, pero el archivo quedó en Storage:', delErr.message);
+
+      existingReg.receipt_url         = null;
+      existingReg.receipt_uploaded_at = null;
+      existingReg.payment_status      = 'not_required';
       renderInscripcion();
     });
   }

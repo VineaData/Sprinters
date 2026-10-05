@@ -24,6 +24,19 @@ window.SPRINTERS = {
   // ── Términos y Condiciones de Participación ──────────────────────
   TERMS_URL: 'https://drive.google.com/file/d/1-mHoaNZmDMo-vwQluwJfKZpmYVRUz6RE/view',
 
+  // ── Redes y comunidad ────────────────────────────────────────────
+  // Desde el 2026-10-01 el cierre de la landing ya no pide mail: manda a la
+  // comunidad de WhatsApp y al Instagram (ver doc de cambios de la reunión).
+  //
+  // TODO(link): WHATSAPP_COMUNIDAD tiene que ser el link de invitación del
+  // grupo/comunidad (https://chat.whatsapp.com/XXXXXXXX), que lo saca un
+  // admin desde WhatsApp → Invitar al grupo → Copiar enlace. Mientras tanto
+  // queda el chat uno a uno con el número del club, que funciona pero no es
+  // lo pedido.
+  WHATSAPP_COMUNIDAD: 'https://wa.me/542619298844?text=' +
+    encodeURIComponent('Hola! Quiero sumarme a la comunidad de Sprinters.'),
+  INSTAGRAM_URL: 'https://instagram.com/sprintersmza',
+
   // ── Supabase (claves públicas: la protección real es RLS) ────────
   SUPABASE_URL: 'https://lzvsttrbofnktnilunwd.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_tXVIeheQvj9fnk_WFeyHYQ_StxuNmna'

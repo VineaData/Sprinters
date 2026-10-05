@@ -152,7 +152,14 @@ nav.top .cta:hover{background:var(--bosque);border-color:var(--bosque);color:#ff
   .plan.popular:hover{transform:translateY(-4px)}
 }
 @media (max-width:760px){
-  nav.top{padding:14px 18px}
+  /* Mismo arreglo que ya se hizo en el nav de Landing v2 y Evento: sin
+     white-space:nowrap, "Mi cuenta →" se parte en dos renglones y queda
+     pegado al logo en pantallas angostas. El grid de 3 columnas comprime
+     las laterales hasta que el texto se corta, y el gap no alcanza porque
+     la columna del medio (el logo) no cede. */
+  nav.top{padding:14px 18px;gap:12px}
+  nav.top .back,
+  nav.top .cta{white-space:nowrap}
   nav.top .back{font-size:10px;letter-spacing:0.18em;gap:6px}
 
   nav.top .cta{font-size:10px;padding:9px 14px;letter-spacing:0.14em}
