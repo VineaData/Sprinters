@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Run &amp; Wine × Lamadrid · Sprinters</title>
+<meta name="description" content="Sábado 14 de noviembre en Lamadrid Estate Wines. Corré entre viñedos, sunset post-run y degustación. Entradas por tandas." />
+<meta property="og:title" content="Run &amp; Wine × Lamadrid · Sprinters" />
+<meta property="og:description" content="Corré entre viñedos, sunset post-run y degustación. Sábado 14/11, Las Compuertas." />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="icon" href="images/brand/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="images/brand/icon-180.png">
+<meta name="theme-color" content="#024939">
+<style>
+/* ============================================================
+   RUN & WINE × LAMADRID — landing de venta de entradas
+   Brief: "Brief_landing_Run_and_Wine.pdf" (Ines, 13/10/2026)
+
+   TIPOGRAFÍA. El brief pide Harper para títulos, Transforma para texto y
+   GW Bantley (script) para detalles como "Run & Wine". Las tres son de
+   pago. Harper además no sirve: la versión que tenemos reemplaza los diez
+   dígitos por el sello del autor, y esta página es casi toda números.
+     · Harper      → Inter, como el resto del sitio.
+     · Transforma  → Inter.
+     · GW Bantley  → Pinyon Script, que es el sustituto libre que ya había
+       elegido sprinters-style.json comparando las letras reales. Se usa
+       SOLO en "& Wine" y en un par de acentos: abajo de 28px los trazos
+       finos se rompen, así que nunca va en texto chico.
+
+   GRÁFICA. El brief pide usar el isotipo S. Está vectorizado en
+   images/brand/iso-s.svg y se usa como marca de agua grande en el hero y
+   en el cierre, y chico como viñeta entre secciones.
+
+   Todo cuelga de .rw para no pisar al resto del sitio.
+   ============================================================ */
+.rw{
+  --rw-display: 'Inter', sans-serif;
+  --rw-texto:   'Inter', sans-serif;
+  /* La cadena NO termina en `cursive`: en Windows eso cae a Comic Sans,
+     y es peor que no tener script. Se prefiere una caligráfica del
+     sistema y, si tampoco está, un serif, que al menos acompaña. */
+  --rw-script:  'Pinyon Script', 'Snell Roundhand', 'Apple Chancery', 'Segoe Script', Georgia, serif;
+  --rw-verde:   var(--bosque);
+  --rw-verde-900: var(--bosque-900);
+  --rw-naranja: var(--terracota);
+  --rw-naranja-ink: var(--terracota-ink);
+  --rw-crema:   var(--crema);
+  --rw-crema-2: var(--crema-2);
+  --rw-tierras: var(--tierras);
+  --rw-tinta:   var(--asfaltico);
+  font-family:var(--rw-texto); color:var(--rw-tinta); line-height:1.6;
+}
+.rw *{box-sizing:border-box}
+.rw img{display:block;max-width:100%}
+.rw a{color:inherit;text-decoration:none}
+
+.rw-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+@media (min-width:760px){ .rw-wrap{padding:0 36px} }
+
+/* Aparición al hacer scroll: el resto del sitio ya lo usa, y acá es lo que
+   hace que la página se sienta viva en vez de un documento largo. */
+.rw [data-rv]{opacity:0;transform:translateY(26px);
+  transition:opacity .9s cubic-bezier(.22,.7,.2,1),transform .9s cubic-bezier(.22,.7,.2,1)}
+.rw [data-rv].vis{opacity:1;transform:none}
+
+/* ── Etiquetas numeradas ──────────────────────────────────────
+   Mismo gesto que los pilares de la home: número grande en Terracota y
+   la etiqueta en versalitas espaciadas. Ata la landing al sistema. */
+.rw-eyebrow{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.rw-eyebrow .n{font-family:var(--rw-display);font-size:clamp(28px,4vw,42px);
+  font-weight:800;line-height:1;color:var(--rw-naranja);font-variant-numeric:tabular-nums}
+.rw-eyebrow .t{font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;
+  font-weight:700;color:var(--rw-naranja-ink)}
+.rw-sec--verde .rw-eyebrow .t{color:var(--rw-tierras)}
+
+.rw h1,.rw h2,.rw h3{font-family:var(--rw-display);margin:0;letter-spacing:-.01em}
+.rw h2{font-size:clamp(34px,6.4vw,70px);line-height:.96;text-transform:uppercase;font-weight:200}
+.rw h2 em{font-family:var(--rw-script);font-style:normal;text-transform:none;
+  font-size:1.18em;letter-spacing:0;color:var(--rw-naranja)}
+.rw-sec--verde h2 em{color:var(--rw-tierras)}
+.rw h3{font-size:clamp(18px,2.2vw,22px);font-weight:700;line-height:1.3}
+.rw p{margin:0 0 1em;max-width:60ch}
+.rw p:last-child{margin-bottom:0}
+
+.rw-sec{padding:clamp(64px,10vw,116px) 0;position:relative;overflow:hidden}
+.rw-sec--verde{background:var(--rw-verde);color:#fff}
+.rw-sec--verde p{color:rgba(255,255,255,.84)}
+.rw-sec--crema{background:var(--rw-crema)}
+.rw-sec--crema2{background:var(--rw-crema-2)}
+
+/* Viñeta: el isotipo centrado sobre el filete terracota, como separador
+   entre secciones. Reemplaza al borde plano que había antes. */
+.rw-sep{position:relative;height:0}
+.rw-sep::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--rw-naranja)}
+.rw-sep span{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;z-index:2}
+.rw-sep span svg{width:21px;height:21px}
+
+/* ══════════ HERO ══════════ */
+.rw-hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding-bottom:clamp(40px,7vw,76px);
+  background:var(--rw-verde-900);color:#fff;overflow:hidden}
+.rw-hero__bg{position:absolute;inset:0;z-index:0}
+.rw-hero__bg img{width:100%;height:100%;object-fit:cover;
+  animation:rwZoom 18s ease-out forwards;will-change:transform}
+@keyframes rwZoom{from{transform:scale(1.14)}to{transform:scale(1)}}
+.rw-hero__veil{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(1,46,36,.70) 0%,rgba(1,46,36,.30) 38%,rgba(1,46,36,.95) 100%)}
+/* El isotipo gigante, saliéndose por el borde: da escala y profundidad
+   sin tapar la foto. */
+.rw-hero__iso{position:absolute;right:-9%;top:4%;width:min(58vw,560px);
+  color:rgba(255,255,255,.07);z-index:1;pointer-events:none}
+.rw-hero__in{position:relative;z-index:2;width:100%}
+
+.rw-cobrand{display:flex;align-items:center;gap:15px;margin-bottom:clamp(26px,4vw,40px)}
+.rw-cobrand .brand-logo{height:24px}
+.rw-cobrand__sep{width:1px;height:28px;background:rgba(255,255,255,.4);flex-shrink:0}
+.rw-cobrand__socio{font-family:var(--rw-display);font-size:15px;letter-spacing:.22em;
+  text-transform:uppercase;font-weight:700}
+
+.rw-hero h1{font-size:clamp(58px,17vw,172px);line-height:.84;font-weight:200;
+  text-transform:uppercase;letter-spacing:-.02em;margin-bottom:6px}
+/* "& Wine" en script, desplazado y en Tierras: es el detalle que pide el
+   brief y lo que saca al titular de ser una palabra en mayúsculas. */
+.rw-hero h1 .script{display:block;font-family:var(--rw-script);font-weight:400;
+  text-transform:none;letter-spacing:0;color:var(--rw-tierras);
+  font-size:.74em;line-height:1;margin-top:-.06em;margin-left:.06em}
+.rw-hero__lede{font-size:clamp(16px,2.3vw,20px);color:rgba(255,255,255,.9);
+  max-width:28ch;font-weight:300;margin:20px 0 26px}
+
+/* Datos en una línea, separados por filetes: más editorial que las píldoras */
+.rw-datos{display:flex;flex-wrap:wrap;gap:0 22px;margin-bottom:28px;
+  font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  color:rgba(255,255,255,.92)}
+.rw-datos span{position:relative;padding-right:22px}
+.rw-datos span::after{content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:1px;height:13px;background:rgba(255,255,255,.34)}
+.rw-datos span:last-child{padding-right:0}
+.rw-datos span:last-child::after{display:none}
+
+.rw-estado{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:30px}
+.rw-pill{display:inline-flex;align-items:center;gap:9px;background:var(--rw-naranja);
+  color:var(--on-accent);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:800;padding:10px 18px;border-radius:999px}
+.rw-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--on-accent);
+  animation:rwLatir 1.8s ease-in-out infinite}
+@keyframes rwLatir{0%,100%{opacity:1}50%{opacity:.25}}
+.rw-cuenta{font-size:12.5px;color:rgba(255,255,255,.76);letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600}
+.rw-cuenta b{display:inline-block;font-variant-numeric:tabular-nums;color:#fff;
+  font-weight:800;font-size:15px;letter-spacing:.04em;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+  padding:5px 11px;border-radius:7px;margin-left:5px}
+
+/* ══════════ BOTONES ══════════ */
+.rw-btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;
+  padding:18px 36px;border-radius:999px;background:var(--rw-naranja);color:var(--on-accent);
+  font-family:var(--rw-texto);font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:800;border:none;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .22s ease,box-shadow .22s ease}
+.rw-btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px -14px rgba(253,82,27,.9)}
+.rw-btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.rw-btn[disabled]{cursor:not-allowed;transform:none;box-shadow:none;
+  background:transparent;color:var(--ink-muted);border:1px solid rgba(2,73,57,.22)}
+@media (max-width:560px){ .rw-btn{width:100%} }
+
+/* ══════════ CRONOGRAMA ══════════ */
+.rw-crono{list-style:none;margin:30px 0 0;padding:0;max-width:640px;position:relative}
+/* Línea vertical que une los hitos: convierte la lista en una línea de tiempo */
+.rw-crono::before{content:"";position:absolute;left:7px;top:14px;bottom:14px;
+  width:2px;background:rgba(255,255,255,.22)}
+.rw-crono li{position:relative;display:grid;grid-template-columns:40px 86px 1fr;
+  gap:14px;align-items:baseline;padding:14px 0}
+.rw-crono li::before{content:"";position:absolute;left:0;top:21px;width:16px;height:16px;
+  border-radius:50%;background:var(--rw-verde);border:2px solid var(--rw-tierras)}
+.rw-crono li:first-child::before{background:var(--rw-naranja);border-color:var(--rw-naranja)}
+.rw-crono .hora{grid-column:2;font-family:var(--rw-display);font-size:19px;font-weight:800;
+  color:var(--rw-tierras);font-variant-numeric:tabular-nums}
+.rw-crono .que{grid-column:3;font-size:15.5px;color:rgba(255,255,255,.92)}
+
+/* ══════════ ENTRADAS ══════════ */
+.rw-tickets{display:grid;grid-template-columns:1fr;gap:20px;margin-top:38px}
+@media (min-width:680px){ .rw-tickets{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:1040px){ .rw-tickets{grid-template-columns:repeat(4,1fr);gap:16px} }
+
+/* Forma de entrada: muescas laterales + línea de troquelado antes del
+   precio, que es lo que la hace leer como ticket y no como tarjeta. */
+.rw-ticket{position:relative;background:#fff;border-radius:16px;padding:0;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 0 rgba(2,73,57,.1), 0 18px 40px -30px rgba(2,73,57,.5);
+  transition:transform .25s ease,box-shadow .25s ease}
+.rw-ticket__top{padding:24px 22px 18px;position:relative}
+.rw-ticket__bot{padding:18px 22px 24px;position:relative;margin-top:auto}
+/* El troquelado: línea punteada con una muesca a cada lado */
+.rw-ticket__bot::before{content:"";position:absolute;left:14px;right:14px;top:0;
+  border-top:2px dashed rgba(2,73,57,.22)}
+.rw-ticket__bot::after{content:"";position:absolute;left:-11px;right:-11px;top:-11px;
+  height:22px;pointer-events:none;
+  background:radial-gradient(circle 11px at 0 50%, var(--rw-crema) 98%, transparent 100%),
+             radial-gradient(circle 11px at 100% 50%, var(--rw-crema) 98%, transparent 100%);
+  background-repeat:no-repeat}
+.rw-ticket--activa{box-shadow:0 0 0 2px var(--rw-naranja), 0 22px 46px -26px rgba(253,82,27,.75)}
+.rw-ticket--activa:hover{transform:translateY(-5px)}
+.rw-ticket--agotada,.rw-ticket--cerrada{opacity:.5}
+
+.rw-ticket__estado{display:inline-block;font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;font-weight:800;padding:6px 12px;border-radius:999px;margin-bottom:14px}
+.rw-e-activa{background:var(--rw-naranja);color:var(--on-accent)}
+.rw-e-proximamente{background:var(--sky);color:#1c3d6b}
+.rw-e-agotada,.rw-e-cerrada{background:var(--rw-crema-2);color:var(--ink-soft);border:1px solid var(--line)}
+
+.rw-ticket__nombre{font-family:var(--rw-display);font-size:20px;font-weight:800;margin-bottom:10px}
+.rw-ticket__precio{font-family:var(--rw-display);font-size:clamp(36px,4.6vw,46px);
+  font-weight:200;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em}
+.rw-ticket__incluye{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:0}
+.rw-ticket__cierre{font-size:11.5px;color:var(--rw-naranja-ink);font-weight:700;
+  letter-spacing:.04em;margin-bottom:14px;min-height:17px}
+.rw-ticket__cta .rw-btn{width:100%;padding:15px 16px;font-size:11.5px}
+
+.rw-nota-gastro{margin-top:30px;padding:18px 20px;background:#fff;
+  border:1px solid rgba(2,73,57,.14);border-left:4px solid var(--rw-naranja);
+  border-radius:12px;font-size:14px;line-height:1.6;max-width:none}
+
+/* ══════════ RESERVA ══════════
+   La compra vive acá dentro, no en otra página: salir de la landing al
+   momento de pagar rompía el clima justo cuando la persona decide. */
+.rw-reserva{max-width:620px;margin:34px auto 0;background:#fff;border-radius:20px;
+  padding:clamp(26px,4vw,38px);box-shadow:0 24px 60px -40px rgba(2,73,57,.7)}
+.rw-reserva__tanda{display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;padding-bottom:16px;margin-bottom:20px;border-bottom:2px dashed rgba(2,73,57,.2)}
+.rw-reserva__tanda b{font-family:var(--rw-display);font-size:18px;font-weight:800}
+.rw-reserva__tanda span{font-family:var(--rw-display);font-size:30px;font-weight:200;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.rw-reserva h3{margin-bottom:14px}
+
+.rw-campo{margin-bottom:16px}
+.rw-campo > label{display:block;font-size:12.5px;font-weight:700;margin-bottom:7px}
+/* El asterisco también dentro de las casillas: la regla sólo cubría los
+   campos con label arriba, y en las checks quedaba pegado y sin color.
+   Mismo descuido que ya había corregido en Evento.html. */
+.rw-campo .req,.rw-check .req{color:var(--rw-naranja-ink);margin-left:4px;font-weight:800}
+.rw-campo input[type=text],.rw-campo input[type=tel],.rw-campo input[type=email],.rw-campo select{
+  width:100%;height:48px;border-radius:11px;padding:0 14px;font-family:inherit;font-size:15px;
+  background:var(--rw-crema);border:1px solid rgba(2,73,57,.2);color:var(--rw-tinta);outline:none;
+  transition:border-color .2s,background .2s}
+.rw-campo select{appearance:none;cursor:pointer;padding-right:38px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--rw-verde) 50%),
+                   linear-gradient(135deg,var(--rw-verde) 50%,transparent 50%);
+  background-position:calc(100% - 19px) 22px,calc(100% - 14px) 22px;
+  background-size:5px 5px;background-repeat:no-repeat}
+.rw-campo input:focus,.rw-campo select:focus{border-color:var(--rw-verde);background:#fff}
+.rw-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;
+  font-size:13.5px;line-height:1.5;cursor:pointer}
+.rw-check input{margin-top:2px;width:17px;height:17px;flex-shrink:0;accent-color:var(--rw-naranja)}
+.rw-campo.falta input,.rw-campo.falta select{border-color:var(--rw-naranja)}
+.rw-check.falta{color:var(--rw-naranja-ink)}
+.rw-aviso{font-size:13px;color:var(--rw-naranja-ink);font-weight:700;min-height:18px;margin:6px 0 2px}
+
+.rw-alias{background:var(--rw-crema);border:1px solid rgba(2,73,57,.16);border-radius:14px;
+  padding:16px 18px;margin:20px 0}
+.rw-alias__fila{display:flex;align-items:center;gap:12px;font-size:14px;padding:5px 0}
+.rw-alias__fila .k{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-soft);font-weight:700;width:68px;flex-shrink:0}
+.rw-alias__fila .v{font-weight:700;flex:1}
+.rw-copiar{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+  padding:7px 13px;border-radius:999px;border:1px solid var(--rw-verde);background:#fff;
+  color:var(--rw-verde);cursor:pointer}
+.rw-copiar:hover{background:var(--rw-verde);color:#fff}
+
+.rw-subir{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.rw-subir__btn{display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:999px;
+  background:#fff;border:1.5px dashed var(--rw-verde);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;font-weight:800;cursor:pointer}
+.rw-subir__nom{font-size:13px;color:var(--ink-soft);flex:1;min-width:140px}
+.rw-quitar{width:28px;height:28px;border-radius:999px;border:1px solid rgba(2,73,57,.2);
+  background:#fff;color:var(--ink-soft);cursor:pointer;font-size:15px;line-height:1;flex-shrink:0}
+.rw-quitar:hover{color:var(--error-fg);border-color:var(--error-fg)}
+
+.rw-estado-ins{display:inline-flex;align-items:center;gap:9px;padding:10px 18px;border-radius:999px;
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin-bottom:16px}
+.rw-estado-ins.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.rw-estado-ins.pend{background:var(--pending-bg);color:var(--pending-fg)}
+.rw-legal{font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin-top:16px}
+.rw-legal a{color:var(--rw-verde);text-decoration:underline;font-weight:600}
+
+/* ══════════ COLUMNAS + LISTAS ══════════ */
+.rw-cols{display:grid;grid-template-columns:1fr;gap:clamp(30px,5vw,64px);align-items:center}
+@media (min-width:880px){ .rw-cols{grid-template-columns:1fr 1fr} }
+.rw-foto{border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:var(--rw-verde-900)}
+.rw-foto img{width:100%;height:100%;object-fit:cover}
+
+.rw-lista{list-style:none;margin:22px 0 0;padding:0}
+.rw-lista li{padding:16px 0;border-top:1px solid rgba(2,73,57,.16);
+  display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.rw-sec--verde .rw-lista li{border-top-color:rgba(255,255,255,.2)}
+.rw-lista li::before{content:"→";color:var(--rw-naranja);font-weight:800;line-height:1.5}
+.rw-lista li b{display:block;font-weight:800;font-size:16px;margin-bottom:3px}
+.rw-lista li span{color:var(--ink-soft);font-size:14.5px}
+.rw-sec--verde .rw-lista li span{color:rgba(255,255,255,.75)}
+
+/* ══════════ FAQ ══════════ */
+.rw-faq{max-width:780px;margin-top:32px}
+.rw-faq details{border-top:1px solid rgba(2,73,57,.18);transition:background .2s}
+.rw-faq details:last-of-type{border-bottom:1px solid rgba(2,73,57,.18)}
+.rw-faq details[open]{background:rgba(255,255,255,.5)}
+.rw-faq summary{cursor:pointer;list-style:none;padding:20px 44px 20px 4px;position:relative;
+  font-weight:700;font-size:16px;line-height:1.4}
+.rw-faq summary::-webkit-details-marker{display:none}
+.rw-faq summary::after{content:"";position:absolute;right:12px;top:50%;width:13px;height:13px;
+  margin-top:-7px;border-right:2.5px solid var(--rw-naranja);border-bottom:2.5px solid var(--rw-naranja);
+  transform:rotate(45deg);transition:transform .25s}
+.rw-faq details[open] summary::after{transform:rotate(-135deg);margin-top:-3px}
+.rw-faq summary:focus-visible{outline:2px solid var(--rw-naranja);outline-offset:-2px}
+.rw-faq .rw-faq__r{padding:0 44px 22px 4px;font-size:15px;line-height:1.75;color:var(--ink-soft)}
+
+/* ══════════ SPONSORS ══════════ */
+.rw-sponsors{display:flex;flex-wrap:wrap;gap:clamp(26px,4vw,58px);align-items:center;
+  justify-content:center;margin-top:28px}
+.rw-sponsors img{height:clamp(30px,4vw,46px);width:auto;opacity:.82}
+
+/* ══════════ CIERRE ══════════ */
+.rw-cierre{text-align:center;position:relative}
+.rw-cierre__iso{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(74vw,520px);color:rgba(255,255,255,.06);pointer-events:none}
+.rw-cierre .rw-wrap{position:relative;z-index:1}
+.rw-cierre h2{margin-bottom:28px}
+.rw-contacto{display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:center;margin-top:34px;font-size:14.5px}
+.rw-contacto a{color:var(--rw-tierras);border-bottom:1px solid rgba(229,229,204,.45);padding-bottom:2px;
+  transition:border-color .2s}
+.rw-contacto a:hover{border-color:var(--rw-tierras)}
+
+/* ══════════ BARRA FIJA ══════════ */
+.rw-barra{position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:rgba(250,248,236,.97);backdrop-filter:blur(12px);
+  border-top:2px solid var(--rw-naranja);padding:11px 16px;display:none;align-items:center;gap:12px}
+.rw-barra__precio{font-family:var(--rw-display);font-size:21px;font-weight:800;line-height:1.1;
+  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.02em}
+.rw-barra__sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:1px;font-weight:700}
+.rw-barra .rw-btn{margin-left:auto;width:auto;padding:14px 24px;font-size:11px}
+@media (max-width:760px){ .rw-barra.is-on{display:flex} body.rw-con-barra{padding-bottom:86px} }
+
+@media (prefers-reduced-motion:reduce){
+  .rw *{transition:none !important;animation:none !important}
+  .rw [data-rv]{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Sprite del logo: inline para que herede currentColor y para que la
+     página funcione abierta con doble clic. Ver la nota en brand.css. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="sl-wordmark" viewBox="0 0 1105.3 146.98"><path d="M63.66 38.92c.92-5.27 5.35-8.52 12.44-8.52 9.54 0 20.56 4.06 25.58 12.37l4.81-27.37c1.17-6.69-2.85-12.57-9.33-13.8C92.24.8 87.5 0 81.22 0 48.16 0 26.26 17.42 21.35 45.4c-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.44 31c-1.2 6.9 2.63 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.42-17.65 62.44-46.23 7.1-40.54-35.23-46.44-32.73-61.83m87.78 68.1 1.71-9.73h12.98c34.67 0 56.33-18.43 61.3-46.62 4.89-27.98-10.7-47.65-44.76-47.65h-53.94c-.43 6.09-2.95 22.71-5.41 36.71l-11.81 67.3c-2.42 13.78-5.73 30.4-7.46 36.7h41.98c.5-6.3 3-22.92 5.41-36.7m12.96-73.79h8.1c11.96 0 16.4 9.33 15.05 17.04-1.42 8.1-9.02 16.81-20.98 16.81h-8.1Zm109.34 73.59 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.2 41.77 22.48 49.87h52.1C339.8 126.7 329.7 105.61 316 87.77c16.3-5.06 30.43-16.2 34.35-38.52C355.04 22.5 339 3.02 303.1 3.02H251c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9h41.98c.5-6.3 3.04-23.12 5.46-36.9m12.66-72.16h9.34c11.14 0 15.9 7.5 14.43 15.81-1.45 8.31-9.3 15-19.25 15H281Zm134.93 5.06c2.45-14 5.79-30.62 7.25-36.7h-41.57c-.64 6.08-3.16 22.7-5.62 36.7l-11.81 67.3c-2.42 13.78-5.73 30.4-7.25 36.7h41.56c.7-6.3 3.2-22.92 5.62-36.7Zm42.1 74.4 6.3-35.88 47.72 48.04c5.48 5.67 10.93 12.77 16.58 19.88h8.13a405 405 0 0 1 4.6-33.25l12.83-73.19c1.96-11.15 5.65-27.58 7.67-36.7h-40.15a996 996 0 0 1-5.62 36.7l-4.8 27.35-44.24-44.79c-5.42-5.06-10.52-10.54-19.9-21.9h-8.31c-1.5 10.94-4.17 28.38-6.33 40.76l-12.78 72.77a545 545 0 0 1-6.04 29.81h39.94c.6-5.69 2.52-18.85 4.4-29.6M669.84 3.02h-50.66c-14 0-30.77-.4-36.77-.79l-6.13 34.85c6.17-.4 23.1-1 37.1-1h4.65c-.91 7.5-2.48 17.63-4 26.36l-7.83 44.58c-2.46 14-5.96 30.42-7.46 36.71h42.56c.5-6.3 2.98-22.7 5.44-36.7l7.83-44.6c1.52-8.72 3.27-18.66 4.82-26.35h4.66c14.19 0 31.13.6 37.32 1l6.12-34.85c-6.35.4-23.46.8-37.65.8m94.58 33.05c13.98 0 29.36.2 35.52.82l6.16-35.1c-6.33.42-21.9 1.21-35.87 1.21H718.3c-.65 6.09-3.1 22.31-5.58 36.5l-11.86 67.5c-1.6 9.13-4.83 25.36-7.25 36.71h53.52c14.21 0 29.54.4 35.54.81l6.13-34.87c-6.15.4-21.63.81-35.83.81H740.4l3.92-22.3h8.31c14 0 29.1.4 35.3 1l6.12-34.87c-6.36.42-21.63.82-35.63.82h-8.3l3.35-19.05Zm81.04 70.75 2.23-12.77h3.25c.4 0 1 0 1.85-.2 3.02 15.2 17.21 41.77 22.48 49.87h52.1c-15.85-17.04-25.95-38.12-39.66-55.96 16.31-5.06 30.44-16.2 34.35-38.52 4.7-26.75-11.35-46.23-47.25-46.23h-52.1c-.44 6.09-2.96 22.71-5.42 36.71l-11.77 67.1c-2.46 13.98-5.77 30.6-7.5 36.9H840c.5-6.3 3.04-23.12 5.46-36.9m12.67-72.16h9.33c11.14 0 15.9 7.5 14.44 15.81s-9.32 15-19.25 15h-9.94Zm141.57 4.25c.92-5.27 5.36-8.52 12.44-8.52 9.54 0 20.56 4.06 25.59 12.37l4.8-27.37c1.17-6.69-2.85-12.57-9.33-13.8-4.91-.8-9.66-1.6-15.93-1.6-33.07 0-54.96 17.42-59.88 45.4-7 39.93 34.48 43.79 31.44 61.23-.94 5.27-5.65 9.12-13.15 9.12-11.77 0-27.73-6.08-33.98-15.6l-5.43 31c-1.21 6.9 2.62 12.79 9.4 13.58a131 131 0 0 0 24.33 2.25c31.02 0 57.41-17.65 62.43-46.23 7.1-40.54-35.23-46.44-32.73-61.83m81.22 8.91q-6.96 0-12.48-3.1a22.6 22.6 0 0 1-8.64-8.58 24 24 0 0 1-3.1-12.2q-.01-6.7 3.1-12.16a22.4 22.4 0 0 1 8.64-8.58 25 25 0 0 1 12.48-3.1q6.98 0 12.5 3.1a23 23 0 0 1 8.69 8.58 23.7 23.7 0 0 1 3.19 12.17q0 6.71-3.19 12.19a23 23 0 0 1-8.69 8.58 25 25 0 0 1-12.5 3.1m0-4.98q8.46 0 13.8-5.27 5.34-5.28 5.35-13.62 0-8.31-5.36-13.58-5.33-5.3-13.79-5.3-8.43 0-13.79 5.3-5.33 5.27-5.33 13.58 0 8.34 5.33 13.62 5.36 5.28 13.8 5.27m-9.68-31.18h10.43q10.2 0 10.19 6.96a6 6 0 0 1-1.98 4.72 8 8 0 0 1-4.6 1.98v.13q2.12.12 3.23 1.12a7.5 7.5 0 0 1 1.87 2.73l2.6 6.09h-5.83l-1.75-4.36a5 5 0 0 0-1.94-2.54q-1.16-.69-3.9-.69h-2.72v7.59h-5.6Zm10.18 11.18q2.38 0 3.42-.75 1.05-.75 1.06-2.5 0-2.97-4.48-2.97h-4.58v6.22Zm0 0"/></symbol></defs></svg>
+
+<!-- Isotipo S vectorizado desde images/brand/iso-sprinters.png, que venía
+     con el fondo verde pegado. Inline para que tome currentColor y se pueda
+     usar en blanco, terracota o translúcido sin duplicar archivos. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="rw-iso" viewBox="0 0 100 100"><path fill="currentColor" fill-rule="evenodd" d="M25.66 99.24C9.52 97.7 0.0 89.26 0.15 76.63C0.29 64.53 8.48 52.82 21.3 46.42C24.66 44.74 24.81 44.34 22.98 41.95C14.08 30.3 18.56 11.25 32.34 2.07L35.0 0.3L67.5 0.3L100.0 0.3L99.99 2.53C99.97 11.79 86.79 21.71 75.76 20.78C69.44 20.25 65.49 18.21 53.01 9.03C46.88 4.52 41.24 2.03 38.09 2.46C34.07 3.0 31.81 7.77 33.66 11.84C35.19 15.22 38.96 17.46 53.57 23.69C67.72 29.73 72.51 32.54 77.19 37.56C84.99 45.92 85.63 57.53 79.02 70.87C70.93 87.2 55.15 97.42 35.19 99.26C30.48 99.7 30.51 99.7 25.66 99.24ZM56.36 91.01C62.86 88.6 65.9 81.16 62.86 75.14C60.58 70.64 57.04 67.79 40.31 57.04C38.0 55.55 34.18 52.71 31.81 50.72C29.44 48.73 27.25 46.89 26.94 46.63C25.03 45.06 24.23 47.73 24.23 55.65C24.24 78.73 40.69 96.84 56.36 91.01Z"/></symbol>
+</defs></svg>
+
+<div class="rw">
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="rw-hero">
+  <div class="rw-hero__bg">
+    <!-- TODO(foto): el brief pide viñedos al atardecer, que graba Sprinters
+         en la visita técnica. Mientras tanto va una foto que SÍ existe en el
+         repo: apuntar a la ruta final antes de tenerla daría un 404. -->
+    <img src="images/run-trees-2.jpg" alt="" aria-hidden="true" />
+  </div>
+  <div class="rw-hero__veil" aria-hidden="true"></div>
+  <svg class="rw-hero__iso"><use href="#rw-iso"></use></svg>
+
+  <div class="rw-hero__in">
+    <div class="rw-wrap">
+      <div class="rw-cobrand">
+        <a href="Landing v2.html" aria-label="Sprinters — ir al inicio">
+          <svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg>
+        </a>
+        <span class="rw-cobrand__sep" aria-hidden="true"></span>
+        <!-- TODO(logo): reemplazar por el logo de Lamadrid cuando lo manden. -->
+        <span class="rw-cobrand__socio">Lamadrid</span>
+      </div>
+
+      <h1>Run<span class="script">&amp; Wine</span></h1>
+      <p class="rw-hero__lede">Corré entre viñedos, sunset post-run y degustación.</p>
+
+      <div class="rw-datos">
+        <span>Sábado 14 de noviembre</span>
+        <span>18:00 h</span>
+        <span>Lamadrid Estate Wines</span>
+      </div>
+
+      <div class="rw-estado">
+        <span class="rw-pill" id="rwPill">—</span>
+        <span class="rw-cuenta" id="rwCuenta"></span>
+      </div>
+
+      <a class="rw-btn" href="#entradas">Comprar entrada</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ 01 · QUÉ ES ═══════════ -->
+<section class="rw-sec rw-sec--crema">
+  <div class="rw-wrap rw-cols">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">01</span><span class="t">Qué es</span></div>
+      <h2>No es una carrera.<br>Es una <em>tarde entera</em></h2>
+      <p style="margin-top:24px;font-size:17.5px">
+        Correr entre viñedos, sunset con degustación de vinos Lamadrid, quedarse a comer y bailar.
+      </p>
+    </div>
+    <div class="rw-foto" data-rv>
+      <!-- TODO(foto): copas y viñedos. -->
+      <img src="images/picnic-mate.jpg" alt="Sprinters compartiendo después de correr" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 02 · LA TARDE ═══════════ -->
+<section class="rw-sec rw-sec--verde">
+  <div class="rw-wrap" data-rv>
+    <div class="rw-eyebrow"><span class="n">02</span><span class="t">La tarde, hora por hora</span></div>
+    <h2>El <em>plan</em></h2>
+    <ul class="rw-crono">
+      <li><span class="hora">18:00</span><span class="que">Acreditación</span></li>
+      <li><span class="hora">18:20</span><span class="que">Warm-up</span></li>
+      <li><span class="hora">18:30</span><span class="que">Social Run</span></li>
+      <li><span class="hora">19:30</span><span class="que">Cool down</span></li>
+      <li><span class="hora">19:45</span><span class="que">Degustación, Los Bocheros, sunset y DJ</span></li>
+      <li><span class="hora">23:00</span><span class="que">Cierre</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════ 03 · ENTRADAS ═══════════ -->
+<section class="rw-sec rw-sec--crema" id="entradas">
+  <div class="rw-wrap">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">03</span><span class="t">Entradas</span></div>
+      <h2>Elegí <em>la tuya</em></h2>
+    </div>
+    <!-- Las arma el script desde estado_tandas() -->
+    <div class="rw-tickets" id="rwTickets"></div>
+    <p class="rw-nota-gastro" data-rv>
+      Ninguna entrada incluye gastronomía. <strong>Los Bocheros</strong> se paga en el lugar según consumo.
+    </p>
+
+    <!-- La reserva: el script la llena según haya sesión, inscripción previa
+         o no. Vive acá adentro para no sacar a la persona de la landing. -->
+    <div class="rw-reserva" id="rwReserva" data-rv style="display:none"></div>
+  </div>
+</section>
+
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 04 · EL RUN ═══════════ -->
+<section class="rw-sec rw-sec--verde">
+  <div class="rw-wrap rw-cols">
+    <div class="rw-foto" data-rv>
+      <img src="images/group-running.jpg" alt="Grupo de Sprinters corriendo" loading="lazy" />
+    </div>
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">04</span><span class="t">El run</span></div>
+      <h2>Tres distancias,<br>ningún <em>requisito</em></h2>
+      <ul class="rw-lista">
+        <li><div><b>4K friendly</b><span>Para quien recién arranca o nunca corrió</span></div></li>
+        <li><div><b>6K intermedia</b><span>Si ya venís corriendo seguido</span></div></li>
+        <li><div><b>8K desafío</b><span>Para los que quieren exigirse</span></div></li>
+        <li><div><b>Dress code: All Black</b><span>Negro de pies a cabeza</span></div></li>
+        <li><div><b>Tus cosas, a tu cargo</b><span>Traé lo justo</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 05 · EL AFTER ═══════════ -->
+<section class="rw-sec rw-sec--crema2">
+  <div class="rw-wrap rw-cols">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">05</span><span class="t">El after</span></div>
+      <h2>Cuando <em>baja el sol</em></h2>
+      <ul class="rw-lista">
+        <li><div><b>Degustación de vinos Lamadrid</b><span>Incluida en todas las entradas</span></div></li>
+        <li><div><b>Gastronomía de Los Bocheros</b><span>Se paga aparte, en el lugar</span></div></li>
+        <li><div><b>Sunset entre los viñedos</b></div></li>
+        <li><div><b>DJ hasta las 23:00</b></div></li>
+      </ul>
+    </div>
+    <div class="rw-foto" data-rv>
+      <!-- TODO(foto): sunset en la bodega. -->
+      <img src="images/pizza-picnic.jpg" alt="After de Sprinters" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 06 · CÓMO LLEGAR ═══════════ -->
+<section class="rw-sec rw-sec--crema">
+  <div class="rw-wrap rw-cols">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">06</span><span class="t">Cómo llegar</span></div>
+      <h2>Lamadrid<br><em>Estate Wines</em></h2>
+      <p style="margin-top:22px">Las Compuertas, Luján de Cuyo, Mendoza.</p>
+      <p>Hay estacionamiento afuera de la bodega.</p>
+      <a class="rw-btn" style="background:var(--rw-verde);color:#fff;margin-top:10px"
+         href="https://maps.app.goo.gl/xHBtRZsUjkQTEzRv9" target="_blank" rel="noopener">
+        Ver en Google Maps
+      </a>
+    </div>
+    <div class="rw-foto" data-rv>
+      <!-- TODO(foto): la bodega. -->
+      <img src="images/run-trees-3.jpg" alt="Camino entre árboles" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 07 · SPONSORS ═══════════ -->
+<section class="rw-sec rw-sec--crema2">
+  <div class="rw-wrap" style="text-align:center" data-rv>
+    <div class="rw-eyebrow" style="justify-content:center"><span class="n">07</span><span class="t">Con el apoyo de</span></div>
+    <!-- TODO(logo): logos de sponsors. La sección se oculta sola si no hay. -->
+    <div class="rw-sponsors" id="rwSponsors"></div>
+  </div>
+</section>
+
+<!-- ═══════════ 08 · FAQ ═══════════ -->
+<section class="rw-sec rw-sec--crema">
+  <div class="rw-wrap">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Preguntas frecuentes</span></div>
+      <h2>Lo que nos<br><em>suelen preguntar</em></h2>
+    </div>
+    <div class="rw-faq" data-rv>
+      <details>
+        <summary>¿Tengo que saber correr?</summary>
+        <div class="rw-faq__r">¡Para nada! Hay una 4K friendly pensada para quien recién arranca (o nunca corrió). Y nadie se queda atrás: siempre hay un run leader cerrando el grupo.</div>
+      </details>
+      <details>
+        <summary>¿Puedo ir solo al after?</summary>
+        <div class="rw-faq__r">¡Obvio! Con la entrada Solo After llegás a las 19:30, te sumás a la degustación y disfrutás del sunset y el DJ. Se habilita cuando se agota Early Bird.</div>
+      </details>
+      <details>
+        <summary>¿Qué incluye la entrada?</summary>
+        <div class="rw-faq__r">Las entradas de run incluyen warm-up, run guiado entre viñedos (4K, 6K u 8K), hidratación, cool down y degustación de vinos Lamadrid.</div>
+      </details>
+      <details>
+        <summary>¿La comida está incluida?</summary>
+        <div class="rw-faq__r">No, la gastronomía va aparte. Los Bocheros cocina en la bodega y pagás ahí según lo que pidas. ¡Vení con hambre!</div>
+      </details>
+      <details>
+        <summary>¿Qué llevo?</summary>
+        <div class="rw-faq__r">Ropa cómoda para correr (el dress code es All Black 🖤), zapatillas y un abrigo liviano para cuando baje el sol. Tus cosas quedan a tu cargo, así que traé lo justo.</div>
+      </details>
+      <details>
+        <summary>¿Hay estacionamiento?</summary>
+        <div class="rw-faq__r">Sí, afuera de la bodega. Si vas a tomar, venite en auto compartido o con conductor designado.</div>
+      </details>
+      <details>
+        <summary>¿Hay edad mínima?</summary>
+        <div class="rw-faq__r">Sí, es para mayores de 18: hay vino de por medio 🍷</div>
+      </details>
+      <details>
+        <summary>¿Qué pasa si llueve?</summary>
+        <div class="rw-faq__r">Si el clima no acompaña, te avisamos por WhatsApp con tiempo y te contamos la nueva fecha.</div>
+      </details>
+      <!-- TODO(definir): el brief deja la devolución y lo de la copa como
+           "[a definir]". Queda la respuesta provisoria del brief. -->
+      <details>
+        <summary>¿Puedo pedir la devolución?</summary>
+        <div class="rw-faq__r">Si te surge algo, escribinos y lo vemos juntos.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CIERRE ═══════════ -->
+<section class="rw-sec rw-sec--verde rw-cierre">
+  <svg class="rw-cierre__iso"><use href="#rw-iso"></use></svg>
+  <div class="rw-wrap" data-rv>
+    <h2>¿Corremos <em>juntos</em>?</h2>
+    <a class="rw-btn" href="#entradas">Comprar entrada</a>
+    <div class="rw-contacto">
+      <a href="https://instagram.com/sprintersmza" target="_blank" rel="noopener">@sprintersmza</a>
+      <a href="#" id="rwWhatsapp" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="mailto:sprintersmza@gmail.com">sprintersmza@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<div class="rw-barra" id="rwBarra">
+  <div>
+    <div class="rw-barra__precio" id="rwBarraPrecio">—</div>
+    <div class="rw-barra__sub" id="rwBarraSub"></div>
+  </div>
+  <a class="rw-btn" href="#entradas">Comprar</a>
+</div>
+
+</div><!-- /.rw -->
+
+<script>
+/* Aparición al hacer scroll. Puro UI, fuera de todo lo que espere a la base:
+   si Supabase tarda o falla, la página igual se ve bien. */
+(function(){
+  const items = document.querySelectorAll('.rw [data-rv]');
+  if (!('IntersectionObserver' in window)){
+    items.forEach(e => e.classList.add('vis')); return;
+  }
+  const io = new IntersectionObserver((entradas) => {
+    entradas.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); }
+    });
+  }, { threshold: .14, rootMargin: '0px 0px -8% 0px' });
+  items.forEach(e => io.observe(e));
+})();
+</script>
+
+<script src="config.js"></script>
+<script src="inscripcion.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script>
+/* ============================================================
+   RUN & WINE — lógica de la landing
+
+   Hasta el 2026-10-15 las tandas estaban escritas acá, en una constante.
+   Funcionaba para maquetar, pero tenía un problema serio para operar:
+   marcar una tanda como agotada era editar este archivo y volver a
+   publicar, en plena venta.
+
+   Ahora todo sale de la base:
+     · El evento se busca por landing_url = la ruta de esta página, así no
+       hay ids pegados en el HTML. Si mañana se duplica esta landing para
+       otro evento, apunta sola al que corresponda.
+     · El estado de cada tanda lo calcula estado_tandas() en el servidor,
+       que es la misma fuente que usa register_for_event para cobrar. Sin
+       eso habría dos implementaciones de la misma regla y, tarde o
+       temprano, la pantalla diría una cosa y el cobro haría otra.
+
+   Lo único que queda escrito acá son los sponsors, que son imágenes.
+   ============================================================ */
+
+// Ruta por la que la base reconoce a esta landing. Tiene que coincidir con
+// events.landing_url. Si se cambia el rewrite de vercel.json, cambiar acá.
+const RUTA_LANDING = '/runandwine';
+
+// Logos de sponsors: { src, alt }. Mientras esté vacío, la sección se oculta.
+const SPONSORS = [];
+
+(function(){
+  'use strict';
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const plata = n => '$' + Number(n).toLocaleString('es-AR');
+
+  const ETIQUETA = {
+    activa: 'Activa', proximamente: 'Próximamente',
+    agotada: 'Agotada', cerrada: 'Cerrada'
+  };
+
+  // day:'numeric' y no '2-digit': con 2-digit, es-AR devuelve "02-noviembre"
+  // en vez de "2 de noviembre".
+  const fmtFecha = iso => new Intl.DateTimeFormat('es-AR', {
+    day: 'numeric', month: 'long'
+  }).format(new Date(iso));
+
+  let supaRef = null;    // cliente de Supabase, para las funciones de reserva
+  let evento = null;     // fila de events
+  let tandas = [];       // salida de estado_tandas()
+  let timer = null;
+
+  /* ── Carga ──────────────────────────────────────────────────── */
+  async function cargar(supa){
+    supaRef = supa;
+    const { data: ev, error } = await supa
+      .from('events')
+      .select('id,title,event_date,location_text,sales_cutoff,is_published,total_capacity,sold_tickets,form_schema,requires_form')
+      .eq('landing_url', RUTA_LANDING)
+      .is('deleted_at', null)
+      .maybeSingle();
+
+    if (error || !ev){
+      // Sin evento en la base la página sigue siendo legible: el contenido
+      // editorial es estático. Lo único que no se puede es comprar.
+      sinVenta('Las entradas todavía no están disponibles.');
+      return;
+    }
+    evento = ev;
+
+    const { data: t, error: e2 } = await supa.rpc('estado_tandas', { p_event_id: ev.id });
+    if (e2 || !Array.isArray(t) || !t.length){
+      sinVenta('Las entradas todavía no están disponibles.');
+      return;
+    }
+    tandas = t;
+
+    // La sesión se lee después de las tandas: si ya estaba anotada, hace
+    // falta saber qué tanda le tocó para mostrar el estado correcto.
+    await cargarSesion(supa);
+
+    pintar();
+    // Un tick por segundo mantiene viva la cuenta regresiva. El estado de
+    // las tandas se relee cada 60s: cambia por ventas de otra gente, así
+    // que no alcanza con calcularlo una vez al entrar.
+    clearInterval(timer);
+    timer = setInterval(pintar, 1000);
+    setInterval(() => refrescarEstado(supa), 60000);
+  }
+
+  async function refrescarEstado(supa){
+    if (!evento) return;
+    const { data, error } = await supa.rpc('estado_tandas', { p_event_id: evento.id });
+    if (!error && Array.isArray(data) && data.length) tandas = data;
+  }
+
+  function sinVenta(msj){
+    const cont = document.getElementById('rwTickets');
+    if (cont) cont.innerHTML = `<p style="grid-column:1/-1;color:var(--ink-soft)">${esc(msj)}</p>`;
+    const pill = document.getElementById('rwPill');
+    if (pill) pill.textContent = 'Entradas muy pronto';
+    const cuenta = document.getElementById('rwCuenta');
+    if (cuenta) cuenta.textContent = '';
+  }
+
+  /* ── Tarjetas ───────────────────────────────────────────────── */
+  function pintarTickets(){
+    const cont = document.getElementById('rwTickets');
+    if (!cont) return;
+    cont.innerHTML = tandas.map(t => {
+      const activa = t.estado === 'activa';
+      // En la activa va la fecha de cierre. Cuántos lugares quedan no se
+      // muestra: lo pide así el brief, y la RPC directamente no lo manda.
+      const cierre = activa && t.cierra ? `Hasta el ${esc(fmtFecha(t.cierra))}` : '';
+
+      // Comprar abre la reserva acá abajo, sin salir de la página. La
+      // lógica de cobro es la compartida de inscripcion.js, así que no hay
+      // dos implementaciones aunque haya dos pantallas.
+      const cta = activa
+        ? `<button type="button" class="rw-btn" data-comprar="${esc(t.tipo)}">Comprar entrada</button>`
+        : `<button type="button" class="rw-btn" disabled>${esc(ETIQUETA[t.estado] || '')}</button>`;
+
+      return `
+        <article class="rw-ticket rw-ticket--${esc(t.estado)}">
+          <span class="rw-ticket__estado rw-e-${esc(t.estado)}">${esc(ETIQUETA[t.estado] || '')}</span>
+          <h3 class="rw-ticket__nombre">${esc(t.nombre)}</h3>
+          <div class="rw-ticket__precio">${esc(plata(t.precio))}</div>
+          <p class="rw-ticket__incluye">${esc(t.incluye || '')}</p>
+          <div class="rw-ticket__cierre">${cierre}</div>
+          <div class="rw-ticket__cta">${cta}</div>
+        </article>`;
+    }).join('');
+
+    cont.querySelectorAll('[data-comprar]').forEach(b => {
+      b.addEventListener('click', () => {
+        tipoElegido = b.getAttribute('data-comprar');
+        pintarReserva();
+        document.getElementById('rwReserva')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  }
+
+  /* ── Hero y barra ───────────────────────────────────────────── */
+  function destacada(){
+    // Para el hero manda la entrada de run, que es el producto principal.
+    // Si no hay ninguna activa, se cae a la de after.
+    return tandas.find(t => t.tipo === 'run'   && t.estado === 'activa')
+        || tandas.find(t => t.tipo === 'after' && t.estado === 'activa')
+        || null;
+  }
+
+  function pintarHero(){
+    const pill = document.getElementById('rwPill');
+    const cuenta = document.getElementById('rwCuenta');
+    if (!pill) return;
+    const t = destacada();
+
+    if (!t){
+      const vendra = tandas.some(x => x.estado === 'proximamente');
+      pill.textContent = vendra ? 'Entradas muy pronto' : 'Entradas cerradas';
+      cuenta.textContent = '';
+      return;
+    }
+
+    pill.textContent = t.nombre + ' activa';
+
+    if (!t.cierra){ cuenta.textContent = ''; return; }
+    const faltan = new Date(t.cierra) - new Date();
+    if (faltan <= 0){ cuenta.textContent = ''; return; }
+    const d = Math.floor(faltan / 864e5);
+    const h = Math.floor(faltan % 864e5 / 36e5);
+    const m = Math.floor(faltan % 36e5 / 6e4);
+    const s = Math.floor(faltan % 6e4 / 1e3);
+    // Más de un día: días y horas. El último día va al segundo, que es
+    // cuando la urgencia es real y no un reloj de adorno.
+    cuenta.innerHTML = d > 0
+      ? `Cierra en <b>${d}d ${h}h</b>`
+      : `Cierra en <b>${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</b>`;
+  }
+
+  function pintarBarra(){
+    const barra = document.getElementById('rwBarra');
+    if (!barra) return;
+    const t = destacada();
+    if (!t){ barra.classList.remove('is-on'); return; }
+    const p = document.getElementById('rwBarraPrecio');
+    const s = document.getElementById('rwBarraSub');
+    if (p) p.textContent = plata(t.precio);
+    if (s) s.textContent = t.nombre;
+    document.body.classList.add('rw-con-barra');
+  }
+
+  function vigilarBarra(){
+    const hero = document.querySelector('.rw-hero');
+    const barra = document.getElementById('rwBarra');
+    if (!hero || !barra) return;
+    if (!('IntersectionObserver' in window)){ barra.classList.add('is-on'); return; }
+    new IntersectionObserver(([e]) => {
+      barra.classList.toggle('is-on', !e.isIntersecting);
+    }, { threshold: 0 }).observe(hero);
+  }
+
+  function pintar(){ pintarTickets(); pintarHero(); pintarBarra(); pintarReserva(); }
+
+  /* ── Puro UI: no espera a la base ───────────────────────────── */
+  function pintarSponsors(){
+    const cont = document.getElementById('rwSponsors');
+    if (!cont) return;
+    if (!SPONSORS.length){
+      // Una fila vacía bajo el título "Con el apoyo de" queda peor que no
+      // mostrar la sección.
+      const sec = cont.closest('.rw-sec');
+      if (sec) sec.style.display = 'none';
+      return;
+    }
+    cont.innerHTML = SPONSORS.map(s =>
+      `<img src="${esc(s.src)}" alt="${esc(s.alt)}" loading="lazy" />`).join('');
+  }
+
+  function pintarContacto(){
+    const wa = document.getElementById('rwWhatsapp');
+    const cfg = window.SPRINTERS || {};
+    if (wa && cfg.WHATSAPP_COMUNIDAD) wa.href = cfg.WHATSAPP_COMUNIDAD;
+  }
+
+  pintarSponsors();
+  pintarContacto();
+  vigilarBarra();
+
+
+  /* ══════════════════════════════════════════════════════════════
+     RESERVA — la compra, dentro de esta misma página
+
+     Antes el botón de cada entrada llevaba a Evento.html, que es la página
+     genérica. Funcionaba, pero cortaba el clima justo en el momento de
+     pagar: de los viñedos a un formulario que no decía Run & Wine por
+     ningún lado.
+
+     La lógica de cobro no está acá: vive en inscripcion.js, compartida con
+     Evento.html. Acá sólo está el markup y el diseño de esta landing.
+     ══════════════════════════════════════════════════════════════ */
+
+  const INS = window.SprintersInscripcion;
+  let sesion = null;        // sesión de Supabase, o null
+  let inscripcion = null;   // fila de event_registrations, si ya está anotada
+  let tipoElegido = null;   // 'run' | 'after' — lo fija el botón de la tarjeta
+  let archivoListo = null;  // comprobante ya procesado, antes de subirlo
+
+  const BANCO = (window.SPRINTERS || {}).BANK || {};
+  const TERMINOS = (window.SPRINTERS || {}).TERMS_URL || '#';
+
+  function tandaPorTipo(tipo){
+    return tandas.find(t => t.tipo === tipo && t.estado === 'activa') || null;
+  }
+
+  /* ── Formulario, dibujado desde form_schema ──────────────────── */
+  function camposVisibles(){
+    const esquema = evento && evento.form_schema;
+    if (!Array.isArray(esquema)) return [];
+    return esquema.filter(c => c && c.key &&
+      !(c.solo_tipo && tipoElegido && c.solo_tipo !== tipoElegido));
+  }
+
+  function camposHtml(){
+    return camposVisibles().map(c => {
+      const req = c.required ? '<span class="req">*</span>' : '';
+      if (c.type === 'check'){
+        return `<label class="rw-check" data-campo="${esc(c.key)}">
+                  <input type="checkbox" id="rwf-${esc(c.key)}" />
+                  <span>${esc(c.label)}${req}</span></label>`;
+      }
+      if (c.type === 'select'){
+        const ops = (c.options || []).map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('');
+        return `<div class="rw-campo" data-campo="${esc(c.key)}">
+                  <label for="rwf-${esc(c.key)}">${esc(c.label)}${req}</label>
+                  <select id="rwf-${esc(c.key)}"><option value="">Elegí una opción</option>${ops}</select>
+                </div>`;
+      }
+      const tipo = ['tel','email'].includes(c.type) ? c.type : 'text';
+      return `<div class="rw-campo" data-campo="${esc(c.key)}">
+                <label for="rwf-${esc(c.key)}">${esc(c.label)}${req}</label>
+                <input type="${tipo}" id="rwf-${esc(c.key)}" maxlength="120" />
+              </div>`;
+    }).join('');
+  }
+
+  // marcar=true pinta en rojo lo que falta. Mientras la persona completa no
+  // se marca nada: sólo al intentar reservar.
+  function leerCampos(marcar){
+    const datos = {}; let faltan = 0;
+    camposVisibles().forEach(c => {
+      const el = document.getElementById('rwf-' + c.key);
+      if (!el) return;
+      const cont = document.querySelector(`#rwReserva [data-campo="${CSS.escape(c.key)}"]`);
+      const valor = c.type === 'check' ? !!el.checked : (el.value || '').trim();
+      const vacio = c.required && (c.type === 'check' ? !valor : !valor);
+      datos[c.key] = valor;
+      if (vacio) faltan++;
+      if (marcar && cont) cont.classList.toggle('falta', !!vacio);
+    });
+    return { ok: faltan === 0, datos, faltan };
+  }
+
+  /* ── Pintado según el estado ─────────────────────────────────── */
+  function pintarReserva(){
+    const caja = document.getElementById('rwReserva');
+    if (!caja || !evento) return;
+
+    // Sin tipo elegido no se muestra nada: primero hay que tocar una entrada.
+    if (!tipoElegido){ caja.style.display = 'none'; return; }
+    caja.style.display = '';
+
+    if (inscripcion){ pintarYaInscripta(caja); return; }
+    if (!sesion){ pintarSinSesion(caja); return; }
+    pintarFormulario(caja);
+  }
+
+  function pintarSinSesion(caja){
+    const t = tandaPorTipo(tipoElegido);
+    // volver=... hace que después de entrar la persona caiga de nuevo acá y
+    // no en la home, que es donde terminaba antes.
+    const volver = encodeURIComponent(location.pathname + location.search + '#entradas');
+    caja.innerHTML = `
+      ${t ? `<div class="rw-reserva__tanda"><b>${esc(t.nombre)}</b><span>${esc(plata(t.precio))}</span></div>` : ''}
+      <h3>Necesitás una cuenta para reservar</h3>
+      <p style="margin-top:10px;color:var(--ink-soft);font-size:14.5px">
+        Es gratis y toma un minuto. La usás después para ver tu inscripción y tu comprobante.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+        <a class="rw-btn" href="Cuenta.html?tab=signup&volver=${volver}">Crear mi cuenta</a>
+        <a class="rw-btn" style="background:transparent;color:var(--rw-verde);border:1px solid var(--rw-verde)"
+           href="Cuenta.html?tab=login&volver=${volver}">Ya tengo cuenta</a>
+      </div>`;
+  }
+
+  function pintarFormulario(caja){
+    const t = tandaPorTipo(tipoElegido);
+    if (!t){
+      caja.innerHTML = `<h3>Esa entrada ya no está disponible</h3>
+        <p style="margin-top:10px;color:var(--ink-soft)">Mirá las tandas de arriba para ver cuál está activa.</p>`;
+      return;
+    }
+
+    caja.innerHTML = `
+      <div class="rw-reserva__tanda">
+        <b>${esc(t.nombre)}</b><span>${esc(plata(t.precio))}</span>
+      </div>
+      <h3>Completá tus datos</h3>
+      <div id="rwCampos" style="margin-top:18px">${camposHtml()}</div>
+
+      <div class="rw-alias">
+        <div class="rw-alias__fila">
+          <span class="k">Alias</span><span class="v">${esc(BANCO.alias || '—')}</span>
+          <button type="button" class="rw-copiar" id="rwCopiar">Copiar</button>
+        </div>
+        <div class="rw-alias__fila"><span class="k">Nombre</span><span class="v">${esc(BANCO.titular || '—')}</span></div>
+        <div class="rw-alias__fila"><span class="k">Monto</span><span class="v">${esc(plata(t.precio))}</span></div>
+      </div>
+
+      <div class="rw-subir">
+        <label class="rw-subir__btn">＋ Subir comprobante
+          <input type="file" id="rwArchivo" accept="image/*,application/pdf" style="display:none" />
+        </label>
+        <span class="rw-subir__nom" id="rwArchivoNom">${esc(INS.PISTA)}</span>
+        <button type="button" class="rw-quitar" id="rwQuitar" style="display:none"
+                title="Quitar el archivo" aria-label="Quitar el archivo">×</button>
+      </div>
+
+      <label class="rw-check" id="rwTerminos">
+        <input type="checkbox" id="rwTerminosChk" />
+        <span>He leído y acepto los <a href="${esc(TERMINOS)}" target="_blank" rel="noopener">Términos y Condiciones</a>.</span>
+      </label>
+
+      <div class="rw-aviso" id="rwAviso"></div>
+      <button type="button" class="rw-btn" id="rwReservar" style="width:100%" disabled>
+        Confirmar y reservar mi lugar
+      </button>
+      <p class="rw-legal">
+        Tu lugar queda confirmado apenas subís el comprobante. Un admin del club lo revisa después.
+      </p>`;
+
+    engancharFormulario(t);
+  }
+
+  function pintarYaInscripta(caja){
+    const confirmada = inscripcion.payment_status === 'verified';
+    const nombreArchivo = inscripcion.receipt_url
+      ? String(inscripcion.receipt_url).split('/').pop() : null;
+    caja.innerHTML = `
+      <div class="rw-estado-ins ${confirmada ? 'ok' : 'pend'}">
+        ${confirmada ? '✓ Tu lugar está confirmado' : '⏳ Falta tu comprobante'}
+      </div>
+      <h3>${confirmada ? '¡Nos vemos el 14!' : 'Ya estás anotada'}</h3>
+      <p style="margin-top:10px;color:var(--ink-soft);font-size:14.5px">
+        ${confirmada
+          ? 'Te esperamos en Lamadrid Estate Wines a las 18:00. Cualquier cambio te avisamos.'
+          : 'Transferí al alias de arriba y subí el comprobante para confirmar tu lugar.'}
+      </p>
+      ${nombreArchivo ? `
+        <div class="rw-alias" style="margin-top:20px">
+          <div class="rw-alias__fila">
+            <span class="k">Comprobante</span>
+            <span class="v" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nombreArchivo)}</span>
+          </div>
+        </div>` : ''}
+      <p class="rw-legal">
+        ¿Algún problema? Escribinos y lo resolvemos.
+      </p>`;
+  }
+
+  /* ── Eventos del formulario ──────────────────────────────────── */
+  function engancharFormulario(tanda){
+    const btn      = document.getElementById('rwReservar');
+    const chk      = document.getElementById('rwTerminosChk');
+    const input    = document.getElementById('rwArchivo');
+    const nombreEl = document.getElementById('rwArchivoNom');
+    const quitar   = document.getElementById('rwQuitar');
+    const aviso    = document.getElementById('rwAviso');
+    const campos   = document.getElementById('rwCampos');
+
+    function revisar(){
+      btn.disabled = !(chk.checked && archivoListo && leerCampos(false).ok);
+    }
+
+    document.getElementById('rwCopiar')?.addEventListener('click', (e) => {
+      navigator.clipboard?.writeText(BANCO.alias || '');
+      const t = e.target; const orig = t.textContent;
+      t.textContent = '✓'; setTimeout(() => t.textContent = orig, 1300);
+    });
+
+    chk.addEventListener('change', revisar);
+    campos?.addEventListener('input', revisar);
+    campos?.addEventListener('change', () => { leerCampos(true); revisar(); });
+
+    quitar.addEventListener('click', () => {
+      archivoListo = null; input.value = '';
+      nombreEl.textContent = INS.PISTA; quitar.style.display = 'none'; revisar();
+    });
+
+    input.addEventListener('change', async () => {
+      const crudo = input.files && input.files[0];
+      if (!crudo){ archivoListo = null; nombreEl.textContent = INS.PISTA; quitar.style.display='none'; revisar(); return; }
+      nombreEl.textContent = 'Procesando…'; quitar.style.display = ''; btn.disabled = true;
+
+      const { file, error, original } = await INS.prepararComprobante(crudo);
+      if (error){ nombreEl.textContent = error; archivoListo = null; revisar(); return; }
+      archivoListo = file;
+      // Mostrar la compresión explica por qué el archivo "cambió" de peso.
+      nombreEl.textContent = (original && file.size < original)
+        ? `${file.name} · ${INS.fmtBytes(original)} → ${INS.fmtBytes(file.size)}`
+        : `${file.name} · ${INS.fmtBytes(file.size)}`;
+      revisar();
+    });
+
+    btn.addEventListener('click', async () => {
+      const form = leerCampos(true);
+      if (!form.ok){
+        aviso.textContent = form.faltan === 1
+          ? 'Te falta completar un campo.'
+          : `Te faltan completar ${form.faltan} campos.`;
+        document.querySelector('#rwReserva .falta')?.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+      aviso.textContent = '';
+      btn.disabled = true; btn.textContent = 'Reservando…';
+
+      const r = await INS.reservar(supaRef, {
+        eventId: evento.id, tipo: tipoElegido, formData: form.datos
+      });
+      if (r.error){
+        aviso.textContent = r.error;
+        btn.disabled = false; btn.textContent = 'Confirmar y reservar mi lugar';
+        // Si fue cupo o tanda, el estado de la página ya no sirve.
+        if (/AGOTADO|TANDA_CERRADA|CERRADA/.test(r.crudo || '')) refrescarEstado(supaRef);
+        return;
+      }
+      inscripcion = r.registro;
+
+      btn.textContent = 'Subiendo comprobante…';
+      const sub = await INS.subirComprobante(supaRef, {
+        userId: sesion.user.id, registroId: inscripcion.id, file: archivoListo
+      });
+      if (sub.error){
+        // La inscripción ya existe: avisar y no dejarla en silencio.
+        aviso.textContent = sub.error + ' Tu lugar quedó reservado igual; escribinos para resolverlo.';
+      } else {
+        inscripcion.receipt_url = sub.path;
+        inscripcion.payment_status = 'verified';
+      }
+      pintarReserva();
+      document.getElementById('rwReserva').scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+
+    revisar();
+  }
+
+  /* ── Sesión e inscripción previa ─────────────────────────────── */
+  async function cargarSesion(supa){
+    const { data } = await supa.auth.getSession();
+    sesion = data ? data.session : null;
+    if (!sesion || !evento) return;
+    const { data: reg } = await supa.from('event_registrations')
+      .select('*').eq('event_id', evento.id).eq('user_id', sesion.user.id).maybeSingle();
+    inscripcion = reg || null;
+    // Si ya estaba anotada, se muestra su estado sin esperar a que elija
+    // nada. El tipo sale de la tanda que le tocó, no de una suposición.
+    if (inscripcion && !tipoElegido){
+      const suya = tandas.find(t => t.id === inscripcion.price_tier);
+      tipoElegido = suya ? suya.tipo : 'run';
+    }
+  }
+
+  /* ── Arranque ───────────────────────────────────────────────── */
+  // Mismo patrón que el resto del sitio: esperar a que entre el script de
+  // Supabase, que va con defer.
+  (function esperar(intentos){
+    if (window.supabase && window.SPRINTERS){
+      const supa = window.supabase.createClient(
+        window.SPRINTERS.SUPABASE_URL, window.SPRINTERS.SUPABASE_ANON_KEY);
+      cargar(supa);
+      return;
+    }
+    if (intentos <= 0){ sinVenta('No pudimos cargar las entradas. Recargá la página.'); return; }
+    setTimeout(() => esperar(intentos - 1), 100);
+  })(60);
+})();
+</script>
+</body>
+</html>
+</body>
+</html>

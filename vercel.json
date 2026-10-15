@@ -9,6 +9,8 @@
     { "source": "/running", "destination": "/Suscripcion Running.html" },
     { "source": "/social", "destination": "/Suscripcion Social.html" },
     { "source": "/admin", "destination": "/Admin.html" },
+    { "source": "/runandwine", "destination": "/Run and Wine.html" },
+    { "source": "/run-and-wine", "destination": "/Run and Wine.html" },
     { "source": "/padel", "destination": "/Padel.html" },
     { "source": "/trekking", "destination": "/Trekking.html" }
   ],

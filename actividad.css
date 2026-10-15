@@ -27,7 +27,7 @@
 /* --terracota-ink (brand.css) y no --terracota puro: sobre crema el terracota
    de marca da 3.0:1 y estos textos son de 11-12px, así que no pasa AA. */
 .act-eyebrow{
-  font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:.32em;
+  font-family:'Inter',sans-serif;font-size:12.5px;letter-spacing:.26em;
   text-transform:uppercase;font-weight:600;color:var(--terracota-ink);margin-bottom:16px;
 }
 /* Los titulares de sección van en Inter, no en Harper: el Harper del repo
@@ -35,12 +35,15 @@
    acá el copy lo escribe otra persona — mejor que no haya forma de romperlo. */
 .act-h2{
   font-family:'Inter',sans-serif;font-weight:300;text-transform:uppercase;
-  font-size:clamp(28px,4vw,52px);line-height:1;letter-spacing:.01em;
+  font-size:clamp(32px,4.4vw,58px);line-height:1.02;letter-spacing:.01em;
   color:var(--asfaltico);
 }
 .act-lead-txt{
-  margin-top:18px;max-width:620px;font-size:15px;line-height:1.7;
-  font-weight:300;color:var(--ink-soft);text-wrap:pretty;
+  margin-top:18px;max-width:640px;font-size:17px;line-height:1.75;
+  /* 300 a 15px sobre crema se veía desvaído en pantallas grandes. Subir el
+     cuerpo solo no alcanzaba: lo que costaba leer era el trazo fino, así que
+     también va de 300 a 400 y el color pasa a Asfáltico. */
+  font-weight:400;color:var(--asfaltico);text-wrap:pretty;
 }
 
 /* ====== "Qué es" — texto + rasgos ====== */
@@ -50,10 +53,10 @@
 .act-fact{padding:18px 20px;border-bottom:1px solid var(--line-soft)}
 .act-fact:last-child{border-bottom:none}
 .act-fact dt{
-  font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.18em;
+  font-family:'Inter',sans-serif;font-size:11.5px;letter-spacing:.16em;
   text-transform:uppercase;font-weight:600;color:var(--terracota-ink);margin-bottom:6px;
 }
-.act-fact dd{font-size:14px;line-height:1.6;color:var(--ink-soft);font-weight:300}
+.act-fact dd{font-size:15.5px;line-height:1.65;color:var(--asfaltico);font-weight:400}
 
 /* ====== Banda de cierre ====== */
 .act-band-cta{background:var(--bosque-900);color:#fff;text-align:center;padding:clamp(48px,7vh,88px) clamp(20px,5vw,48px)}

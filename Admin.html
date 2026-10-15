@@ -240,6 +240,36 @@
         </div>
         <div class="field"><label>Cupo total (vacío = sin límite)</label><input type="number" id="e-capacity" min="1" /></div>
         <div class="field"><label>Cierre de inscripción (opcional)</label><input type="datetime-local" id="e-cutoff" /></div>
+
+        <!-- Tanda early · requiere db/2026-10-13_tandas_early_general.sql.
+             Sin esa migración, guardar un evento tira error porque la RPC
+             pasa a recibir tres parámetros que la base todavía no tiene. -->
+        <div class="field full" style="margin-top:4px;padding-top:16px;border-top:1px solid var(--line)">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="e-early-on" style="width:16px;height:16px" />
+            Entrada por tandas (early + general)
+          </label>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">
+            Para entradas tipo boliche. Sin tildar, el evento tiene un solo precio.
+          </div>
+        </div>
+        <div class="field" id="e-early-price-wrap" style="display:none">
+          <label>Precio early ($)</label>
+          <input type="number" id="e-early-price" min="0" placeholder="12000" />
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Tiene que ser menor o igual al precio general</div>
+        </div>
+        <div class="field" id="e-early-capacity-wrap" style="display:none">
+          <label>Cuántas entradas early</label>
+          <input type="number" id="e-early-capacity" min="1" placeholder="50" />
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Son las primeras N del evento. Vacío = sin tope por cantidad</div>
+        </div>
+        <div class="field full" id="e-early-until-wrap" style="display:none">
+          <label>Early hasta (opcional)</label>
+          <input type="datetime-local" id="e-early-until" />
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">
+            Si cargás las dos cosas, la tanda termina con lo que pase primero: que se agoten las early o que llegue esta fecha.
+          </div>
+        </div>
         <div class="field full"><label>Descripción</label><textarea id="e-desc"></textarea></div>
         <div class="field full">
           <label>Itinerario</label>
@@ -668,6 +698,15 @@ document.addEventListener('DOMContentLoaded', function(){
         : 'Precio general ($, vacío = gratis)';
     }
 
+    // Muestra u oculta los tres campos de la tanda. Se llama al abrir el
+    // modal y cada vez que se toca el checkbox.
+    function toggleEarlyFields(){
+      const on = document.getElementById('e-early-on').checked;
+      ['e-early-price-wrap','e-early-capacity-wrap','e-early-until-wrap']
+        .forEach(id => { document.getElementById(id).style.display = on ? '' : 'none'; });
+    }
+    document.getElementById('e-early-on').addEventListener('change', toggleEarlyFields);
+
     function openEventModal(ev){
       editingEventId = ev ? ev.id : null;
       pendingImageFile = null;
@@ -694,6 +733,15 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('e-member-price').value = ev?.member_price ?? '';
       document.getElementById('e-capacity').value = ev?.total_capacity ?? '';
       document.getElementById('e-cutoff').value = toDatetimeLocal(ev?.sales_cutoff);
+
+      // Tanda early. early_price es el interruptor: si tiene valor, el evento
+      // va por tandas; si es NULL, precio único.
+      const tieneEarly = ev?.early_price != null;
+      document.getElementById('e-early-on').checked = tieneEarly;
+      document.getElementById('e-early-price').value    = ev?.early_price ?? '';
+      document.getElementById('e-early-capacity').value = ev?.early_capacity ?? '';
+      document.getElementById('e-early-until').value    = toDatetimeLocal(ev?.early_until);
+      toggleEarlyFields();
       document.getElementById('e-desc').value = ev?.description || '';
       renderItinerary(ev?.itinerary);
       document.getElementById('e-afterrun-switch').classList.toggle('on', !!ev?.has_after_run);
@@ -765,6 +813,35 @@ document.addEventListener('DOMContentLoaded', function(){
         const memberPriceNum = memberPriceRaw === '' ? null : parseFloat(memberPriceRaw);
         const memberPriceVal = Number.isFinite(memberPriceNum) ? memberPriceNum : null;
 
+        // ── Tanda early ────────────────────────────────────────────────
+        const earlyOn = document.getElementById('e-early-on').checked;
+        const earlyPriceRaw = document.getElementById('e-early-price').value.trim();
+        const earlyPriceNum = earlyPriceRaw === '' ? null : parseFloat(earlyPriceRaw);
+        const earlyPriceVal = earlyOn && Number.isFinite(earlyPriceNum) ? earlyPriceNum : null;
+        const earlyCapRaw = document.getElementById('e-early-capacity').value.trim();
+        const earlyCapVal = earlyOn && earlyCapRaw !== '' ? parseInt(earlyCapRaw) : null;
+        const earlyUntilRaw = document.getElementById('e-early-until').value;
+        const earlyUntilVal = earlyOn && earlyUntilRaw ? new Date(earlyUntilRaw).toISOString() : null;
+
+        // Las mismas tres reglas que los CHECK de la base, pero avisadas acá
+        // para no hacer ir y volver al servidor por un error de carga.
+        if (earlyOn){
+          if (earlyPriceVal == null){
+            throw new Error('Pusiste entrada por tandas pero falta el precio early.');
+          }
+          const baseNum = parseFloat(document.getElementById('e-price').value);
+          if (Number.isFinite(baseNum) && earlyPriceVal > baseNum){
+            throw new Error('El precio early ($' + earlyPriceVal.toLocaleString('es-AR') + ') no puede ser mayor que el general ($' + baseNum.toLocaleString('es-AR') + ').');
+          }
+          const capNum = parseInt(document.getElementById('e-capacity').value);
+          if (Number.isFinite(capNum) && earlyCapVal != null && earlyCapVal > capNum){
+            throw new Error('Las entradas early (' + earlyCapVal + ') no pueden superar el cupo total (' + capNum + ').');
+          }
+          if (earlyCapVal == null && !earlyUntilVal){
+            throw new Error('La tanda early necesita un tope: o cuántas entradas, o hasta cuándo. Si no, nunca pasa a general.');
+          }
+        }
+
         const params = {
           p_title: title,
           p_event_date: new Date(dateVal).toISOString(),
@@ -788,6 +865,10 @@ document.addEventListener('DOMContentLoaded', function(){
           p_custom_tag: tagVal || null,
           // Requiere db/2026-09-03_padel_trekking.sql corrida en Supabase.
           p_member_price: memberPriceVal,
+          // Tanda early — requiere db/2026-10-13_tandas_early_general.sql.
+          p_early_price: earlyPriceVal,
+          p_early_capacity: earlyCapVal,
+          p_early_until: earlyUntilVal,
         };
 
         if (!editingEventId){
@@ -798,6 +879,10 @@ document.addEventListener('DOMContentLoaded', function(){
             p_event_id: editingEventId,
             ...params,
             p_clear_after_run_price: !afterRunOn || !afterRunPriceVal,
+            // Destildar "entrada por tandas" tiene que borrar las tres
+            // columnas. Con COALESCE solo, mandar NULL se leería como
+            // "no cambies nada" y la tanda quedaría viva.
+            p_clear_early: !earlyOn,
             // Igual que con el precio del after-run: si el campo quedó vacío
             // es porque el admin lo borró a propósito (quiere volver al
             // fallback de categoría), no porque "no cambió nada". Sin este

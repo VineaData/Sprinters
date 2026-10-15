@@ -192,6 +192,39 @@
   .price-line{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0}
   .price-line.total{font-weight:700;border-top:1px solid var(--line);margin-top:4px;padding-top:10px}
   .info-block{font-size:12.5px;color:var(--muted);line-height:1.65;margin:14px 0;padding:14px 16px;background:var(--crema-2);border:1px solid var(--line);border-radius:12px}
+  /* ===== Formulario por evento =====
+     Los campos salen de events.form_schema, que existe en la base desde
+     junio y hasta ahora ningún front leía. Cada evento define los suyos:
+     Run & Wine pide distancia, contacto de emergencia y consentimientos;
+     una corrida del sábado no pide nada y la sección no aparece. */
+  .ev-form{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.18)}
+  .ev-form__tit{font-family:'Inter';font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:600;color:var(--tierras);margin-bottom:16px}
+  .ev-field{margin-bottom:16px}
+  .ev-field > label{display:block;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.9);margin-bottom:7px}
+  /* El asterisco va también dentro de las casillas, no sólo de los campos
+     con label arriba: si no, ahí queda pegado al texto y en blanco. */
+  .ev-field .req,.ev-check .req{color:var(--terracota);margin-left:4px;font-weight:700}
+  .ev-field input[type=text],.ev-field input[type=tel],.ev-field input[type=email],.ev-field select{
+    width:100%;height:46px;border-radius:10px;padding:0 14px;font-family:inherit;font-size:14.5px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#fff;outline:none;
+    transition:border-color .2s,background .2s}
+  .ev-field select{appearance:none;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,rgba(255,255,255,.6) 50%),
+                     linear-gradient(135deg,rgba(255,255,255,.6) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 21px,calc(100% - 13px) 21px;
+    background-size:5px 5px;background-repeat:no-repeat;padding-right:38px}
+  .ev-field select option{background:var(--bosque-900);color:#fff}
+  .ev-field input::placeholder{color:rgba(255,255,255,.45)}
+  .ev-field input:focus,.ev-field select:focus{border-color:var(--tierras);background:rgba(255,255,255,.14)}
+  /* Los consentimientos son casillas: el texto va al lado, no arriba */
+  .ev-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:13px;
+    font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.9);cursor:pointer}
+  .ev-check input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--terracota)}
+  .ev-field.falta input,.ev-field.falta select{border-color:var(--terracota)}
+  .ev-check.falta{color:var(--terracota)}
+  .ev-form__aviso{font-size:12px;color:var(--terracota);font-weight:500;margin-top:4px;min-height:16px}
+
   .terms-row{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:12.5px;line-height:1.5}
   .terms-row input[type=checkbox]{margin-top:3px;width:16px;height:16px;flex-shrink:0}
   .terms-row a{color:var(--teal);text-decoration:underline;font-weight:600}
@@ -536,8 +569,10 @@ document.addEventListener('DOMContentLoaded', function(){
   function memberPrice(){
     if (event_.member_price == null) return null;
     const m = Number(event_.member_price);
-    // Un "descuento" que no descuenta no se anuncia.
-    if (!Number.isFinite(m) || m >= Number(event_.base_price || 0)) return null;
+    // Un "descuento" que no descuenta no se anuncia. Se compara contra la
+    // tanda vigente: durante el early, un precio de socio más caro que el
+    // early no es un beneficio.
+    if (!Number.isFinite(m) || m >= tierPrice()) return null;
     return m;
   }
 
@@ -546,11 +581,39 @@ document.addEventListener('DOMContentLoaded', function(){
   const PRICE_LABEL = { running: 'Run', social: 'Run', padel: 'Inscripción', trekking: 'Inscripción' };
   function priceLabel(){ return PRICE_LABEL[event_.branch] || 'Inscripción'; }
 
+  // Espejo de public.current_event_tier() (db/2026-10-13_tandas_early_general.sql).
+  // OJO: esto es para MOSTRAR. El precio que se cobra lo fija el servidor
+  // dentro de register_for_event, bajo el lock del evento. Si entre que la
+  // persona abre la página y aprieta "reservar" se agota la tanda, manda el
+  // servidor y la inscripción queda en general. Es a propósito: si decidiera
+  // el navegador, dos personas podrían llevarse el último lugar early.
+  function currentTier(){
+    if (event_.early_price == null) return 'general';
+    if (event_.early_until && new Date() >= new Date(event_.early_until)) return 'general';
+    if (event_.early_capacity != null && (event_.sold_tickets || 0) >= event_.early_capacity) return 'general';
+    return 'early';
+  }
+
+  // Precio de lista según la tanda, antes de descuentos de socio.
+  function tierPrice(){
+    return currentTier() === 'early'
+      ? Number(event_.early_price)
+      : Number(event_.base_price || 0);
+  }
+
+  // Cuántas entradas quedan al precio early. null = no hay tope por cantidad.
+  function earlyLeft(){
+    if (event_.early_price == null || event_.early_capacity == null) return null;
+    return Math.max(0, event_.early_capacity - (event_.sold_tickets || 0));
+  }
+
   function effectivePrice(){
     if (event_.included_in_running_pro && userIsPro) return 0;
     const m = memberPrice();
-    if (m != null && userIsMember) return m;
-    return Number(event_.base_price || 0);
+    // El precio de socio solo se aplica si de verdad mejora la tanda vigente:
+    // si el early quedó más barato que el precio de socio, gana el early.
+    if (m != null && userIsMember && m < tierPrice()) return m;
+    return tierPrice();
   }
 
   function render(){
@@ -610,6 +673,27 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }
 
+    // Tanda early: es la urgencia más fuerte que tiene este evento, así que
+    // pisa a las demás en vez de encolarse. "Quedan 8 al precio early" mueve
+    // más que "quedan 8 lugares".
+    if (currentTier() === 'early'){
+      const quedan = earlyLeft();
+      let txt = null;
+      if (quedan != null && quedan <= 20){
+        txt = quedan === 1 ? 'Queda 1 entrada early' : `Quedan ${quedan} entradas early`;
+      } else if (event_.early_until){
+        const hs = (new Date(event_.early_until) - new Date()) / 36e5;
+        if (hs > 0 && hs <= 72){
+          txt = hs <= 24 ? 'Último día de precio early' : `Precio early por ${Math.ceil(hs / 24)} días más`;
+        }
+      }
+      if (txt){
+        urgencyEl.textContent = txt;
+        urgencyEl.classList.add('warn');
+        urgencyEl.style.display = '';
+      }
+    }
+
     // Precio / badge Pro
     const price = effectivePrice();
     if (event_.included_in_running_pro && userIsPro){
@@ -638,10 +722,26 @@ document.addEventListener('DOMContentLoaded', function(){
     const showAfterRun = event_.has_after_run && afterRunPrice > 0;
     const money = n => '$' + n.toLocaleString('es-AR');
 
+    // Nota de tanda, debajo del precio. Durante el early se muestra tachado
+    // el general, que es lo que hace que el descuento se entienda de un
+    // vistazo; en general se aclara que el early ya pasó, para que nadie
+    // crea que le están cobrando mal respecto de lo que vio antes.
+    const tier = currentTier();
+    let tierNote = '';
+    if (event_.early_price != null && !(event_.included_in_running_pro && userIsPro)){
+      const general = Number(event_.base_price || 0);
+      if (tier === 'early' && general > 0){
+        tierNote = `<span class="note">Precio early · después <s>${money(general)}</s></span>`;
+      } else if (tier === 'general'){
+        tierNote = '<span class="note">Precio general · la tanda early se agotó</span>';
+      }
+    }
+
     if (!showAfterRun){
       priceRow.innerHTML = price === 0
         ? `<span class="amount">Gratis</span>`
-        : `<span class="amount">${money(price)}</span><span class="note">Transferencia + comprobante</span>`;
+        : `<span class="amount">${money(price)}</span>` +
+          (tierNote || '<span class="note">Transferencia + comprobante</span>');
     } else {
       const breakdown = `
         <div class="price-breakdown">
@@ -728,6 +828,101 @@ document.addEventListener('DOMContentLoaded', function(){
     return event_.total_capacity != null && (event_.total_capacity - (event_.sold_tickets || 0)) <= 0;
   }
 
+  // ───────────────────────────────────────────────────────────────
+  // FORMULARIO POR EVENTO
+  //
+  // events.form_schema: [{key,label,type,required,options,solo_tipo}]
+  //   type: text | tel | email | select | check
+  //   solo_tipo: 'run' | 'after' — el campo aparece sólo si la entrada que
+  //     eligió la persona es de ese tipo. Lo usa Run & Wine: la distancia
+  //     se pregunta a quien corre, no a quien va sólo al after.
+  //
+  // Las respuestas van a event_registrations.form_data, que también existía
+  // desde junio sin usarse.
+  // ───────────────────────────────────────────────────────────────
+
+  // Qué entrada eligió, si vino desde una landing con tandas (?tipo=run).
+  const TIPO_ENTRADA = new URLSearchParams(location.search).get('tipo');
+
+  function camposDelFormulario(){
+    const esquema = event_.form_schema;
+    if (!Array.isArray(esquema)) return [];
+    return esquema.filter(c => {
+      if (!c || !c.key) return false;
+      // Sin tipo elegido se muestran todos: es un evento sin tandas.
+      if (c.solo_tipo && TIPO_ENTRADA && c.solo_tipo !== TIPO_ENTRADA) return false;
+      return true;
+    });
+  }
+
+  function formularioHtml(){
+    const campos = camposDelFormulario();
+    if (!campos.length) return '';
+
+    const filas = campos.map(c => {
+      const req = c.required ? '<span class="req" aria-hidden="true">*</span>' : '';
+      const obl = c.required ? 'required' : '';
+
+      if (c.type === 'check'){
+        return `<label class="ev-check" data-campo="${esc(c.key)}">
+                  <input type="checkbox" id="f-${esc(c.key)}" ${obl} />
+                  <span>${esc(c.label)}${req}</span>
+                </label>`;
+      }
+      if (c.type === 'select'){
+        const ops = (c.options || []).map(o =>
+          `<option value="${esc(o)}">${esc(o)}</option>`).join('');
+        return `<div class="ev-field" data-campo="${esc(c.key)}">
+                  <label for="f-${esc(c.key)}">${esc(c.label)}${req}</label>
+                  <select id="f-${esc(c.key)}" ${obl}>
+                    <option value="">Elegí una opción</option>${ops}
+                  </select>
+                </div>`;
+      }
+      const tipo = ['tel','email'].includes(c.type) ? c.type : 'text';
+      return `<div class="ev-field" data-campo="${esc(c.key)}">
+                <label for="f-${esc(c.key)}">${esc(c.label)}${req}</label>
+                <input type="${tipo}" id="f-${esc(c.key)}" ${obl}
+                       placeholder="${esc(c.placeholder || '')}" maxlength="120" />
+              </div>`;
+    }).join('');
+
+    return `<div class="ev-form" id="evForm">
+              <div class="ev-form__tit">Para anotarte</div>
+              ${filas}
+              <div class="ev-form__aviso" id="evFormAviso"></div>
+            </div>`;
+  }
+
+  // Devuelve { ok, datos }. Marca en rojo lo que falta, para no obligar a
+  // adivinar cuál de ocho campos es el que falta.
+  function leerFormulario(marcar){
+    const campos = camposDelFormulario();
+    const datos = {};
+    let faltan = 0;
+
+    campos.forEach(c => {
+      const el = document.getElementById('f-' + c.key);
+      if (!el) return;
+      const cont = document.querySelector(`[data-campo="${CSS.escape(c.key)}"]`);
+      let valor, vacio;
+
+      if (c.type === 'check'){
+        valor = !!el.checked;
+        vacio = c.required && !valor;
+      } else {
+        valor = (el.value || '').trim();
+        vacio = c.required && !valor;
+      }
+
+      datos[c.key] = valor;
+      if (vacio) faltan++;
+      if (marcar && cont) cont.classList.toggle('falta', !!vacio);
+    });
+
+    return { ok: faltan === 0, datos, faltan };
+  }
+
   function renderInscripcion(){
     const card = document.getElementById('inscCard');
 
@@ -797,6 +992,10 @@ document.addEventListener('DOMContentLoaded', function(){
         </div>`;
     }
 
+    // El formulario va arriba de los términos: primero los datos, después
+    // el consentimiento y recién ahí el botón.
+    html += formularioHtml();
+
     html += `
       <label class="terms-row">
         <input type="checkbox" id="termsCheck" />
@@ -844,10 +1043,23 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function updateReserveEnabled(){
       const termsOk = termsCheck.checked;
+      // El formulario se valida sin marcar en rojo: acá sólo decide si el
+      // botón se habilita. El rojo aparece recién si intenta reservar.
+      const formOk = leerFormulario(false).ok;
       const fileOk = !needsPayment || !!pendingReceipt;
-      reserveBtn.disabled = !(termsOk && fileOk);
+      reserveBtn.disabled = !(termsOk && fileOk && formOk);
     }
     termsCheck.addEventListener('change', updateReserveEnabled);
+    // input cubre lo que se tipea; change, los select y las casillas.
+    const formEl = document.getElementById('evForm');
+    if (formEl){
+      formEl.addEventListener('input', updateReserveEnabled);
+      formEl.addEventListener('change', () => {
+        // Al corregir un campo se le saca el rojo en el acto.
+        leerFormulario(true);
+        updateReserveEnabled();
+      });
+    }
 
     if (receiptClear) receiptClear.addEventListener('click', clearReceipt);
 
@@ -892,12 +1104,30 @@ document.addEventListener('DOMContentLoaded', function(){
       if (msg.includes('EVENTO_NO_PUBLICADO'))  return 'Este evento todavía no está abierto a inscripciones.';
       if (msg.includes('EVENTO_NO_ENCONTRADO')) return 'No encontramos este evento. Puede que lo hayan dado de baja.';
       if (msg.includes('NO_AUTENTICADO'))       return 'Se cerró tu sesión. Volvé a iniciar sesión y probá de nuevo.';
+      if (msg.includes('TANDA_CERRADA'))        return 'Se agotó esa tanda mientras completabas el formulario. Volvé a la página del evento para ver el precio actual.';
+      if (msg.includes('TIPO_REQUERIDO'))       return 'Faltó elegir el tipo de entrada. Volvé a la página del evento y entrá desde el botón de la entrada que querés.';
       return 'No pudimos reservar tu lugar: ' + msg;
     }
 
     reserveBtn.addEventListener('click', async () => {
       const labelDefault = needsPayment ? 'Confirmar y reservar mi lugar →' : 'Confirmar mi lugar →';
       const restore = () => { reserveBtn.disabled = false; reserveBtn.textContent = labelDefault; };
+
+      // Última validación del formulario, esta vez marcando en rojo. El
+      // botón ya estaba deshabilitado si faltaba algo, pero esto cubre el
+      // caso de que alguien lo habilite desde la consola.
+      const form = leerFormulario(true);
+      if (!form.ok){
+        const aviso = document.getElementById('evFormAviso');
+        if (aviso) aviso.textContent = form.faltan === 1
+          ? 'Te falta completar un campo.'
+          : `Te faltan completar ${form.faltan} campos.`;
+        document.querySelector('.ev-field.falta, .ev-check.falta')
+          ?.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+      const aviso = document.getElementById('evFormAviso');
+      if (aviso) aviso.textContent = '';
 
       // pendingReceipt ya pasó por prepareReceipt() en el change del input:
       // acá no hace falta revalidar tamaño, si está seteado es porque entró.
@@ -908,8 +1138,14 @@ document.addEventListener('DOMContentLoaded', function(){
       // register_for_event() valida cierre, cupo y publicación con la fila del
       // evento bloqueada, e incrementa sold_tickets en la misma transacción.
       // Si ya estabas inscripta devuelve tu fila en vez de fallar.
+      //
+      // p_tipo va sólo si el evento tiene tandas: en los eventos comunes la
+      // función lo espera NULL y usa base_price como siempre.
       const { data, error } = await supa.rpc('register_for_event', {
-        p_event_id: evId, p_after_run: afterRunOn
+        p_event_id: evId,
+        p_after_run: afterRunOn,
+        p_tipo: TIPO_ENTRADA || null,
+        p_form_data: form.datos
       });
       if (error){
         alert(reserveErrorMessage(error.message));
