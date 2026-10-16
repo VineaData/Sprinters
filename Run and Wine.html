@@ -977,13 +977,37 @@ const SPONSORS = [];
   }
 
   /* ── Pintado según el estado ─────────────────────────────────── */
+
+  // Firma de lo que hay dibujado en la caja de reserva. Existe porque pintar()
+  // corre una vez por segundo para la cuenta regresiva, y pintarFormulario()
+  // reemplaza el innerHTML entero: sin esto, cada tick borraba lo que la
+  // persona venía tipeando, destildaba los checks y le sacaba el foco del
+  // campo. Era imposible completar el formulario.
+  //
+  // La firma junta todo lo que cambia el contenido de la caja. Mientras no
+  // cambie, no se toca el DOM. Los segundos NO entran: la cuenta regresiva
+  // vive en las tarjetas y en la barra, no acá.
+  let firmaReserva = null;
+
   function pintarReserva(){
     const caja = document.getElementById('rwReserva');
     if (!caja || !evento) return;
 
     // Sin tipo elegido no se muestra nada: primero hay que tocar una entrada.
-    if (!tipoElegido){ caja.style.display = 'none'; return; }
+    if (!tipoElegido){ caja.style.display = 'none'; firmaReserva = null; return; }
     caja.style.display = '';
+
+    const t = tandaPorTipo(tipoElegido);
+    const firma = [
+      inscripcion ? 'ins:' + inscripcion.id + ':' + inscripcion.payment_status +
+                    ':' + (inscripcion.receipt_url || '')
+        : sesion ? 'form' : 'anon',
+      tipoElegido,
+      t ? t.id + ':' + t.precio : 'sin-tanda'
+    ].join('|');
+
+    if (firma === firmaReserva) return;
+    firmaReserva = firma;
 
     if (inscripcion){ pintarYaInscripta(caja); return; }
     if (!sesion){ pintarSinSesion(caja); return; }
