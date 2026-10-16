@@ -771,9 +771,21 @@ const SPONSORS = [];
   }
 
   /* ── Tarjetas ───────────────────────────────────────────────── */
+  // Misma idea que firmaReserva: las tarjetas no tienen cuenta regresiva
+  // adentro (sólo la fecha de cierre), así que no hay por qué rehacerlas cada
+  // segundo. Rehacerlas destruía los botones y los volvía a crear: si alguien
+  // apretaba "Comprar entrada" justo en ese instante, el click caía en un
+  // nodo que ya no estaba en la página y no pasaba nada.
+  let firmaTickets = null;
+
   function pintarTickets(){
     const cont = document.getElementById('rwTickets');
     if (!cont) return;
+
+    const firma = tandas.map(t => [t.id, t.estado, t.precio, t.cierra].join(':')).join('|');
+    if (firma === firmaTickets) return;
+    firmaTickets = firma;
+
     cont.innerHTML = tandas.map(t => {
       const activa = t.estado === 'activa';
       // En la activa va la fecha de cierre. Cuántos lugares quedan no se
