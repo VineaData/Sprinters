@@ -156,6 +156,33 @@
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
   padding:5px 11px;border-radius:7px;margin-left:5px}
 
+/* ══════════ VOLVER ══════════
+   Esta landing no lleva la barra de arriba que tienen las otras páginas:
+   el hero va a sangre completa y una barra lo cortaba. Pero sin nada, quien
+   entra desde la agenda queda sin salida.
+
+   Va fija y no dentro del hero, para que siga estando a mano después de
+   scrollear. Lleva su propio fondo oscuro, así se lee igual sobre la foto
+   del hero que sobre las secciones crema. */
+.rw-volver{
+  position:fixed;top:14px;left:14px;z-index:70;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:11px 18px 11px 15px;border-radius:999px;
+  background:rgba(1,46,36,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.26);color:#fff;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;
+  transition:background .22s ease,transform .22s ease;
+}
+.rw-volver:hover{background:rgba(1,46,36,.85);transform:translateX(-2px)}
+.rw-volver:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.rw-volver .flecha{font-size:14px;line-height:1}
+/* En pantallas muy chicas queda sólo la flecha: el texto competía con el
+   logo del hero y se encimaban. */
+@media (max-width:420px){
+  .rw-volver{padding:11px 13px}
+  .rw-volver .txt{display:none}
+}
+
 /* ══════════ BOTONES ══════════ */
 .rw-btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;
   padding:18px 36px;border-radius:999px;background:var(--rw-naranja);color:var(--on-accent);
@@ -189,11 +216,12 @@
 
 /* Forma de entrada: muescas laterales + línea de troquelado antes del
    precio, que es lo que la hace leer como ticket y no como tarjeta. */
-.rw-ticket{position:relative;background:#fff;border-radius:16px;padding:0;
+.rw-tickets{align-items:stretch}
+.rw-ticket{position:relative;background:#fff;border-radius:16px;padding:0;height:100%;
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 2px 0 rgba(2,73,57,.1), 0 18px 40px -30px rgba(2,73,57,.5);
   transition:transform .25s ease,box-shadow .25s ease}
-.rw-ticket__top{padding:24px 22px 18px;position:relative}
+.rw-ticket__top{padding:24px 22px 20px;position:relative;display:flex;flex-direction:column;flex:1}
 .rw-ticket__bot{padding:18px 22px 24px;position:relative;margin-top:auto}
 /* El troquelado: línea punteada con una muesca a cada lado */
 .rw-ticket__bot::before{content:"";position:absolute;left:14px;right:14px;top:0;
@@ -207,7 +235,7 @@
 .rw-ticket--activa:hover{transform:translateY(-5px)}
 .rw-ticket--agotada,.rw-ticket--cerrada{opacity:.5}
 
-.rw-ticket__estado{display:inline-block;font-size:9.5px;letter-spacing:.2em;
+.rw-ticket__estado{display:inline-block;align-self:flex-start;font-size:9.5px;letter-spacing:.2em;
   text-transform:uppercase;font-weight:800;padding:6px 12px;border-radius:999px;margin-bottom:14px}
 .rw-e-activa{background:var(--rw-naranja);color:var(--on-accent)}
 .rw-e-proximamente{background:var(--sky);color:#1c3d6b}
@@ -217,14 +245,14 @@
 .rw-ticket__precio{font-family:var(--rw-display);font-size:clamp(36px,4.6vw,46px);
   font-weight:200;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums;
   letter-spacing:-.03em}
-.rw-ticket__incluye{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:0}
+.rw-ticket__incluye{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:0;min-height:40px}
 .rw-ticket__cierre{font-size:11.5px;color:var(--rw-naranja-ink);font-weight:700;
   letter-spacing:.04em;margin-bottom:14px;min-height:17px}
 .rw-ticket__cta .rw-btn{width:100%;padding:15px 16px;font-size:11.5px}
 
-.rw-nota-gastro{margin-top:30px;padding:18px 20px;background:#fff;
+.rw .rw-nota-gastro{margin-top:30px;padding:18px 22px;background:#fff;
   border:1px solid rgba(2,73,57,.14);border-left:4px solid var(--rw-naranja);
-  border-radius:12px;font-size:14px;line-height:1.6;max-width:none}
+  border-radius:12px;font-size:14px;line-height:1.6;max-width:none;width:100%}
 
 /* ══════════ RESERVA ══════════
    La compra vive acá dentro, no en otra página: salir de la landing al
@@ -366,6 +394,10 @@
 
 <div class="rw">
 
+<a class="rw-volver" href="Landing v2.html">
+  <span class="flecha" aria-hidden="true">←</span><span class="txt">Volver</span>
+</a>
+
 <!-- ═══════════ HERO ═══════════ -->
 <header class="rw-hero">
   <div class="rw-hero__bg">
@@ -442,35 +474,14 @@
   </div>
 </section>
 
-<!-- ═══════════ 03 · ENTRADAS ═══════════ -->
-<section class="rw-sec rw-sec--crema" id="entradas">
-  <div class="rw-wrap">
-    <div data-rv>
-      <div class="rw-eyebrow"><span class="n">03</span><span class="t">Entradas</span></div>
-      <h2>Elegí <em>la tuya</em></h2>
-    </div>
-    <!-- Las arma el script desde estado_tandas() -->
-    <div class="rw-tickets" id="rwTickets"></div>
-    <p class="rw-nota-gastro" data-rv>
-      Ninguna entrada incluye gastronomía. <strong>Los Bocheros</strong> se paga en el lugar según consumo.
-    </p>
-
-    <!-- La reserva: el script la llena según haya sesión, inscripción previa
-         o no. Vive acá adentro para no sacar a la persona de la landing. -->
-    <div class="rw-reserva" id="rwReserva" data-rv style="display:none"></div>
-  </div>
-</section>
-
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
-
-<!-- ═══════════ 04 · EL RUN ═══════════ -->
+<!-- ═══════════ 03 · EL RUN ═══════════ -->
 <section class="rw-sec rw-sec--verde">
   <div class="rw-wrap rw-cols">
     <div class="rw-foto" data-rv>
       <img src="images/group-running.jpg" alt="Grupo de Sprinters corriendo" loading="lazy" />
     </div>
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">04</span><span class="t">El run</span></div>
+      <div class="rw-eyebrow"><span class="n">03</span><span class="t">El run</span></div>
       <h2>Tres distancias,<br>ningún <em>requisito</em></h2>
       <ul class="rw-lista">
         <li><div><b>4K friendly</b><span>Para quien recién arranca o nunca corrió</span></div></li>
@@ -483,11 +494,13 @@
   </div>
 </section>
 
-<!-- ═══════════ 05 · EL AFTER ═══════════ -->
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 04 · EL AFTER ═══════════ -->
 <section class="rw-sec rw-sec--crema2">
   <div class="rw-wrap rw-cols">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">05</span><span class="t">El after</span></div>
+      <div class="rw-eyebrow"><span class="n">04</span><span class="t">El after</span></div>
       <h2>Cuando <em>baja el sol</em></h2>
       <ul class="rw-lista">
         <li><div><b>Degustación de vinos Lamadrid</b><span>Incluida en todas las entradas</span></div></li>
@@ -503,13 +516,13 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
-<!-- ═══════════ 06 · CÓMO LLEGAR ═══════════ -->
+<!-- ═══════════ 05 · CÓMO LLEGAR ═══════════ -->
 <section class="rw-sec rw-sec--crema">
   <div class="rw-wrap rw-cols">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">06</span><span class="t">Cómo llegar</span></div>
+      <div class="rw-eyebrow"><span class="n">05</span><span class="t">Cómo llegar</span></div>
       <h2>Lamadrid<br><em>Estate Wines</em></h2>
       <p style="margin-top:22px">Las Compuertas, Luján de Cuyo, Mendoza.</p>
       <p>Hay estacionamiento afuera de la bodega.</p>
@@ -525,20 +538,24 @@
   </div>
 </section>
 
-<!-- ═══════════ 07 · SPONSORS ═══════════ -->
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 06 · SPONSORS ═══════════ -->
 <section class="rw-sec rw-sec--crema2">
   <div class="rw-wrap" style="text-align:center" data-rv>
-    <div class="rw-eyebrow" style="justify-content:center"><span class="n">07</span><span class="t">Con el apoyo de</span></div>
+    <div class="rw-eyebrow" style="justify-content:center"><span class="n">06</span><span class="t">Con el apoyo de</span></div>
     <!-- TODO(logo): logos de sponsors. La sección se oculta sola si no hay. -->
     <div class="rw-sponsors" id="rwSponsors"></div>
   </div>
 </section>
 
-<!-- ═══════════ 08 · FAQ ═══════════ -->
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 07 · FAQ ═══════════ -->
 <section class="rw-sec rw-sec--crema">
   <div class="rw-wrap">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Preguntas frecuentes</span></div>
+      <div class="rw-eyebrow"><span class="n">07</span><span class="t">Preguntas frecuentes</span></div>
       <h2>Lo que nos<br><em>suelen preguntar</em></h2>
     </div>
     <div class="rw-faq" data-rv>
@@ -581,6 +598,27 @@
         <div class="rw-faq__r">Si te surge algo, escribinos y lo vemos juntos.</div>
       </details>
     </div>
+  </div>
+</section>
+
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 08 · ENTRADAS ═══════════ -->
+<section class="rw-sec rw-sec--crema" id="entradas">
+  <div class="rw-wrap">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Entradas</span></div>
+      <h2>Elegí <em>la tuya</em></h2>
+    </div>
+    <!-- Las arma el script desde estado_tandas() -->
+    <div class="rw-tickets" id="rwTickets"></div>
+    <p class="rw-nota-gastro" data-rv>
+      Ninguna entrada incluye gastronomía. <strong>Los Bocheros</strong> se paga en el lugar según consumo.
+    </p>
+
+    <!-- La reserva: el script la llena según haya sesión, inscripción previa
+         o no. Vive acá adentro para no sacar a la persona de la landing. -->
+    <div class="rw-reserva" id="rwReserva" data-rv style="display:none"></div>
   </div>
 </section>
 
@@ -749,14 +787,21 @@ const SPONSORS = [];
         ? `<button type="button" class="rw-btn" data-comprar="${esc(t.tipo)}">Comprar entrada</button>`
         : `<button type="button" class="rw-btn" disabled>${esc(ETIQUETA[t.estado] || '')}</button>`;
 
+      // __top y __bot no son decorativos: el troquelado va entre los dos, y
+      // __bot con margin-top:auto es lo que deja todos los botones a la
+      // misma altura aunque las tarjetas tengan distinto texto.
       return `
         <article class="rw-ticket rw-ticket--${esc(t.estado)}">
-          <span class="rw-ticket__estado rw-e-${esc(t.estado)}">${esc(ETIQUETA[t.estado] || '')}</span>
-          <h3 class="rw-ticket__nombre">${esc(t.nombre)}</h3>
-          <div class="rw-ticket__precio">${esc(plata(t.precio))}</div>
-          <p class="rw-ticket__incluye">${esc(t.incluye || '')}</p>
-          <div class="rw-ticket__cierre">${cierre}</div>
-          <div class="rw-ticket__cta">${cta}</div>
+          <div class="rw-ticket__top">
+            <span class="rw-ticket__estado rw-e-${esc(t.estado)}">${esc(ETIQUETA[t.estado] || '')}</span>
+            <h3 class="rw-ticket__nombre">${esc(t.nombre)}</h3>
+            <div class="rw-ticket__precio">${esc(plata(t.precio))}</div>
+            <p class="rw-ticket__incluye">${esc(t.incluye || '')}</p>
+          </div>
+          <div class="rw-ticket__bot">
+            <div class="rw-ticket__cierre">${cierre}</div>
+            <div class="rw-ticket__cta">${cta}</div>
+          </div>
         </article>`;
     }).join('');
 

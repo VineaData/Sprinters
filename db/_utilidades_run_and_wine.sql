@@ -118,3 +118,25 @@ SELECT r.created_at,
 -- UPDATE public.events
 --    SET ticket_tiers = jsonb_set(ticket_tiers, '{0,cupo_hasta}', '40')
 --  WHERE landing_url = '/runandwine';
+
+
+-- ────────────────────────────────────────────────────────────────
+-- 7. CORREGIR abre_con DE SOLO AFTER  (correr una sola vez)
+--
+--    El evento se creó con Solo After sin dependencia, así que salía a la
+--    venta desde el primer día. El brief dice que se habilita recién al
+--    cerrar Early Bird. La migración ya quedó corregida para los eventos
+--    nuevos; esto arregla el que ya existe.
+--
+--    Verificar después con el bloque 1: Solo After tiene que figurar
+--    "proximamente" mientras Early Bird siga activa.
+-- ────────────────────────────────────────────────────────────────
+UPDATE public.events
+   SET ticket_tiers = jsonb_set(ticket_tiers, '{3,abre_con}', '"early"')
+ WHERE landing_url = '/runandwine'
+   AND ticket_tiers->3->>'id' = 'soloafter';
+
+-- Confirmar que quedó bien:
+-- SELECT ticket_tiers->3->>'id'       AS tanda,
+--        ticket_tiers->3->>'abre_con' AS abre_con
+--   FROM public.events WHERE landing_url = '/runandwine';

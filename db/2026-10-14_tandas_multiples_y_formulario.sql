@@ -211,6 +211,60 @@ COMMENT ON COLUMN public.event_registrations.price_tier IS
 --    admin rechaza un comprobante. Como quien llama tiene la fila del
 --    evento bloqueada, contar acá es exacto.
 -- ================================================================
+-- ────────────────────────────────────────────────────────────────
+-- tanda_disponible() — ¿esta tanda puntual todavía se puede comprar?
+--
+-- Responde por UNA tanda, no por el conjunto. La usa tanda_vigente() para
+-- resolver abre_con: "Solo After no abre mientras Early Bird siga viva".
+-- Mira lo mismo que el bucle principal — fecha, cupo acumulado del tipo y
+-- cierre manual — pero sin decidir cuál corresponde.
+-- ────────────────────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.tanda_disponible(p_event_id UUID, p_tier_id TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_tiers    JSONB;
+  v_t        JSONB;
+  v_vendidas INTEGER;
+BEGIN
+  SELECT ticket_tiers INTO v_tiers FROM public.events WHERE id = p_event_id;
+  IF v_tiers IS NULL THEN RETURN FALSE; END IF;
+
+  SELECT t INTO v_t
+    FROM jsonb_array_elements(v_tiers) AS t
+   WHERE t->>'id' = p_tier_id
+   LIMIT 1;
+  IF v_t IS NULL THEN RETURN FALSE; END IF;
+
+  IF COALESCE((v_t->>'cerrada_manual')::boolean, FALSE) THEN RETURN FALSE; END IF;
+
+  IF v_t->>'cierra' IS NOT NULL AND NOW() >= (v_t->>'cierra')::timestamptz THEN
+    RETURN FALSE;
+  END IF;
+
+  SELECT COUNT(*) INTO v_vendidas
+    FROM public.event_registrations r
+    JOIN LATERAL jsonb_array_elements(v_tiers) AS tt ON tt->>'id' = r.price_tier
+   WHERE r.event_id = p_event_id
+     AND r.status <> 'cancelled'
+     AND tt->>'tipo' = v_t->>'tipo';
+
+  IF v_t->>'cupo_hasta' IS NOT NULL
+     AND v_vendidas >= (v_t->>'cupo_hasta')::integer THEN
+    RETURN FALSE;
+  END IF;
+
+  RETURN TRUE;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.tanda_disponible(UUID, TEXT) TO anon, authenticated;
+
+
 CREATE OR REPLACE FUNCTION public.tanda_vigente(p_event_id UUID, p_tipo TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -259,15 +313,23 @@ BEGIN
     -- contrario —estirar una tanda que se agotó— se sube cupo_hasta.
     CONTINUE WHEN COALESCE((v_t->>'cerrada_manual')::boolean, FALSE);
 
-    -- No hace falta mirar abre_con acá. Las tandas vienen ORDENADAS y los
-    -- cupos son ACUMULADOS, así que la primera que pasa los dos filtros de
-    -- arriba es, por construcción, la que corresponde:
-    --   vendidas=10  → early (10 < 40)
-    --   vendidas=40  → early no pasa el cupo → general (40 < 120)
-    --   vendidas=120 → tampoco general → last call (120 < 150)
-    --   vendidas=150 → ninguna → NULL, agotado
-    -- abre_con queda en el JSON como dato para el front, que lo usa para
-    -- mostrar "Próximamente" en las que todavía no arrancaron.
+    -- abre_con: la tanda no arranca hasta que la que nombra deje de estar
+    -- disponible.
+    --
+    -- Dentro del run esto es redundante — el orden del array más los cupos
+    -- acumulados ya encadenan early → general → last call. Pero Solo After
+    -- es de OTRO tipo y no tiene predecesora en su propia cadena, así que
+    -- sin esto salía a la venta desde el primer día, cuando el brief dice
+    -- que se habilita recién al cerrar Early Bird.
+    --
+    -- No hay recursión infinita: pregunta por la disponibilidad de UNA
+    -- tanda puntual, no por cuál es la vigente. La cadena más larga acá es
+    -- de tres saltos.
+    IF v_t->>'abre_con' IS NOT NULL
+       AND public.tanda_disponible(p_event_id, v_t->>'abre_con') THEN
+      CONTINUE;
+    END IF;
+
     RETURN v_t;
   END LOOP;
 
@@ -554,7 +616,7 @@ SELECT
      "cierra":"2026-11-13T23:59:59-03:00","abre_con":"general"},
     {"id":"soloafter","nombre":"Solo After","precio":20000,"tipo":"after",
      "incluye":"Acceso al after (desde las 19:30) + degustación","cupo_hasta":30,
-     "cierra":"2026-11-13T23:59:59-03:00","abre_con":null}
+     "cierra":"2026-11-13T23:59:59-03:00","abre_con":"early"}
   ]$json$::jsonb,
   E'No es una carrera. Es una tarde entera: correr entre viñedos, sunset con degustación de vinos Lamadrid, quedarse a comer y bailar.\n\nNinguna entrada incluye gastronomía: Los Bocheros se paga en el lugar según consumo.',
   '/runandwine'

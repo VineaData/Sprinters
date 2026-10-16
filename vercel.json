@@ -44,7 +44,7 @@
       ]
     },
     {
-      "source": "/:ruta(cuenta|evento|running|social|admin|padel|trekking)",
+      "source": "/:ruta(cuenta|evento|running|social|admin|padel|trekking|runandwine|run-and-wine)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]

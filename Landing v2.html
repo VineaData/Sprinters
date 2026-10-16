@@ -1204,6 +1204,35 @@ document.addEventListener('DOMContentLoaded', function(){
       return u;
     }
 
+    // Para los eventos con tandas, el precio de la tarjeta sale de la que
+    // esté activa. Se consulta después de pintar y no antes: así la agenda
+    // aparece de una y el precio se completa solo, en vez de hacer esperar
+    // toda la sección por una llamada extra.
+    //
+    // Si falla, la tarjeta se queda con el precio de referencia: es mejor un
+    // número aproximado que un hueco.
+    async function pintarPreciosDeTandas(supa, eventos){
+      const conTandas = eventos.filter(e => Array.isArray(e.ticket_tiers) && e.ticket_tiers.length);
+      await Promise.all(conTandas.map(async (ev) => {
+        const destino = document.querySelector(`[data-precio-tandas="${CSS.escape(ev.id)}"]`);
+        if (!destino) return;
+        let texto = ev.base_price != null ? '$' + Number(ev.base_price).toLocaleString('es-AR') : '';
+        try {
+          const { data } = await supa.rpc('estado_tandas', { p_event_id: ev.id });
+          const activas = (data || []).filter(t => t.estado === 'activa');
+          if (activas.length){
+            const minimo = Math.min(...activas.map(t => Number(t.precio)));
+            // "Desde" porque puede haber más de una tanda activa a la vez
+            // (en Run & Wine conviven General y Solo After).
+            texto = (activas.length > 1 ? 'Desde $' : '$') + minimo.toLocaleString('es-AR');
+          } else {
+            texto = 'Agotado';
+          }
+        } catch (e){ /* se queda el de referencia */ }
+        destino.textContent = texto;
+      }));
+    }
+
     const renderEvent = (ev) => {
       const img = ev.cover_image_url || EV_IMG_DEFAULT[ev.branch] || EV_IMG_DEFAULT.social;
       // Los eventos con landing propia (Run & Wine) llevan ahí en vez de a
@@ -1213,10 +1242,16 @@ document.addEventListener('DOMContentLoaded', function(){
         ? resolverLanding(ev.landing_url)
         : 'Evento.html?id=' + encodeURIComponent(ev.id);
       const closed = ev.sales_cutoff && new Date(ev.sales_cutoff) <= new Date();
-      const isFree = ev.base_price == null || Number(ev.base_price) === 0;
+      // En un evento con tandas, base_price es sólo el precio de referencia:
+      // mostrarlo decía $30.000 cuando la tanda activa costaba $20.000. El
+      // precio real lo trae pintarPreciosDeTandas() después, con una llamada
+      // por evento; acá queda un valor provisorio que se pisa enseguida.
+      const tieneTandas = Array.isArray(ev.ticket_tiers) && ev.ticket_tiers.length > 0;
+      const isFree = !tieneTandas && (ev.base_price == null || Number(ev.base_price) === 0);
       const price = isFree
         ? '<span class="free">Gratis</span>'
-        : '$' + Number(ev.base_price).toLocaleString('es-AR');
+        : (tieneTandas ? '<span data-precio-tandas="' + esc(ev.id) + '">·&nbsp;·&nbsp;·</span>'
+                       : '$' + Number(ev.base_price).toLocaleString('es-AR'));
       // La card entera linkea a la vista de detalle del evento — ahí vive el
       // formulario, el itinerario y (si es pago) la transferencia + comprobante.
       return `
@@ -1252,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
       const nowIso = new Date().toISOString();
       let q = await supa.from('events')
-        .select('id,title,event_date,branch,custom_tag,base_price,sales_cutoff,location_text,cover_image_url,landing_url')
+        .select('id,title,event_date,branch,custom_tag,base_price,sales_cutoff,location_text,cover_image_url,landing_url,ticket_tiers')
         .eq('is_published', true).is('deleted_at', null)
         .gte('event_date', nowIso).order('event_date', { ascending: true }).limit(4);
       if (q.error) {
@@ -1275,6 +1310,7 @@ document.addEventListener('DOMContentLoaded', function(){
         return;
       }
       grid.innerHTML = q.data.map(renderEvent).join('');
+      pintarPreciosDeTandas(supa, q.data);
 
       // Con menos de 4 eventos publicados, en vez de dejar columnas vacías a
       // la derecha (grid de 4 con solo 1 o 2 cards, todo pegado a la
