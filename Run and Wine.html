@@ -82,11 +82,21 @@
 .rw h2 em{font-family:var(--rw-script);font-style:normal;text-transform:none;
   font-size:1.18em;letter-spacing:0;color:var(--rw-naranja)}
 .rw-sec--verde h2 em{color:var(--rw-tierras)}
+/* Titular de la sección 01, más grande que el resto: es el que abre la
+   página y el cliente lo veía chico al lado del hero. */
+.rw h2.rw-h2--grande{font-size:clamp(40px,7.6vw,86px)}
+/* Cuerpo de texto de la 01: varios párrafos, más grandes que el default. */
+.rw-cuerpo{margin-top:26px}
+.rw-cuerpo p{font-size:clamp(16px,1.6vw,19px);line-height:1.6}
 .rw h3{font-size:clamp(18px,2.2vw,22px);font-weight:700;line-height:1.3}
 .rw p{margin:0 0 1em;max-width:60ch}
 .rw p:last-child{margin-bottom:0}
 
 .rw-sec{padding:clamp(64px,10vw,116px) 0;position:relative;overflow:hidden}
+/* Dos secciones verdes seguidas (02 La tarde y 03 El run) comparten fondo,
+   así que entre ellas se sumaban los dos paddings y quedaba un hueco enorme
+   sin nada. Sin filete en el medio, nada justificaba esa distancia. */
+.rw-sec--verde + .rw-sec--verde{padding-top:0}
 .rw-sec--verde{background:var(--rw-verde);color:#fff}
 .rw-sec--verde p{color:rgba(255,255,255,.84)}
 .rw-sec--crema{background:var(--rw-crema)}
@@ -122,15 +132,20 @@
 .rw-cobrand__socio{font-family:var(--rw-display);font-size:15px;letter-spacing:.22em;
   text-transform:uppercase;font-weight:700}
 
-.rw-hero h1{font-size:clamp(58px,17vw,172px);line-height:.84;font-weight:200;
-  text-transform:uppercase;letter-spacing:-.02em;margin-bottom:6px}
-/* "& Wine" en script, desplazado y en Tierras: es el detalle que pide el
-   brief y lo que saca al titular de ser una palabra en mayúsculas. */
-.rw-hero h1 .script{display:block;font-family:var(--rw-script);font-weight:400;
+/* "Run & Wine" va en UNA sola línea (pedido del cliente, 19/10). Antes el
+   script caía abajo con display:block. Al ponerlo en línea el titular pasa a
+   medir ~10 caracteres en vez de 3, así que el tamaño base tuvo que bajar:
+   con los 172px de antes no entraba ni en un monitor ancho. */
+.rw-hero h1{font-size:clamp(40px,10vw,116px);line-height:.9;font-weight:200;
+  text-transform:uppercase;letter-spacing:-.02em;margin-bottom:6px;
+  white-space:nowrap}
+/* "& Wine" en script y en Tierras. Más grande que el resto del titular —
+   .96em contra el .74em de antes — para que gane protagonismo. */
+.rw-hero h1 .script{font-family:var(--rw-script);font-weight:400;
   text-transform:none;letter-spacing:0;color:var(--rw-tierras);
-  font-size:.74em;line-height:1;margin-top:-.06em;margin-left:.06em}
-.rw-hero__lede{font-size:clamp(16px,2.3vw,20px);color:rgba(255,255,255,.9);
-  max-width:28ch;font-weight:300;margin:20px 0 26px}
+  font-size:.96em;line-height:1;margin-left:.1em}
+.rw-hero__lede{font-size:clamp(19px,3vw,31px);color:#fff;
+  max-width:24ch;font-weight:300;line-height:1.28;margin:22px 0 30px}
 
 /* Datos en una línea, separados por filetes: más editorial que las píldoras */
 .rw-datos{display:flex;flex-wrap:wrap;gap:0 22px;margin-bottom:28px;
@@ -141,6 +156,12 @@
   width:1px;height:13px;background:rgba(255,255,255,.34)}
 .rw-datos span:last-child{padding-right:0}
 .rw-datos span:last-child::after{display:none}
+
+/* Dos CTAs en el hero: comprar (terracota, lleno) y conocer más (contorno).
+   flex-wrap para que en mobile caigan uno abajo del otro sin apretarse. */
+.rw-acciones{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.rw-btn--ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+.rw-btn--ghost:hover{background:rgba(255,255,255,.12);border-color:#fff}
 
 .rw-estado{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:30px}
 .rw-pill{display:inline-flex;align-items:center;gap:9px;background:var(--rw-naranja);
@@ -208,6 +229,10 @@
 .rw-crono .hora{grid-column:2;font-family:var(--rw-display);font-size:19px;font-weight:800;
   color:var(--rw-tierras);font-variant-numeric:tabular-nums}
 .rw-crono .que{grid-column:3;font-size:15.5px;color:rgba(255,255,255,.92)}
+/* Cada hito pasó a tener título y detalle (pedido del cliente, 19/10). */
+.rw-crono .que b{display:block;font-weight:700}
+.rw-crono .que .det{display:block;margin-top:3px;font-size:14px;
+  font-weight:300;color:rgba(255,255,255,.72);line-height:1.45}
 
 /* ══════════ ENTRADAS ══════════ */
 .rw-tickets{display:grid;grid-template-columns:1fr;gap:20px;margin-top:38px}
@@ -245,6 +270,10 @@
 .rw-ticket__precio{font-family:var(--rw-display);font-size:clamp(36px,4.6vw,46px);
   font-weight:200;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums;
   letter-spacing:-.03em}
+/* Tanda sin precio a la vista: gris, más chico y sin el peso tipográfico del
+   número, para que no compita con el precio real de la tanda activa. */
+.rw-ticket__precio--oculto{font-size:clamp(19px,2.2vw,23px);color:var(--ink-muted);
+  font-weight:400;letter-spacing:.01em;padding:.32em 0}
 .rw-ticket__incluye{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:0;min-height:40px}
 .rw-ticket__cierre{font-size:11.5px;color:var(--rw-naranja-ink);font-weight:700;
   letter-spacing:.04em;margin-bottom:14px;min-height:17px}
@@ -420,7 +449,7 @@
         <span class="rw-cobrand__socio">Lamadrid</span>
       </div>
 
-      <h1>Run<span class="script">&amp; Wine</span></h1>
+      <h1>Run <span class="script">&amp; Wine</span></h1>
       <p class="rw-hero__lede">Corré entre viñedos, sunset post-run y degustación.</p>
 
       <div class="rw-datos">
@@ -429,25 +458,29 @@
         <span>Lamadrid Estate Wines</span>
       </div>
 
-      <div class="rw-estado">
-        <span class="rw-pill" id="rwPill">—</span>
-        <span class="rw-cuenta" id="rwCuenta"></span>
+      <!-- La píldora de tanda activa y la cuenta regresiva salieron del hero
+           el 19/10: el cliente no quiere nombrar Early Bird acá arriba. La
+           urgencia sigue viva en las tarjetas de entradas y en la barra fija
+           de abajo, que es donde además está el precio. -->
+      <div class="rw-acciones">
+        <a class="rw-btn" href="#entradas">Comprá tu entrada</a>
+        <a class="rw-btn rw-btn--ghost" href="#que-es">Conocé más sobre el evento</a>
       </div>
-
-      <a class="rw-btn" href="#entradas">Comprar entrada</a>
     </div>
   </div>
 </header>
 
 <!-- ═══════════ 01 · QUÉ ES ═══════════ -->
-<section class="rw-sec rw-sec--crema">
+<section class="rw-sec rw-sec--crema" id="que-es">
   <div class="rw-wrap rw-cols">
     <div data-rv>
       <div class="rw-eyebrow"><span class="n">01</span><span class="t">Qué es</span></div>
-      <h2>No es una carrera.<br>Es una <em>tarde entera</em></h2>
-      <p style="margin-top:24px;font-size:17.5px">
-        Correr entre viñedos, sunset con degustación de vinos Lamadrid, quedarse a comer y bailar.
-      </p>
+      <h2 class="rw-h2--grande">No es una carrera.<br>Es una <em>tarde entera</em></h2>
+      <div class="rw-cuerpo">
+        <p>Run &amp; Wine es la primera experiencia de Sprinters y Bodega Lamadrid que une running, vino y atardecer en un mismo plan. El sábado 14 de noviembre corremos entre los viñedos de la bodega, en Las Compuertas, Luján de Cuyo.</p>
+        <p>Después del run nos quedamos a brindar con una degustación de vinos Lamadrid y sunset. Seguimos con la gastronomía de Los Bocheros y DJ hasta las 23 h.</p>
+        <p>No hace falta ser corredor: hay distancias para todos los ritmos y nadie corre solo. Venís a moverte, a conocer gente, a vivir la bodega de una forma distinta y obviamente a sumarte a un sunset increíble para cerrar tu sábado.</p>
+      </div>
     </div>
     <div class="rw-foto" data-rv>
       <!-- TODO(foto): copas y viñedos. -->
@@ -464,12 +497,13 @@
     <div class="rw-eyebrow"><span class="n">02</span><span class="t">La tarde, hora por hora</span></div>
     <h2>El <em>plan</em></h2>
     <ul class="rw-crono">
-      <li><span class="hora">18:00</span><span class="que">Acreditación</span></li>
-      <li><span class="hora">18:20</span><span class="que">Warm-up</span></li>
-      <li><span class="hora">18:30</span><span class="que">Social Run</span></li>
-      <li><span class="hora">19:30</span><span class="que">Cool down</span></li>
-      <li><span class="hora">19:45</span><span class="que">Degustación, Los Bocheros, sunset y DJ</span></li>
-      <li><span class="hora">23:00</span><span class="que">Cierre</span></li>
+      <li><span class="hora">18:00</span><span class="que"><b>Llegada y acreditación.</b><span class="det">Te damos tu pulsera, que te identifica toda la noche.</span></span></li>
+      <li><span class="hora">18:20</span><span class="que"><b>Warm-up.</b><span class="det">Entrada en calor guiada por Sprinters.</span></span></li>
+      <li><span class="hora">18:30</span><span class="que"><b>Social Run.</b><span class="det">Salimos a correr entre los viñedos. 4K, 6K y 8K. Cada uno elige su distancia.</span></span></li>
+      <li><span class="hora">19:30</span><span class="que"><b>Cool down.</b><span class="det">Elongación guiada, hidratación y algo rico para recuperar.</span></span></li>
+      <li><span class="hora">19:45</span><span class="que"><b>Degustación y sunset.</b><span class="det">Brindamos con vinos Lamadrid.</span></span></li>
+      <li><span class="hora">20:30</span><span class="que"><b>After run.</b><span class="det">Gastronomía de Los Bocheros (opcional) y DJ.</span></span></li>
+      <li><span class="hora">23:00</span><span class="que"><b>Cierre.</b></span></li>
     </ul>
   </div>
 </section>
@@ -551,11 +585,33 @@
 
 <div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
-<!-- ═══════════ 07 · FAQ ═══════════ -->
+<!-- ═══════════ 07 · ENTRADAS ═══════════ -->
+<section class="rw-sec rw-sec--crema" id="entradas">
+  <div class="rw-wrap">
+    <div data-rv>
+      <div class="rw-eyebrow"><span class="n">07</span><span class="t">Entradas</span></div>
+      <h2>Elegí <em>la tuya</em></h2>
+    </div>
+    <!-- Las arma el script desde estado_tandas() -->
+    <div class="rw-tickets" id="rwTickets"></div>
+    <p class="rw-nota-gastro" data-rv>
+      Ninguna entrada incluye gastronomía. <strong>Los Bocheros</strong> se paga en el lugar según consumo.
+    </p>
+
+    <!-- La reserva: el script la llena según haya sesión, inscripción previa
+         o no. Vive acá adentro para no sacar a la persona de la landing. -->
+    <div class="rw-reserva" id="rwReserva" data-rv style="display:none"></div>
+  </div>
+</section>
+
+
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+
+<!-- ═══════════ 08 · FAQ ═══════════ -->
 <section class="rw-sec rw-sec--crema">
   <div class="rw-wrap">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">07</span><span class="t">Preguntas frecuentes</span></div>
+      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Preguntas frecuentes</span></div>
       <h2>Lo que nos<br><em>suelen preguntar</em></h2>
     </div>
     <div class="rw-faq" data-rv>
@@ -601,26 +657,8 @@
   </div>
 </section>
 
+
 <div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
-
-<!-- ═══════════ 08 · ENTRADAS ═══════════ -->
-<section class="rw-sec rw-sec--crema" id="entradas">
-  <div class="rw-wrap">
-    <div data-rv>
-      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Entradas</span></div>
-      <h2>Elegí <em>la tuya</em></h2>
-    </div>
-    <!-- Las arma el script desde estado_tandas() -->
-    <div class="rw-tickets" id="rwTickets"></div>
-    <p class="rw-nota-gastro" data-rv>
-      Ninguna entrada incluye gastronomía. <strong>Los Bocheros</strong> se paga en el lugar según consumo.
-    </p>
-
-    <!-- La reserva: el script la llena según haya sesión, inscripción previa
-         o no. Vive acá adentro para no sacar a la persona de la landing. -->
-    <div class="rw-reserva" id="rwReserva" data-rv style="display:none"></div>
-  </div>
-</section>
 
 <!-- ═══════════ CIERRE ═══════════ -->
 <section class="rw-sec rw-sec--verde rw-cierre">
@@ -807,7 +845,14 @@ const SPONSORS = [];
           <div class="rw-ticket__top">
             <span class="rw-ticket__estado rw-e-${esc(t.estado)}">${esc(ETIQUETA[t.estado] || '')}</span>
             <h3 class="rw-ticket__nombre">${esc(t.nombre)}</h3>
-            <div class="rw-ticket__precio">${esc(plata(t.precio))}</div>
+            <!-- El precio de las tandas que todavía no salieron no se muestra
+                 (pedido del cliente, 19/10): anunciar $38.000 al lado de los
+                 $20.000 de ahora le quita toda la fuerza a la de hoy. En su
+                 lugar va un texto gris. -->
+            <div class="rw-ticket__precio${activa ? '' : ' rw-ticket__precio--oculto'}">${
+              activa ? esc(plata(t.precio))
+                     : (t.estado === 'agotada' ? 'Agotada' : 'Próximamente')
+            }</div>
             <p class="rw-ticket__incluye">${esc(t.incluye || '')}</p>
           </div>
           <div class="rw-ticket__bot">
