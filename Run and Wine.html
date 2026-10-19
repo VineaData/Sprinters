@@ -115,7 +115,10 @@
   justify-content:flex-end;padding-bottom:clamp(40px,7vw,76px);
   background:var(--rw-verde-900);color:#fff;overflow:hidden}
 .rw-hero__bg{position:absolute;inset:0;z-index:0}
-.rw-hero__bg img{width:100%;height:100%;object-fit:cover;
+/* <picture> es inline por defecto y no tiene altura propia, así que sin esto
+   el height:100% del img no se resuelve contra nada y la foto desaparece. */
+.rw-hero__bg picture{display:block;width:100%;height:100%}
+.rw-hero__bg img{width:100%;height:100%;object-fit:cover;object-position:50% 46%;
   animation:rwZoom 18s ease-out forwards;will-change:transform}
 @keyframes rwZoom{from{transform:scale(1.14)}to{transform:scale(1)}}
 .rw-hero__veil{position:absolute;inset:0;z-index:1;
@@ -430,10 +433,16 @@
 <!-- ═══════════ HERO ═══════════ -->
 <header class="rw-hero">
   <div class="rw-hero__bg">
-    <!-- TODO(foto): el brief pide viñedos al atardecer, que graba Sprinters
-         en la visita técnica. Mientras tanto va una foto que SÍ existe en el
-         repo: apuntar a la ruta final antes de tenerla daría un 404. -->
-    <img src="images/run-trees-2.jpg" alt="" aria-hidden="true" />
+    <!-- Dos encuadres de la misma toma, de Sprinters (19/10). El panorámico
+         (2,45:1) sirve en desktop; en un celular angosto el recorte se comía
+         la cordillera y dejaba casi solo las copas del primer plano. El
+         vertical (0,80:1) mantiene montañas, corredores y copas en cuadro.
+         <picture> elige uno u otro: el navegador descarga SOLO el que
+         corresponde, así que el celular tampoco se baja el grande. -->
+    <picture>
+      <source media="(max-width:760px)" srcset="images/rw/hero-vertical.jpg">
+      <img src="images/rw/hero.jpg" alt="" aria-hidden="true" />
+    </picture>
   </div>
   <div class="rw-hero__veil" aria-hidden="true"></div>
   <svg class="rw-hero__iso"><use href="#rw-iso"></use></svg>
@@ -483,8 +492,7 @@
       </div>
     </div>
     <div class="rw-foto" data-rv>
-      <!-- TODO(foto): copas y viñedos. -->
-      <img src="images/picnic-mate.jpg" alt="Sprinters compartiendo después de correr" loading="lazy" />
+      <img src="images/rw/que-es.jpg" alt="Sprinters charlando en el after, bajo el parral y las luces" loading="lazy" />
     </div>
   </div>
 </section>
@@ -545,7 +553,7 @@
     </div>
     <div class="rw-foto" data-rv>
       <!-- TODO(foto): sunset en la bodega. -->
-      <img src="images/pizza-picnic.jpg" alt="After de Sprinters" loading="lazy" />
+      <img src="images/rw/after.jpg" alt="Sprinters brindando de noche en el after run" loading="lazy" />
     </div>
   </div>
 </section>
@@ -567,7 +575,7 @@
     </div>
     <div class="rw-foto" data-rv>
       <!-- TODO(foto): la bodega. -->
-      <img src="images/run-trees-3.jpg" alt="Camino entre árboles" loading="lazy" />
+      <img src="images/rw/como-llegar.jpg" alt="Fachada de Bodega Lamadrid Estate Wines" loading="lazy" />
     </div>
   </div>
 </section>
