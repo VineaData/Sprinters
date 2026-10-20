@@ -94,9 +94,11 @@
 
 .rw-sec{padding:clamp(64px,10vw,116px) 0;position:relative;overflow:hidden}
 /* Dos secciones verdes seguidas (02 La tarde y 03 El run) comparten fondo,
-   así que entre ellas se sumaban los dos paddings y quedaba un hueco enorme
-   sin nada. Sin filete en el medio, nada justificaba esa distancia. */
-.rw-sec--verde + .rw-sec--verde{padding-top:0}
+   así que entre ellas se sumaban los dos paddings y quedaba un hueco enorme.
+   Ahora el separador va en el medio como entre todas las demás, pero el
+   padding sigue reducido: alcanza con aire suficiente para que el isotipo
+   respire, no con el doble de una sección completa. */
+.rw-sec--verde + .rw-sec--verde{padding-top:clamp(44px,6vw,70px)}
 .rw-sec--verde{background:var(--rw-verde);color:#fff}
 .rw-sec--verde p{color:rgba(255,255,255,.84)}
 .rw-sec--crema{background:var(--rw-crema)}
@@ -104,10 +106,24 @@
 
 /* Viñeta: el isotipo centrado sobre el filete terracota, como separador
    entre secciones. Reemplaza al borde plano que había antes. */
-.rw-sep{position:relative;height:0}
-.rw-sep::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--rw-naranja)}
+/* z-index en los DOS hijos, no sólo en el círculo. El filete es un ::before
+   posicionado sin z-index, así que quedaba por debajo de la sección
+   siguiente — que también está posicionada y se pinta después — y el fondo
+   de esa sección lo tapaba. Resultado: se veía el isotipo flotando solo,
+   sin la línea que le da sentido. */
+.rw-sep{position:relative;height:0;z-index:1}
+.rw-sep::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+  background:var(--rw-naranja);z-index:1}
+/* Disco lleno, no camuflado. Antes cada separador llevaba el color de fondo
+   de su sección para "tapar" el filete, pero en los bordes crema/verde la
+   mitad del círculo caía sobre el otro fondo y se veía como una mancha.
+   El color lo decide el contraste con lo que lo rodea: entre secciones
+   beige va Bosque; cuando toca una sección verde va crema, porque un disco
+   verde sobre verde desaparece. */
 .rw-sep span{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);
-  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;z-index:2}
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;z-index:2;
+  background:var(--rw-verde);color:var(--rw-crema)}
+.rw-sep--claro span{background:var(--rw-crema);color:var(--rw-verde)}
 .rw-sep span svg{width:21px;height:21px}
 
 /* ══════════ HERO ══════════ */
@@ -497,7 +513,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 02 · LA TARDE ═══════════ -->
 <section class="rw-sec rw-sec--verde">
@@ -515,6 +531,11 @@
     </ul>
   </div>
 </section>
+
+<!-- El círculo va en verde, no en crema: tiene que tapar el filete contra el
+     fondo de ESTAS secciones, que son las verdes. Y el isotipo en Tierras,
+     porque Terracota sobre Bosque no cumple contraste (regla del brand book). -->
+<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 03 · EL RUN ═══════════ -->
 <section class="rw-sec rw-sec--verde">
@@ -536,7 +557,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 04 · EL AFTER ═══════════ -->
 <section class="rw-sec rw-sec--crema2">
@@ -558,7 +579,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 05 · CÓMO LLEGAR ═══════════ -->
 <section class="rw-sec rw-sec--crema">
@@ -580,7 +601,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 06 · SPONSORS ═══════════ -->
 <section class="rw-sec rw-sec--crema2">
@@ -591,7 +612,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 07 · ENTRADAS ═══════════ -->
 <section class="rw-sec rw-sec--crema" id="entradas">
@@ -613,7 +634,7 @@
 </section>
 
 
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 08 · FAQ ═══════════ -->
 <section class="rw-sec rw-sec--crema">
@@ -666,7 +687,7 @@
 </section>
 
 
-<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ CIERRE ═══════════ -->
 <section class="rw-sec rw-sec--verde rw-cierre">
@@ -738,7 +759,18 @@
 const RUTA_LANDING = '/runandwine';
 
 // Logos de sponsors: { src, alt }. Mientras esté vacío, la sección se oculta.
-const SPONSORS = [];
+/* Sponsors de Run & Wine. Van en una sola tinta (Bosque) para que la franja
+   se lea como un conjunto y no como tres marcas peleando entre sí: es lo
+   habitual en un "con el apoyo de". Si algún sponsor exige su color de
+   marca, se le saca el filtro a ese y listo.
+   Lamadrid y Los Bocheros llegaron como JPG blanco sobre fondo casi blanco
+   (WhatsApp aplastó la transparencia); se les reconstruyó el canal alfa.
+   Nexo vino en PDF vectorial, así que va en SVG y escala sin perder nitidez. */
+const SPONSORS = [
+  { nombre: 'Bodega Lamadrid Estate Wines', src: 'images/rw/sponsors/lamadrid.png' },
+  { nombre: 'Los Bocheros Restó',           src: 'images/rw/sponsors/los-bocheros.png' },
+  { nombre: 'Nexo Impresiones',             src: 'images/rw/sponsors/nexo.svg' }
+];
 
 (function(){
   'use strict';
@@ -954,7 +986,7 @@ const SPONSORS = [];
       return;
     }
     cont.innerHTML = SPONSORS.map(s =>
-      `<img src="${esc(s.src)}" alt="${esc(s.alt)}" loading="lazy" />`).join('');
+      `<img src="${esc(s.src)}" alt="${esc(s.nombre)}" loading="lazy" />`).join('');
   }
 
   function pintarContacto(){

@@ -140,3 +140,28 @@ UPDATE public.events
 -- SELECT ticket_tiers->3->>'id'       AS tanda,
 --        ticket_tiers->3->>'abre_con' AS abre_con
 --   FROM public.events WHERE landing_url = '/runandwine';
+
+
+-- ────────────────────────────────────────────────────────────────
+-- 8. CAMBIAR LA FOTO DE LA TARJETA DE LA AGENDA  (correr una sola vez)
+--
+--    La tarjeta de la home saca su imagen de events.cover_image_url. Si está
+--    en NULL usa una por defecto según la rama, que es lo que venía pasando.
+--
+--    La ruta es relativa al sitio, no una URL de Storage: el archivo viaja en
+--    el repo. Funciona igual desde "/" que desde "/Landing v2.html" porque en
+--    los dos casos resuelve contra la raíz del dominio.
+--
+--    OJO: el archivo tiene que estar publicado ANTES de correr esto, o la
+--    tarjeta queda con la imagen rota. Pushear primero, después el UPDATE.
+-- ────────────────────────────────────────────────────────────────
+UPDATE public.events
+   SET cover_image_url = 'images/rw/agenda-card.jpg'
+ WHERE landing_url = '/runandwine'
+   AND deleted_at IS NULL;
+
+-- Confirmar:
+-- SELECT title, cover_image_url FROM public.events WHERE landing_url = '/runandwine';
+
+-- Para volver a la foto por defecto:
+-- UPDATE public.events SET cover_image_url = NULL WHERE landing_url = '/runandwine';
