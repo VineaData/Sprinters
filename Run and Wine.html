@@ -380,8 +380,10 @@
    Las dos fotos se recortan al mismo alto aunque una sea vertical y la
    otra apaisada: sin aspect-ratio fijo quedaban de distinto tamaño y la
    fila se veía desprolija. */
-.rw-tira{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.4vw,26px);
-  margin-top:clamp(34px,5vw,56px)}
+/* auto-fit en vez de un número fijo de columnas: así sumar o sacar una foto
+   de la tira no obliga a tocar el CSS. */
+.rw-tira{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:clamp(14px,2.4vw,26px);margin-top:clamp(34px,5vw,56px)}
 .rw-tira figure{margin:0}
 .rw-tira img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;
   background:var(--rw-verde-900);display:block}
@@ -613,12 +615,16 @@
        acá la landing no mostraba ni una copa de vino. -->
   <div class="rw-wrap rw-tira" data-rv>
     <figure>
-      <img src="images/rw/bodega.jpg" alt="Bodega Lamadrid Estate Wines" loading="lazy" />
-      <figcaption>Lamadrid Estate Wines, Las Compuertas</figcaption>
+      <img src="images/rw/copa-lamadrid.jpg" alt="Copa Lamadrid sirviéndose en la bodega" loading="lazy" />
+      <figcaption>La degustación, incluida en tu entrada</figcaption>
     </figure>
     <figure>
       <img src="images/rw/bocheros-vinos.jpg" alt="Vinos de Los Bocheros junto a la cancha de bochas" loading="lazy" />
       <figcaption>Los Bocheros, en la bodega</figcaption>
+    </figure>
+    <figure>
+      <img src="images/rw/picnic-bodega.jpg" alt="Grupo compartiendo una copa en el parque de la bodega" loading="lazy" />
+      <figcaption>Para quedarse hasta que baje el sol</figcaption>
     </figure>
   </div>
 </section>
