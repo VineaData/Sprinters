@@ -14,8 +14,11 @@ window.SPRINTERS = {
 
   // ── Datos de transferencia del club ──────────────────────────────
   BANK: {
-    alias:   'sprintersine',
-    titular: 'Inés Bahamondes - NaranjaX'
+    // Cambiado el 2026-10-21: la plata pasa a la cuenta de Alan.
+    // Esto lo lee TODA página que cobre por transferencia, así que al tocarlo
+    // cambia el alias en Run & Wine, Evento y Suscripción Running a la vez.
+    alias:   'sprinters',
+    titular: 'Alan Hamer (NaranjaX)'
   },
 
   // ── Contacto para cancelaciones y pago en efectivo (internacionales) ──

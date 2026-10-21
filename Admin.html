@@ -538,6 +538,83 @@ document.addEventListener('DOMContentLoaded', function(){
     // EVENTOS
     // ================================================================
     const BRANCH_LABEL = { running: 'Running', social: 'Social', padel: 'Pádel', trekking: 'Trekking' };
+
+    /* ── Exportar inscriptos a CSV ────────────────────────────────────
+       Baja la lista de un evento como archivo, listo para abrir en Google
+       Sheets o Excel. Los datos salen de admin_list_event_registrations(),
+       que hace el JOIN con users del lado del servidor: desde acá no se ve
+       public.users, y event_registrations tiene RLS de "sólo lo mío".
+
+       Las respuestas del formulario se despliegan en columnas propias. Las
+       columnas no están fijas a propósito: cada evento define su form_schema,
+       así que se arman recorriendo las claves que realmente aparecen. */
+
+    function csvCampo(v){
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'boolean') return v ? 'Sí' : 'No';
+      const s = String(v);
+      // Comillas dobles, punto y coma, comas y saltos de línea rompen el CSV
+      // si no se escapan. Excel entiende "" como una comilla literal.
+      return /[";,\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+
+    function csvFecha(iso){
+      if (!iso) return '';
+      const d = new Date(iso);
+      // Formato local y legible: el CSV lo abre una persona, no un sistema.
+      return d.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric',
+                                         hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function exportarInscriptos(eventId, titulo, boton){
+      const textoOriginal = boton ? boton.textContent : '';
+      if (boton){ boton.disabled = true; boton.textContent = 'Buscando…'; }
+      try {
+        const { data, error } = await supa.rpc('admin_list_event_registrations', { p_event_id: eventId });
+        if (error) throw new Error(error.message);
+        if (!data || !data.length){
+          alert('Todavía no hay nadie inscripto en "' + titulo + '".');
+          return;
+        }
+
+        // Claves del formulario, en el orden en que aparecen en los datos.
+        const claves = [];
+        data.forEach(r => Object.keys(r.respuestas || {}).forEach(k => {
+          if (!claves.includes(k)) claves.push(k);
+        }));
+
+        const cabecera = ['Inscripta el','Nombre','Email','Teléfono','Tanda','Precio',
+                          'Estado del pago','Comprobante','After run', ...claves];
+
+        const filas = data.map(r => [
+          csvFecha(r.inscripta_el), r.nombre, r.email, r.telefono, r.tanda,
+          r.precio, r.estado_pago, r.tiene_comprobante, r.after_run,
+          ...claves.map(k => (r.respuestas || {})[k])
+        ].map(csvCampo).join(','));
+
+        // El BOM es lo que hace que Excel en Windows lea los acentos bien.
+        // Sin él, "Inscripción" aparece como "InscripciÃ³n".
+        const csv = '﻿' + [cabecera.map(csvCampo).join(','), ...filas].join('\r\n');
+
+        const hoy = new Date().toISOString().slice(0, 10);
+        const nombre = 'inscriptos-' +
+          (titulo || 'evento').toLowerCase()
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')   // saca tildes
+            .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) +
+          '-' + hoy + '.csv';
+
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+        const a = document.createElement('a');
+        a.href = url; a.download = nombre;
+        document.body.appendChild(a); a.click(); a.remove();
+        // Revocar enseguida cancela la descarga en algunos navegadores.
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      } catch (e){
+        alert('No pudimos exportar los inscriptos: ' + e.message);
+      } finally {
+        if (boton){ boton.disabled = false; boton.textContent = textoOriginal; }
+      }
+    }
     // Pilares que usan el flujo running: after-run y "incluido en Training Plus".
     // Pádel y Trekking son eventos sueltos y abiertos a todos, así que no los usan.
     const BRANCH_HAS_RUN_FIELDS = new Set(['running', 'social']);
@@ -567,6 +644,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <td>${ev.deleted_at ? '<span class="badge inactive">Inactivo</span>' : '<span class="badge pub">Activo</span>'}</td>
           <td class="row-actions">
             <button class="btn btn-ghost btn-sm" data-edit-event="${esc(ev.id)}">Editar</button>
+            <button class="btn btn-ghost btn-sm" data-export-event="${esc(ev.id)}" data-export-title="${esc(ev.title)}">Inscriptos</button>
             ${ev.deleted_at
               ? `<button class="btn btn-ghost btn-sm" data-restore-event="${esc(ev.id)}">Reactivar</button>`
               : `<button class="btn btn-danger btn-sm" data-delete-event="${esc(ev.id)}">Eliminar</button>`}
@@ -577,6 +655,8 @@ document.addEventListener('DOMContentLoaded', function(){
         const row = data.find(ev => ev.id === b.getAttribute('data-edit-event'));
         openEventModal(row);
       }));
+      tbody.querySelectorAll('[data-export-event]').forEach(b => b.addEventListener('click', () =>
+        exportarInscriptos(b.getAttribute('data-export-event'), b.getAttribute('data-export-title'), b)));
       tbody.querySelectorAll('[data-delete-event]').forEach(b => b.addEventListener('click', async () => {
         if (!confirm('¿Dar de baja este evento? Deja de verse en la agenda; podés reactivarlo después.')) return;
         const { error } = await supa.rpc('admin_soft_delete_event', { p_event_id: b.getAttribute('data-delete-event') });

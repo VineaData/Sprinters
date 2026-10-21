@@ -878,7 +878,13 @@ const SPONSORS = [
       const activa = t.estado === 'activa';
       // En la activa va la fecha de cierre. Cuántos lugares quedan no se
       // muestra: lo pide así el brief, y la RPC directamente no lo manda.
-      const cierre = activa && t.cierra ? `Hasta el ${esc(fmtFecha(t.cierra))}` : '';
+      // La fecha de cierre de la tanda no se muestra (pedido del cliente,
+      // 2026-10-21): fijar un "hasta el 2 de noviembre" los ata a esa fecha
+      // y les saca la libertad de cortar Early Bird cuando les convenga.
+      // El dato sigue en la base y la tanda sigue cerrando sola; lo único
+      // que cambia es que no se anuncia. El div queda para no perder la
+      // altura reservada, que es lo que alinea los botones entre tarjetas.
+      const cierre = '';
 
       // Comprar abre la reserva acá abajo, sin salir de la página. La
       // lógica de cobro es la compartida de inscripcion.js, así que no hay
@@ -1199,7 +1205,7 @@ const SPONSORS = [
       <h3>${confirmada ? '¡Nos vemos el 14!' : 'Ya estás anotada'}</h3>
       <p style="margin-top:10px;color:var(--ink-soft);font-size:14.5px">
         ${confirmada
-          ? 'Te esperamos en Lamadrid Estate Wines a las 18:00. Cualquier cambio te avisamos.'
+          ? 'Te esperamos en Lamadrid Estate Wines a las 18:00. Acordate del dress code: full black. Cualquier cambio te avisamos.'
           : 'Transferí al alias de arriba y subí el comprobante para confirmar tu lugar.'}
       </p>
       ${nombreArchivo ? `
