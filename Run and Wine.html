@@ -106,12 +106,14 @@
 
 /* Viñeta: el isotipo centrado sobre el filete terracota, como separador
    entre secciones. Reemplaza al borde plano que había antes. */
-/* Sin filete: el separador es sólo el isotipo centrado entre dos secciones.
-   Hubo un ::before con una línea terracota de lado a lado que en la práctica
-   nunca se vio — quedaba tapada por el fondo de la sección siguiente — y al
-   hacerla visible resultó que tampoco se quería. Queda el isotipo solo, que
-   es lo que estaba a la vista desde el principio. */
-.rw-sep{position:relative;height:0;z-index:1}
+/* Viñeta: el isotipo centrado entre dos secciones.
+   OJO si tocás esto: el ::before dibuja un filete terracota de lado a lado,
+   pero NUNCA se ve — la sección siguiente también está posicionada, se pinta
+   después y lo tapa. Parece un bug y no lo es: así es como se quiere.
+   Ya se probó darle z-index para "arreglarlo" y el resultado no gustó
+   (2026-10-20). Si vas a sacar la regla, sacala entera; no la hagas visible. */
+.rw-sep{position:relative;height:0}
+.rw-sep::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--rw-naranja)}
 /* El disco toma el color de fondo de su sección: no se ve, sólo interrumpe
    el filete para que el isotipo quede calado sobre la línea. El color va
    inline en cada separador porque depende de entre qué secciones está. */
@@ -474,10 +476,13 @@
           <svg class="brand-logo brand-logo--wordmark" role="img" aria-label="Sprinters"><use href="#sl-wordmark"></use></svg>
         </a>
         <span class="rw-cobrand__sep" aria-hidden="true"></span>
+        <span class="rw-cobrand__socio">Lamadrid</span>
         <!-- Los logos reales, en su versión blanca: el hero tiene el velo
              verde oscuro encima de la foto, así que la versión en Bosque que
-             usa la franja de sponsors acá no se leería. -->
-        <img class="rw-cobrand__logo" src="images/rw/sponsors/lamadrid-blanco.png" alt="Bodega Lamadrid Estate Wines" />
+             usa la franja de sponsors acá no se leería.
+             Van con alt="" porque el nombre ya está escrito al lado: repetirlo
+             haría que un lector de pantalla diga "Lamadrid" dos veces. -->
+        <img class="rw-cobrand__logo" src="images/rw/sponsors/lamadrid-blanco.png" alt="" aria-hidden="true" />
         <img class="rw-cobrand__logo" src="images/rw/sponsors/los-bocheros-blanco.png" alt="Los Bocheros Restó" />
       </div>
 
@@ -542,7 +547,7 @@
 <!-- El círculo va en verde, no en crema: tiene que tapar el filete contra el
      fondo de ESTAS secciones, que son las verdes. Y el isotipo en Tierras,
      porque Terracota sobre Bosque no cumple contraste (regla del brand book). -->
-<div class="rw-sep"><span style="background:var(--rw-verde);color:var(--rw-tierras)"><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--rw-verde);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 03 · EL RUN ═══════════ -->
 <section class="rw-sec rw-sec--verde">
