@@ -55,11 +55,16 @@ AS $$
 BEGIN
   PERFORM public._require_admin();
 
+  -- El email NO está en public.users: vive en auth.users, igual que en
+  -- admin_list_users. Por eso el JOIN es contra las dos tablas.
+  -- Los LEFT JOIN son a propósito: si una cuenta se dio de baja, la
+  -- inscripción tiene que seguir apareciendo en la lista del día del evento,
+  -- aunque sea sin nombre.
   RETURN QUERY
   SELECT
     r.created_at,
     NULLIF(TRIM(COALESCE(u.first_name,'') || ' ' || COALESCE(u.last_name,'')), ''),
-    u.email,
+    au.email::TEXT,
     u.phone,
     r.price_tier,
     r.price_locked,
@@ -68,7 +73,8 @@ BEGIN
     COALESCE(r.after_run, FALSE),
     COALESCE(r.form_data, '{}'::jsonb)
   FROM public.event_registrations r
-  LEFT JOIN public.users u ON u.id = r.user_id
+  LEFT JOIN public.users u  ON u.id  = r.user_id
+  LEFT JOIN auth.users  au  ON au.id = r.user_id
   WHERE r.event_id = p_event_id
   ORDER BY r.created_at;
 END;
