@@ -249,9 +249,17 @@
             <input type="checkbox" id="e-early-on" style="width:16px;height:16px" />
             Entrada por tandas (early + general)
           </label>
-          <div style="font-size:11.5px;color:var(--muted);margin-top:4px">
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px" id="e-early-hint">
             Para entradas tipo boliche. Sin tildar, el evento tiene un solo precio.
           </div>
+          <!-- Aviso para los eventos que usan el sistema NUEVO de tandas
+               (ticket_tiers, varias tandas en JSONB). El check de acá arriba
+               es el sistema VIEJO de dos tandas (early_price/early_until) y
+               no refleja esas tandas, así que aparece destildado aunque el
+               evento tenga cuatro. Tildarlo mezclaría los dos sistemas. -->
+          <div id="e-tiers-aviso" style="display:none;margin-top:10px;padding:10px 12px;
+               border-radius:8px;background:#fdf3e7;border:1px solid #e8c9a0;
+               font-size:11.5px;line-height:1.5;color:#7a4b12"></div>
         </div>
         <div class="field" id="e-early-price-wrap" style="display:none">
           <label>Precio early ($)</label>
@@ -822,6 +830,34 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('e-early-capacity').value = ev?.early_capacity ?? '';
       document.getElementById('e-early-until').value    = toDatetimeLocal(ev?.early_until);
       toggleEarlyFields();
+
+      /* Eventos con el sistema nuevo de tandas (ticket_tiers): el check de
+         arriba es el viejo de dos tandas y no las representa, así que se ve
+         destildado aunque el evento tenga cuatro. Se bloquea para que nadie
+         lo tilde pensando que las está activando — mezclaría los dos
+         sistemas y dejaría dos precios distintos conviviendo.
+         Las tandas nuevas todavía se editan por SQL; el editor queda para
+         después del evento. */
+      const tiers = Array.isArray(ev?.ticket_tiers) ? ev.ticket_tiers : [];
+      const aviso = document.getElementById('e-tiers-aviso');
+      const chkEarly = document.getElementById('e-early-on');
+      const hint = document.getElementById('e-early-hint');
+      if (tiers.length){
+        const resumen = tiers.map(t =>
+          `${t.nombre || t.id} ${t.precio != null ? '$' + Number(t.precio).toLocaleString('es-AR') : ''}`
+        ).join(' · ');
+        aviso.innerHTML = `<b>Este evento usa el sistema nuevo de tandas (${tiers.length}).</b><br>` +
+          esc(resumen) + '<br>No tildes la casilla de arriba: es el sistema viejo de dos tandas ' +
+          'y mezclarlos dejaría dos precios conviviendo. Para cambiar estas tandas, por ahora, SQL.';
+        aviso.style.display = '';
+        chkEarly.checked = false;
+        chkEarly.disabled = true;
+        if (hint) hint.style.display = 'none';
+      } else {
+        aviso.style.display = 'none';
+        chkEarly.disabled = false;
+        if (hint) hint.style.display = '';
+      }
       document.getElementById('e-desc').value = ev?.description || '';
       renderItinerary(ev?.itinerary);
       document.getElementById('e-afterrun-switch').classList.toggle('on', !!ev?.has_after_run);
