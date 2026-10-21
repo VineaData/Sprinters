@@ -114,16 +114,11 @@
 .rw-sep{position:relative;height:0;z-index:1}
 .rw-sep::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
   background:var(--rw-naranja);z-index:1}
-/* Disco lleno, no camuflado. Antes cada separador llevaba el color de fondo
-   de su sección para "tapar" el filete, pero en los bordes crema/verde la
-   mitad del círculo caía sobre el otro fondo y se veía como una mancha.
-   El color lo decide el contraste con lo que lo rodea: entre secciones
-   beige va Bosque; cuando toca una sección verde va crema, porque un disco
-   verde sobre verde desaparece. */
+/* El disco toma el color de fondo de su sección: no se ve, sólo interrumpe
+   el filete para que el isotipo quede calado sobre la línea. El color va
+   inline en cada separador porque depende de entre qué secciones está. */
 .rw-sep span{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);
-  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;z-index:2;
-  background:var(--rw-verde);color:var(--rw-crema)}
-.rw-sep--claro span{background:var(--rw-crema);color:var(--rw-verde)}
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;z-index:2}
 .rw-sep span svg{width:21px;height:21px}
 
 /* ══════════ HERO ══════════ */
@@ -513,7 +508,7 @@
   </div>
 </section>
 
-<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 02 · LA TARDE ═══════════ -->
 <section class="rw-sec rw-sec--verde">
@@ -535,7 +530,7 @@
 <!-- El círculo va en verde, no en crema: tiene que tapar el filete contra el
      fondo de ESTAS secciones, que son las verdes. Y el isotipo en Tierras,
      porque Terracota sobre Bosque no cumple contraste (regla del brand book). -->
-<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--rw-verde);color:var(--rw-tierras)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 03 · EL RUN ═══════════ -->
 <section class="rw-sec rw-sec--verde">
@@ -557,7 +552,7 @@
   </div>
 </section>
 
-<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 04 · EL AFTER ═══════════ -->
 <section class="rw-sec rw-sec--crema2">
@@ -579,7 +574,7 @@
   </div>
 </section>
 
-<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ 05 · CÓMO LLEGAR ═══════════ -->
 <section class="rw-sec rw-sec--crema">
@@ -601,24 +596,13 @@
   </div>
 </section>
 
-<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
-<!-- ═══════════ 06 · SPONSORS ═══════════ -->
-<section class="rw-sec rw-sec--crema2">
-  <div class="rw-wrap" style="text-align:center" data-rv>
-    <div class="rw-eyebrow" style="justify-content:center"><span class="n">06</span><span class="t">Con el apoyo de</span></div>
-    <!-- TODO(logo): logos de sponsors. La sección se oculta sola si no hay. -->
-    <div class="rw-sponsors" id="rwSponsors"></div>
-  </div>
-</section>
-
-<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
-
-<!-- ═══════════ 07 · ENTRADAS ═══════════ -->
+<!-- ═══════════ 06 · ENTRADAS ═══════════ -->
 <section class="rw-sec rw-sec--crema" id="entradas">
   <div class="rw-wrap">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">07</span><span class="t">Entradas</span></div>
+      <div class="rw-eyebrow"><span class="n">06</span><span class="t">Entradas</span></div>
       <h2>Elegí <em>la tuya</em></h2>
     </div>
     <!-- Las arma el script desde estado_tandas() -->
@@ -633,14 +617,13 @@
   </div>
 </section>
 
+<div class="rw-sep"><span style="background:var(--crema);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
-<div class="rw-sep"><span><svg><use href="#rw-iso"></use></svg></span></div>
-
-<!-- ═══════════ 08 · FAQ ═══════════ -->
+<!-- ═══════════ 07 · FAQ ═══════════ -->
 <section class="rw-sec rw-sec--crema">
   <div class="rw-wrap">
     <div data-rv>
-      <div class="rw-eyebrow"><span class="n">08</span><span class="t">Preguntas frecuentes</span></div>
+      <div class="rw-eyebrow"><span class="n">07</span><span class="t">Preguntas frecuentes</span></div>
       <h2>Lo que nos<br><em>suelen preguntar</em></h2>
     </div>
     <div class="rw-faq" data-rv>
@@ -686,8 +669,18 @@
   </div>
 </section>
 
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
-<div class="rw-sep rw-sep--claro"><span><svg><use href="#rw-iso"></use></svg></span></div>
+<!-- ═══════════ 08 · SPONSORS ═══════════ -->
+<section class="rw-sec rw-sec--crema2">
+  <div class="rw-wrap" style="text-align:center" data-rv>
+    <div class="rw-eyebrow" style="justify-content:center"><span class="n">08</span><span class="t">Con el apoyo de</span></div>
+    <!-- TODO(logo): logos de sponsors. La sección se oculta sola si no hay. -->
+    <div class="rw-sponsors" id="rwSponsors"></div>
+  </div>
+</section>
+
+<div class="rw-sep"><span style="background:var(--crema-2);color:var(--terracota)"><svg><use href="#rw-iso"></use></svg></span></div>
 
 <!-- ═══════════ CIERRE ═══════════ -->
 <section class="rw-sec rw-sec--verde rw-cierre">
