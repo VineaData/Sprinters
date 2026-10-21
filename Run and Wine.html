@@ -403,7 +403,10 @@
 /* ══════════ SPONSORS ══════════ */
 .rw-sponsors{display:flex;flex-wrap:wrap;gap:clamp(26px,4vw,58px);align-items:center;
   justify-content:center;margin-top:28px}
-.rw-sponsors img{height:clamp(30px,4vw,46px);width:auto;opacity:.82}
+/* Sin opacidad reducida: eso servía cuando había varios logos de distinto
+   color y había que emparejarlos. Con uno solo y en su color de marca,
+   bajarle la opacidad sólo lo ensucia. */
+.rw-sponsors img{height:clamp(34px,5vw,54px);width:auto}
 
 /* ══════════ CIERRE ══════════ */
 .rw-cierre{text-align:center;position:relative}
@@ -769,17 +772,14 @@
 const RUTA_LANDING = '/runandwine';
 
 // Logos de sponsors: { src, alt }. Mientras esté vacío, la sección se oculta.
-/* Sponsors de Run & Wine. Van en una sola tinta (Bosque) para que la franja
-   se lea como un conjunto y no como tres marcas peleando entre sí: es lo
-   habitual en un "con el apoyo de". Si algún sponsor exige su color de
-   marca, se le saca el filtro a ese y listo.
-   Lamadrid y Los Bocheros llegaron como JPG blanco sobre fondo casi blanco
-   (WhatsApp aplastó la transparencia); se les reconstruyó el canal alfa.
-   Nexo vino en PDF vectorial, así que va en SVG y escala sin perder nitidez. */
+/* Sponsors de Run & Wine. Sólo Nexo: Lamadrid y Los Bocheros ya figuran
+   arriba, en el lockup del hero, y repetirlos acá les restaba peso a los dos
+   lugares. Va con su rojo de marca, no en monocromo — es el color con el que
+   la marca se reconoce, y acá no compite con nadie.
+   El archivo es el PDF vectorial que mandaron, pasado a SVG: escala sin
+   perder nitidez y pesa 12 KB. */
 const SPONSORS = [
-  { nombre: 'Bodega Lamadrid Estate Wines', src: 'images/rw/sponsors/lamadrid.png' },
-  { nombre: 'Los Bocheros Restó',           src: 'images/rw/sponsors/los-bocheros.png' },
-  { nombre: 'Nexo Impresiones',             src: 'images/rw/sponsors/nexo.svg' }
+  { nombre: 'Nexo Impresiones', src: 'images/rw/sponsors/nexo.svg' }
 ];
 
 (function(){
