@@ -373,7 +373,12 @@
 /* ══════════ COLUMNAS + LISTAS ══════════ */
 .rw-cols{display:grid;grid-template-columns:1fr;gap:clamp(30px,5vw,64px);align-items:center}
 @media (min-width:880px){ .rw-cols{grid-template-columns:1fr 1fr} }
-.rw-foto{border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:var(--rw-verde-900)}
+/* 4/5 y no 4/3: las cuatro fotos de sección son verticales, y una caja
+   apaisada les recortaba media imagen. En la de la bodega se comía el
+   cartel de la entrada, que es lo único que la hace útil como referencia
+   de "acá entrás". Si alguna vez entra una foto apaisada, ésta la recorta
+   a los costados, que molesta mucho menos. */
+.rw-foto{border-radius:18px;overflow:hidden;aspect-ratio:4/5;background:var(--rw-verde-900)}
 .rw-foto img{width:100%;height:100%;object-fit:cover}
 
 /* Tira de fotos de la bodega, debajo de las columnas de una sección.
