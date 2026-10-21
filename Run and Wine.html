@@ -376,6 +376,21 @@
 .rw-foto{border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:var(--rw-verde-900)}
 .rw-foto img{width:100%;height:100%;object-fit:cover}
 
+/* Tira de fotos de la bodega, debajo de las columnas de una sección.
+   Las dos fotos se recortan al mismo alto aunque una sea vertical y la
+   otra apaisada: sin aspect-ratio fijo quedaban de distinto tamaño y la
+   fila se veía desprolija. */
+.rw-tira{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.4vw,26px);
+  margin-top:clamp(34px,5vw,56px)}
+.rw-tira figure{margin:0}
+.rw-tira img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;
+  background:var(--rw-verde-900);display:block}
+.rw-tira figcaption{margin-top:10px;font-size:12.5px;letter-spacing:.04em;
+  color:var(--ink-soft);font-weight:600}
+@media (max-width:640px){
+  .rw-tira{grid-template-columns:1fr}
+}
+
 .rw-lista{list-style:none;margin:22px 0 0;padding:0}
 .rw-lista li{padding:16px 0;border-top:1px solid rgba(2,73,57,.16);
   display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
@@ -588,9 +603,23 @@
       </ul>
     </div>
     <div class="rw-foto" data-rv>
-      <!-- TODO(foto): sunset en la bodega. -->
-      <img src="images/rw/after-2.jpg" alt="Sprinters brindando de noche en el after run" loading="lazy" />
+      <img src="images/rw/after-2.jpg" alt="Sprinters corriendo junto al lago" loading="lazy" />
     </div>
+  </div>
+
+  <!-- Tira de la bodega. Va debajo de las dos columnas y ocupa el ancho
+       completo: las dos fotos son justamente lo que la lista de arriba
+       promete (degustación Lamadrid y gastronomía de Los Bocheros), y hasta
+       acá la landing no mostraba ni una copa de vino. -->
+  <div class="rw-wrap rw-tira" data-rv>
+    <figure>
+      <img src="images/rw/copa-lamadrid.jpg" alt="Copa Lamadrid sirviéndose en la bodega" loading="lazy" />
+      <figcaption>La degustación, incluida en tu entrada</figcaption>
+    </figure>
+    <figure>
+      <img src="images/rw/bocheros-vinos.jpg" alt="Vinos de Los Bocheros junto a la cancha de bochas" loading="lazy" />
+      <figcaption>Los Bocheros, en la bodega</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -611,7 +640,7 @@
     </div>
     <div class="rw-foto" data-rv>
       <!-- TODO(foto): la bodega. -->
-      <img src="images/rw/como-llegar.jpg" alt="Fachada de Bodega Lamadrid Estate Wines" loading="lazy" />
+      <img src="images/rw/como-llegar-2.jpg" alt="Entrada de Bodega Lamadrid Estate Wines" loading="lazy" />
     </div>
   </div>
 </section>
